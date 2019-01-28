@@ -20,6 +20,11 @@ import {
   PER_PAGE
 } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
+import {
+  setFilterForPatterns,
+  setStrategyAsFilter,
+  clearAllFilters
+} from "../../actions/patternActions";
 
 class SearchBox extends Component {
   constructor(props) {
@@ -126,9 +131,29 @@ class SearchBox extends Component {
 
   handleSelectedSearchItem = searchItem => {
     // this.setState({ selected: searchItem }, alert(searchItem));
+
+    console.log("searchItem");
     console.log(searchItem);
     console.log(this.props.history);
-    this.props.history.push("/patterndetail/" + searchItem[0]._id);
+    const selectedItem = searchItem[0];
+    if (searchItem.length != 0) {
+      // is Pattern
+      if (selectedItem.summary != undefined) {
+        this.props.history.push("/patterndetail/" + selectedItem._id);
+      }
+      // is Strategy
+      else if (selectedItem.assignedTactics != undefined) {
+        this.props.clearAllFilters();
+        this.props.setStrategyAsFilter(selectedItem.assignedTactics);
+        this.props.history.push("/overview");
+      }
+      // is Tactic
+      else {
+        this.props.clearAllFilters();
+        this.props.setFilterForPatterns(selectedItem.name);
+        this.props.history.push("/overview");
+      }
+    }
   };
 
   render() {
@@ -143,7 +168,7 @@ class SearchBox extends Component {
     ) {
       //  searchContent = <Spinner />;
       searchContent = [];
-      isLoading = true;
+      isLoading = false;
       searchBoxContent = (
         <AsyncTypeahead
           // {...this.state}
@@ -155,11 +180,11 @@ class SearchBox extends Component {
           onChange={selected => this.setState({ selected })}
           // onChange={this.search}
           onSearch={this.__handleSearch}
-          placeholder="Search for a Github user..."
+          placeholder="Search for Patterns..."
         />
       );
     } else {
-      searchContent = searchResults.Patterns;
+      searchContent = searchResults.Patterns.concat(searchResults.Strategies);
       //searchContent = [{ id: 1, name: "John" }, { id: 2, name: "Miles" }];
       isLoading = false;
       // alert("gefunden");
@@ -175,11 +200,12 @@ class SearchBox extends Component {
           onChange={selected => this.handleSelectedSearchItem(selected)}
           // onChange={this.search}
           onSearch={this.__handleSearch}
-          placeholder="Search for a Github user..."
-          //  results={searchContent}
+          placeholder="Search for Patterns..."
+
+          //  results={searchContent} <MenuItem>{option.name}</MenuItem>
           /* renderMenuItemChildren={(option, props) => (
-            // <GithubMenuItem key={option.id} user={option} />
-            <MenuItem>{option.name}</MenuItem>
+            // <MenuItem>{option.name}</MenuItem>
+            
           )}*/
         />
       );
@@ -226,5 +252,10 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { searchInBackend }
+  {
+    searchInBackend,
+    setStrategyAsFilter,
+    setFilterForPatterns,
+    clearAllFilters
+  }
 )(withRouter(SearchBox));

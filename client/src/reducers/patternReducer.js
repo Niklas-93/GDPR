@@ -10,6 +10,7 @@ import {
   SET_STRATEGY_AS_FILTER,
   DESELECT_STRATEGY_AS_FILTER,
   SET_EDITING_OF_PATTERN,
+  CLEAR_ALL_FILTERS,
   SET_CHOSEN_TACTICS,
   CLEAR_CHOSEN_TACTICS
 } from "../actions/types";
@@ -153,6 +154,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         visibilityFilters: state.visibilityFilters
+      };
+    case CLEAR_ALL_FILTERS:
+      return {
+        ...state,
+        visibilityFilters: []
       };
     case SET_EDITING_OF_PATTERN:
       return {

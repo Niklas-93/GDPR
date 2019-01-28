@@ -18,7 +18,7 @@ router.get("/test", (req, res) => res.json({ msg: "General Works" }));
 router.post("/search", (req, res) => {
   // var regex = "/.*" + req.body.searchString + ".*/";
   var regex = ".*" + req.body.searchString + ".*";
-  var insertRegex = new RegExp(regex);
+  var insertRegex = new RegExp(regex, "i");
   console.log(regex);
 
   //mongoose.createIndex

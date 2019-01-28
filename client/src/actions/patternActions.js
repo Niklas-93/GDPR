@@ -12,6 +12,7 @@ import {
   SET_ASSIGNED_STRATEGIES,
   SET_FILTER_FOR_PATTERNS,
   DESELECT_STRATEGY_AS_FILTER,
+  CLEAR_ALL_FILTERS,
   SET_EDITING_OF_PATTERN,
   SET_CHOSEN_TACTICS,
   CLEAR_CHOSEN_TACTICS,
@@ -174,7 +175,12 @@ export const setFilterForPatterns = filter => {
     payload: filter
   };
 };
-
+//Clear all Filters
+export const clearAllFilters = () => {
+  return {
+    type: CLEAR_ALL_FILTERS
+  };
+};
 // Set Strategy as Filter for Patterns
 export const setStrategyAsFilter = filters => {
   return {

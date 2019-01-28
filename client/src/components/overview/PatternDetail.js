@@ -54,7 +54,8 @@ class PatternDetail extends Component {
       assignedTactics: [],*/
       errors: {},
       editing: false,
-      assignedStrategiesWithAllTactics: []
+      assignedStrategiesWithAllTactics: [],
+      actualID: ""
     };
 
     this.onChange = this.onChange.bind(this);
@@ -63,7 +64,20 @@ class PatternDetail extends Component {
     // this.onSubmit = this.onSubmit.bind(this);
     //this.props.getPattern(this.props.match.params._id);
   }
-
+  componentWillReceiveProps = nextProps => {
+    /*  console.log("nextProps");
+    console.log(nextProps);
+    if (
+      nextProps.match.params._id != this.props.pattern.pattern._id &&
+      typeof this.props.pattern.pattern._id == "string"
+    ) {
+      //  alert("hallo");
+      this.props.getPattern(nextProps.match.params._id);
+      this.props.getStrategies();
+    }
+    //  this.props.getPattern(this.props.match.params._id);
+    // this.props.getStrategies();*/
+  };
   componentDidMount() {
     //console.log(this.props.location.state);
     //alert(this.props.match.params._id);
