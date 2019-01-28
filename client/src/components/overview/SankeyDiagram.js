@@ -154,7 +154,8 @@ const links2 = [
 class SankeyDiagram extends React.Component {
   render() {
     let SankeyDiagramContent;
-    const { patterns, loading } = this.props.pattern;
+    const { loading } = this.props.pattern;
+    const patterns = this.props.patterns;
     if (patterns === null || loading || patterns.length === 0) {
       //alert("waiting1");
       SankeyDiagramContent = <Spinner />;
@@ -213,7 +214,8 @@ class SankeyDiagram extends React.Component {
               source: strategyCounter,
               target: tacticCounter,
               value: 10,
-              color: "#ddd"
+              color: "#ddd",
+              key: strategy._id
             });
             /*nodes[tacticCounter] = {
               title: tactic.name,

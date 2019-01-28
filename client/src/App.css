@@ -222,3 +222,7 @@ rect:hover {
   background-color: #337ab7 !important;
   color: white !important;
 }
+path:hover {
+  opacity: 1 !important;
+  stroke: #bbb !important;
+}

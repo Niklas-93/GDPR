@@ -262,7 +262,7 @@ class Overview extends Component {
             {patternContent}
           </Tab>
           <Tab eventKey={2} title="Diagram View">
-            <SankeyDiagram />
+            <SankeyDiagram patterns={visiblePatterns} />
           </Tab>
         </Tabs>
       </div>
