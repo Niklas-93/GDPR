@@ -171,7 +171,16 @@ class CommentBox extends Component {
       <div>
         <Panel>
           <Panel.Heading>
-            <Panel.Title componentClass="h3">Comment Box</Panel.Title>
+            <Panel.Title componentClass="h3">
+              Comment Box{" "}
+              <Button
+                onClick={() =>
+                  this.props.getProject(this.props.match.params.id)
+                }
+              >
+                <i className="fas fa-sync" />
+              </Button>
+            </Panel.Title>
           </Panel.Heading>
           <Panel.Body id="commentBox">
             <div className="chatBox">

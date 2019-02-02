@@ -89,25 +89,6 @@ export const getProject = id => dispatch => {
     );
 };
 
-// Match Developer
-export const matchDev = id => dispatch => {
-  dispatch(setProjectLoading());
-  axios
-    .get(`/api/users/user/${id}`)
-    .then(res =>
-      dispatch({
-        type: MATCH_USER,
-        payload: res.data
-      })
-    )
-    .catch(err =>
-      dispatch({
-        type: MATCH_USER,
-        payload: err.data
-      })
-    );
-};
-
 // Delete Project
 export const deleteProject = id => dispatch => {
   console.log(id);

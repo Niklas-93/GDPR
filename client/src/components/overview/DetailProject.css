@@ -8,3 +8,8 @@
 .projectButton {
   margin: 1em;
 }
+
+.vl {
+  border-left: 2px solid #afacac;
+  position: absolute;
+}
