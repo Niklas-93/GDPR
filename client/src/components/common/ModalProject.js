@@ -38,7 +38,11 @@ class ModalProject extends Component {
 
     return (
       <span>
-        <Button style={{ margin: "1em" }} onClick={this.handleShow}>
+        <Button
+          bsStyle="primary"
+          style={{ margin: "1em" }}
+          onClick={this.handleShow}
+        >
           Delete Project
         </Button>
 

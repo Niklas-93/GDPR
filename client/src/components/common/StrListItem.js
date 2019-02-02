@@ -41,7 +41,7 @@ class StrListItem extends Component {
         el.name === this.props.strategy.name
           ? this.setState(() => {
               return {
-                bsStyle: !this.state.bsStyle ? "success" : undefined
+                bsStyle: !this.state.bsStyle ? "info" : undefined
               };
             })
           : ""
@@ -83,7 +83,7 @@ class StrListItem extends Component {
           this.setState(() => {
             return {
               assignedStrategies: this.props.strategy,
-              bsStyle: !this.state.bsStyle ? "success" : undefined
+              bsStyle: !this.state.bsStyle ? "info" : undefined
             };
           });
 
@@ -122,7 +122,7 @@ class StrListItem extends Component {
         this.setState(() => {
           return {
             assignedStrategies: this.props.strategy,
-            bsStyle: !this.state.bsStyle ? "success" : undefined
+            bsStyle: !this.state.bsStyle ? "info" : undefined
           };
         });
 
@@ -135,7 +135,7 @@ class StrListItem extends Component {
       this.setState(() => {
         return {
           assignedStrategies: this.props.strategy,
-          bsStyle: !this.state.bsStyle ? "success" : undefined
+          bsStyle: !this.state.bsStyle ? "info" : undefined
         };
       });
 
