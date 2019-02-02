@@ -59,42 +59,8 @@ export default function(state = initialState, action) {
         finishedTactics: action.payload.finishedTactics,
         loading: false
       };
-    /*case SET_FINISHED_TACTIC:
-      console.log(action.payload);
-      const addfinishedTactic = tac => {
-        if (tac !== undefined) {
-          return state.finishedTactic.concat(tac);
-        } else {
-          return state.finishedTactic;
-        }
-      };
-
-      const remfinishedTactic = tac => {
-        var arr = state.finishedTactic;
-
-        var index = arr.indexOf(tac);
-        if (index !== -1) {
-          arr.splice(index, 1);
-        }
-        return arr;
-      };
-
-      if (state.finishedTactic.indexOf(action.payload) === -1) {
-        var newArray = addfinishedTactic(action.payload);
-      } else {
-        var newArray = remfinishedTactic(action.payload);
-      }
-      return {
-        ...state,
-        finishedTactic: newArray,
-        loading: false
-      };*/
 
     case SWITCH_ATTR_FOR_EDIT_PROJECT:
-      //console.log(state.project.assignedStrategies);
-      //console.log(state.project.assignedTactics);
-      //console.log(state.project.assignedDevelopers);
-
       var tempArr = [];
 
       if (state.project.assignedStrategiesWithAllTactics) {
@@ -131,18 +97,11 @@ export default function(state = initialState, action) {
       };
     case SET_ASSIGNED_DEVELOPER:
       const addDeveloper = dev => {
-        //console.log([...dev].concat(state.assignedDevelopers));
-        // console.log(...[dev].concat(state.assignedDevelopers));
-        //console.log(state.assignedDevelopers.concat(dev));
-        //return "test";
         if (dev !== undefined) {
           return state.assignedDevelopers.concat(dev);
         } else {
           return state.assignedDevelopers;
         }
-
-        /*[...dev].concat(this.props.developer)*/
-        /*[...dev.concat(state.assignedDevelopers)]*/
       };
 
       const remDeveloper = dev => {
