@@ -38,7 +38,9 @@ class ModalProject extends Component {
 
     return (
       <span>
-        <Button onClick={this.handleShow}>Delete Project</Button>
+        <Button style={{ margin: "1em" }} onClick={this.handleShow}>
+          Delete Project
+        </Button>
 
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header closeButton>
@@ -64,25 +66,6 @@ class ModalProject extends Component {
                 Abort
               </Button>
             </div>
-
-            <hr />
-            <h4>Popover in a modal</h4>
-            <p>
-              there is a{" "}
-              <OverlayTrigger overlay={popover}>
-                <a href="#popover">popover</a>
-              </OverlayTrigger>{" "}
-              here
-            </p>
-
-            <h4>Tooltips in a modal</h4>
-            <p>
-              there is a{" "}
-              <OverlayTrigger overlay={tooltip}>
-                <a href="#tooltip">tooltip</a>
-              </OverlayTrigger>{" "}
-              here
-            </p>
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={this.handleClose}>Close</Button>
