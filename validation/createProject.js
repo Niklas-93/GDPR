@@ -4,9 +4,6 @@ const isEmpty = require("./is-empty");
 module.exports = function validateProjectInput(data) {
   let errors = {};
 
-  data.name = !isEmpty(data.name) ? data.name : "";
-  data.description = !isEmpty(data.description) ? data.description : "";
-
   if (!Validator.isLength(data.name, { min: 2, max: 30 })) {
     errors.name = "Name of the pattern must be between 2 and 30 characters";
   }
@@ -18,14 +15,18 @@ module.exports = function validateProjectInput(data) {
   if (Validator.isEmpty(data.description)) {
     errors.description = "Description field is required";
   }
-  /* 
-  if (Validator.isEmpty(data.assignedDevelopers)) {
+
+  if (data.assignedDevelopers.length === 0) {
     errors.assignedDevelopers = "You have to assign at least one developer";
   }
 
-  if (Validator.isEmpty(data.assignedConcerns)) {
-    errors.assignedConcerns = "You have to assign at least one concern";
-  } */
+  if (data.assignedStrategies.length === 0) {
+    errors.assignedStrategy = "You have to assign at least one strategy";
+  }
+
+  if (data.assignedTactics.length === 0) {
+    errors.assignedTactic = "You have to assign at least one tactic";
+  }
 
   return {
     errors,
