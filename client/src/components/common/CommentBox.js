@@ -206,7 +206,11 @@ class CommentBox extends Component {
               placeholder="Enter your comment"
               onChange={this.onChange}
               location={this.props.location}
-              onSubmit={this.onSubmit}
+              onSubmit={
+                this.state.comment.content !== ""
+                  ? this.onSubmit
+                  : () => alert("You can't send a empty message")
+              }
               value={this.state.comment.content}
             />
           </Panel.Body>
