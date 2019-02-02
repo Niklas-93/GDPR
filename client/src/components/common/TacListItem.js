@@ -45,7 +45,7 @@ class TacListItem extends Component {
         el._id === this.props.tactic._id
           ? this.setState(() => {
               return {
-                bsStyle: !this.state.bsStyle ? "success" : undefined
+                bsStyle: !this.state.bsStyle ? "info" : undefined
               };
             })
           : ""
@@ -59,7 +59,7 @@ class TacListItem extends Component {
         this.props.setAssignedTactics(this.props.tactic);
         return {
           assignedTactics: this.props.tactic,
-          bsStyle: !this.state.bsStyle ? "success" : undefined
+          bsStyle: !this.state.bsStyle ? "info" : undefined
         };
       });
     } else {

@@ -169,7 +169,7 @@ class CommentBox extends Component {
 
     return (
       <div>
-        <Panel>
+        <Panel bsStyle="primary">
           <Panel.Heading>
             <Panel.Title componentClass="h3">
               Comment Box{" "}
@@ -201,7 +201,7 @@ class CommentBox extends Component {
                         ) : (
                           ""
                         )}
-                        <Panel>
+                        <Panel bsStyle="primary">
                           <Panel.Body>{comment.content}</Panel.Body>
                         </Panel>
                       </div>
