@@ -92,7 +92,7 @@ class DetailProject extends Component {
 
     var finishedTacticsArray = this.props.finishedTactics;
 
-    if (tactics != undefined) {
+    if (tactics != undefined && finishedTacticsArray != undefined) {
       for (var i = 0; i < tacticsArr.length; i++) {
         if (finishedTacticsArray.indexOf(tacticsArr[i].name) === -1) {
           doneArr.push({ name: tacticsArr[i].name, done: false });
@@ -208,6 +208,15 @@ class DetailProject extends Component {
 
     return (
       <div>
+        {this.props.project === ""
+          ? alert(
+              "This project has been deleted, please contact your local project manager"
+            )
+          : ""}
+        {this.props.project === ""
+          ? this.props.history.push("/PMoverview")
+          : ""}
+
         <Panel bsStyle="primary">
           <Panel.Heading>
             <Panel.Title className="indPanel" componentClass="h1">
@@ -362,11 +371,12 @@ class DetailProject extends Component {
               <span
                 className="vl"
                 style={{
-                  height:
-                    Math.max(
-                      this.props.finishedTactics.length,
-                      doneTacticArray().length
-                    ) + "%"
+                  height: this.props.finishedTactics
+                    ? Math.max(
+                        this.props.finishedTactics.length,
+                        doneTacticArray().length
+                      ) + "%"
+                    : ""
                 }}
               />
               <Col md={6} className="openTasks">
