@@ -26,6 +26,10 @@ import authReducer from "../../reducers/authReducer";
 
 class PMoverview extends Component {
   componentDidMount() {
+    if (this.props.auth.user.role === "Data Protection Officer") {
+      this.props.history.push("/Overview");
+      alert("You don't have the permission to see projects!");
+    }
     this.props.getProjects();
     this.props.getDevelopers();
 

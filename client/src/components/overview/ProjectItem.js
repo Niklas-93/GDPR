@@ -53,20 +53,18 @@ class ProjectItem extends Component {
     //  'is-invalid': error
     //})}
 
+    var finished =
+      project.assignedTactics.length === project.finishedTactics.length;
+
     return (
       <Col xs={4}>
         <Panel
-          //onMouseLeave={() => this.props.getProject(project._id)}
           className={panelHeight}
-          bsStyle={
-            project.assignedTactics.length === project.finishedTactics.length
-              ? "success"
-              : undefined
-          }
+          bsStyle={finished ? "success" : "primary"}
         >
           <Panel.Heading>
             <Link to={`/project/${project._id}`}>
-              <h4>{project.name}</h4>
+              <h4 className={!finished ? "heading" : ""}>{project.name}</h4>
             </Link>
           </Panel.Heading>
           <Panel.Body>

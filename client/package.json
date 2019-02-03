@@ -27,7 +27,8 @@
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {
-    "redux-devtools-extension": "^2.13.8"
+    "redux-devtools-extension": "^2.13.7",
+    "terser": "^3.14.1"
   },
   "browserslist": [
     ">0.2%",
