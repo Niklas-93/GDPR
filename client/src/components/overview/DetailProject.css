@@ -8,3 +8,13 @@
 .projectButton {
   margin: 1em;
 }
+
+.vl {
+  border-left: 2px solid #afacac;
+  position: absolute;
+}
+
+.indPanel {
+  background-color: rgb(51, 122, 183);
+  color: white;
+}

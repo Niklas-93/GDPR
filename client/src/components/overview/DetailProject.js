@@ -39,6 +39,7 @@ class DetailProject extends Component {
     this.onClickDelete = this.onClickDelete.bind(this);
     this.handleChecked = this.handleChecked.bind(this);
     this.createDoneArray = this.createDoneArray.bind(this);
+    this.updateProject = this.updateProject.bind(this);
   }
 
   componentDidMount() {
@@ -60,6 +61,13 @@ class DetailProject extends Component {
       this.props.getProject(this.props.match.params.id);
       this.props.switchAttrForEditProject();
     }, 5000);*/
+  }
+
+  updateProject() {
+    this.props.getProject(this.props.match.params.id);
+    setTimeout(() => {
+      this.props.switchAttrForEditProject();
+    }, 1000);
   }
 
   onClickDelete(id) {
@@ -127,6 +135,19 @@ class DetailProject extends Component {
   render() {
     if (this.props.project.assignedStrategiesWithAllTactics) {
       var tactics = this.props.project.assignedStrategiesWithAllTactics;
+      tactics.sort(function(a, b) {
+        var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+        var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
+
+        // namen müssen gleich sein
+        return 0;
+      });
     }
 
     function aggrTac() {
@@ -187,16 +208,16 @@ class DetailProject extends Component {
 
     return (
       <div>
-        <Panel>
+        <Panel bsStyle="primary">
           <Panel.Heading>
-            <Panel.Title componentClass="h1">
+            <Panel.Title className="indPanel" componentClass="h1">
               {this.props.project.name}
             </Panel.Title>
           </Panel.Heading>
           <Panel.Body>
             <Row>
               <Col md={12}>
-                <Panel>
+                <Panel bsStyle="primary">
                   <Panel.Heading>
                     <Panel.Title componentClass="h4">Description</Panel.Title>
                   </Panel.Heading>
@@ -204,7 +225,7 @@ class DetailProject extends Component {
                 </Panel>
               </Col>
               <Col md={3}>
-                <Panel>
+                <Panel bsStyle="primary">
                   <Panel.Heading>
                     <Panel.Title componentClass="h4">
                       Assigned Developer
@@ -220,10 +241,13 @@ class DetailProject extends Component {
                 </Panel>
               </Col>
               <Col md={9}>
-                <Panel>
+                <Panel bsStyle="primary">
                   <Panel.Heading>
                     <Panel.Title componentClass="h4">
-                      Assigned Strategies and tactics
+                      Assigned Strategies and tactics{" "}
+                      <Button onClick={() => this.updateProject()}>
+                        <i className="fas fa-sync" />
+                      </Button>{" "}
                     </Panel.Title>
                   </Panel.Heading>
                   <Panel.Body>
@@ -232,6 +256,7 @@ class DetailProject extends Component {
                         ? tactics.map(str => (
                             <Col key={str._id} md={3}>
                               <Panel
+                                bsStyle="primary"
                                 className="strategyPanel"
                                 style={{
                                   height:
@@ -274,13 +299,17 @@ class DetailProject extends Component {
           </Panel.Body>
 
           <Link to="/PMoverview">
-            <Button className="projectButton">Back to Overview</Button>
+            <Button bsStyle="primary" className="projectButton">
+              Back to Overview
+            </Button>
           </Link>
 
           {this.props.auth.user.role === "Project Manager" ? (
             <span>
               <Link to={`/project/edit-project/${this.props.project._id}`}>
-                <Button className="projectButton">Edit Project</Button>
+                <Button bsStyle="primary" className="projectButton">
+                  Edit Project
+                </Button>
               </Link>
               <ModalProject
                 onClick={this.onClickDelete}
@@ -292,7 +321,7 @@ class DetailProject extends Component {
           )}
         </Panel>
 
-        <Panel>
+        <Panel bsStyle="primary">
           <Panel.Heading>
             <Panel.Title componentClass="h4">
               {progress === 0
@@ -316,24 +345,38 @@ class DetailProject extends Component {
               now={progress}
             />
             <Row>
-              <Col md={6}>
+              <Col md={6} className="doneTasks">
                 <h4>Done</h4>
                 <div>
                   <ul>
                     {this.props.finishedTactics
                       ? this.props.finishedTactics.map(tac => (
-                          <li key={tac}>{tac}</li>
+                          <Col md={6} key={tac}>
+                            <li key={tac}>{tac}</li>
+                          </Col>
                         ))
                       : ""}
                   </ul>
                 </div>
               </Col>
-              <Col md={6}>
+              <span
+                className="vl"
+                style={{
+                  height:
+                    Math.max(
+                      this.props.finishedTactics.length,
+                      doneTacticArray().length
+                    ) + "%"
+                }}
+              />
+              <Col md={6} className="openTasks">
                 <h4>Open</h4>
                 <div>
                   <ul>
                     {doneTacticArray().map(tac => (
-                      <li key={tac}>{tac}</li>
+                      <Col md={6} key={tac}>
+                        <li key={tac}>{tac}</li>
+                      </Col>
                     ))}
                   </ul>
                 </div>
@@ -342,7 +385,12 @@ class DetailProject extends Component {
           </Panel.Body>
         </Panel>
 
-        <CommentBox project={this.props.project} />
+        <CommentBox
+          project={this.props.project}
+          getProject={() => {
+            this.updateProject();
+          }}
+        />
       </div>
     );
   }
