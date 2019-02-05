@@ -267,7 +267,6 @@ class DetailProject extends Component {
                         ? tactics.map(str => (
                             <Col key={str._id} md={3}>
                               <Panel
-                                bsStyle="primary"
                                 className="strategyPanel"
                                 style={{
                                   height:
