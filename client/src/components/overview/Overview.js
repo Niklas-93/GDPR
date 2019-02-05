@@ -141,7 +141,7 @@ class Overview extends Component {
   render() {
     const { patterns, loading } = this.props.pattern;
     //console.log(patterns);
-
+    const { isAuthenticated } = this.props.auth;
     let patternContent;
     var visiblePatterns = [];
     if (patterns === null || loading) {
@@ -252,14 +252,20 @@ class Overview extends Component {
               <span className={"h4"}>
                 Patterns <Badge>{visiblePatterns.length}</Badge>
               </span>
-              <Link to="/create-pattern">
-                <Button className={"glyphicon-button"}>
-                  <Glyphicon glyph="plus" />
-                </Button>
-              </Link>
-              <Link to="/strategyoverview" style={{ marginLeft: "450px" }}>
-                Manage Strategies and Tactics...
-              </Link>
+              {isAuthenticated ? (
+                <span>
+                  <Link to="/create-pattern">
+                    <Button className={"glyphicon-button"}>
+                      <Glyphicon glyph="plus" />
+                    </Button>
+                  </Link>
+                  <Link to="/strategyoverview" style={{ marginLeft: "450px" }}>
+                    Manage Strategies and Tactics...
+                  </Link>
+                </span>
+              ) : (
+                <span />
+              )}
             </Col>
             <br />
             <br />
@@ -287,7 +293,8 @@ Overview.propTypes = {
 const mapStateToProps = state => ({
   pattern: state.pattern,
   tactic: state.tactic,
-  strategy: state.strategy
+  strategy: state.strategy,
+  auth: state.auth
 });
 
 export default connect(

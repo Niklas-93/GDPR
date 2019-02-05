@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
 import SearchBox from "./SearchBox";
+import { withRouter } from "react-router-dom";
 import {
   Navbar,
   Nav,
@@ -21,6 +22,7 @@ class Navigationbar extends Component {
   onLogoutClick(e) {
     e.preventDefault();
     this.props.logoutUser();
+    this.props.history.push("/login");
   }
   linkToRegister() {
     this.props.history.push("/register");
@@ -81,9 +83,7 @@ class Navigationbar extends Component {
                   View
                 </Link>
               </MenuItem>
-              <MenuItem eventKey={3.2}>Edit</MenuItem>
-              <MenuItem divider />
-              <MenuItem eventKey={3.3}>Change Role</MenuItem>
+
               <MenuItem divider />
               {isAuthenticated ? authLinks : guestLinkRegister}
               {isAuthenticated ? "" : guestLinkLogin}
@@ -107,4 +107,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { logoutUser }
-)(Navigationbar);
+)(withRouter(Navigationbar));
