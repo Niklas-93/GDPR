@@ -66,7 +66,7 @@ class PatternItem extends Component {
             <ul className={"StrategyListInPatterns"}>
               {pattern.assignedStrategiesWithAllTactics.map(strategy => (
                 <li>
-                  <span class="dotForStrategy" /> {" " + strategy.name + " "}
+                  <span class="dotForStrategy" /> {"  " + strategy.name + "  "}
                 </li>
               ))}
             </ul>

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Panel, Col, Tabs, Tab, Button, Collapse } from "react-bootstrap";
-import EditToolbarStrategy from "../common/editToolbarStrategy";
 import {
   setFilterForPatterns,
   deselectTacticAsFilter

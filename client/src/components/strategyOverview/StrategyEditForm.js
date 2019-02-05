@@ -2,48 +2,37 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
-  ButtonToolbar,
-  ButtonGroup,
   Button,
   Glyphicon,
-  Modal,
   FormGroup,
   ControlLabel,
   FormControl,
-  HelpBlock,
   Panel,
   Col
 } from "react-bootstrap";
-import { deleteStrategy, editStrategy } from "../../actions/strategyActions";
-//import TacticItem from "../overview/TacticItem";
-//import StrategyEditForm from "../overview/StrategyEditForm";
+import { editStrategy } from "../../actions/strategyActions";
 
 class StrategyEditForm extends Component {
   constructor(props, context) {
     super(props, context);
-
+    // set initial state
     this.state = {
-      //editing: false,
       name: this.props.strategy.name,
       description: this.props.strategy.description,
       assignedTactics: this.props.strategy.assignedTactics
     };
-
+    // bind functions
     this.onChange = this.onChange.bind(this);
     this.onChangeAssignmentArray = this.onChangeAssignmentArray.bind(this);
-    this.onChangeArray = this.onChangeArray.bind(this);
-    this.onChangeAssignedTactics = this.onChangeAssignedTactics.bind(this);
   }
 
+  // handles change of input fields (name, description)
   onChange(e) {
-    //alert(e.target.name);
-    //alert(e.target.value);
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  // if assigned tactic is changed
   onChangeAssignmentArray(e) {
-    //alert(e.target.name);
-    //alert(e.target.value);
     var tacticArray = this.state.assignedTactics;
     tacticArray[e.target.name].name = e.target.value;
     this.setState({
@@ -51,40 +40,34 @@ class StrategyEditForm extends Component {
     });
   }
 
-  onChangeArray(index, e) {
-    e.preventDefault();
-    alert(e.target.name);
-    alert(e.target.value);
-    this.setState({ [e.target.name[index]]: e.target.value });
-  }
-
+  // on confirmation, change Strategy and assigned Tactics
   editStrategy = () => {
+    // set data to be forwarded to server
     const strategyData = {
       name: this.state.name,
       description: this.state.description,
       assignedTactics: this.state.assignedTactics,
       id: this.props.strategy._id
     };
-    console.log(
-      "function editstrategy called in EditToolbar:" +
-        strategyData.name +
-        strategyData.description
-    );
     this.props.editStrategy(strategyData);
     this.props.disableEditing();
   };
 
+  // disable edit mode
+  disableEditing = () => {
+    this.props.disableEditing();
+  };
+
+  // removes tactic from assigned tactics array - not permanent
   removeTacticFromArray = index => {
     var tacticArray = this.state.assignedTactics;
-    //alert(tacticArray.getType());
-    //alert(name);
-    //alert(tacticArray.indexOf(name));
     tacticArray.splice(index, 1);
     this.setState({
       assignedTactics: tacticArray
     });
   };
 
+  // appends new tactic to array of assigned tactics
   newTacticField = () => {
     var emptyTacticObject = { name: "", description: "" };
     var tacticArray = this.state.assignedTactics;
@@ -92,28 +75,9 @@ class StrategyEditForm extends Component {
     this.setState({
       assignedTactics: tacticArray
     });
-
-    /*  var tacticField = document.createElement("INPUT");
-    tacticField.setAttribute("type", "text");
-    //var textnode = document.createTextNode("Water");
-    node.appendChild(textnode);
-    document.getElementById("myList").appendChild(node);*/
-  };
-
-  onChangeAssignedTactics = (name, index) => {
-    var tacticArray = this.state.assignedTactics;
-    //alert(tacticArray[index].name);
-    alert(name);
-    tacticArray[index].name = name;
-    //alert(tacticArray[index].name);
-    this.setState({
-      assignedTactics: tacticArray
-    });
   };
 
   render() {
-    //alert("render");
-    const tactics = this.state.assignedTactics;
     return (
       <Col xs={3}>
         <Panel className={"minHeightStrategy"}>
@@ -150,10 +114,7 @@ class StrategyEditForm extends Component {
                   <ControlLabel>Assigned Tactics</ControlLabel>
                 </Col>
                 <Col xs={3}>
-                  <Button
-                    onClick={() => this.newTacticField()}
-                    //style={{ marginLeft: "70px" }}
-                  >
+                  <Button onClick={() => this.newTacticField()}>
                     <Glyphicon glyph="plus" />
                   </Button>
                 </Col>
@@ -169,10 +130,6 @@ class StrategyEditForm extends Component {
                         value={tactic.name}
                         placeholder="Tactic Name"
                         onChange={this.onChangeAssignmentArray}
-                        /* onChange={() =>
-                          this.onChangeAssignedTactics(tactic.name, index)
-                        }*/
-                        // onChange={this.onChangeArray(index)}
                       />
                     </Col>
                     <Col xs={3}>
@@ -187,9 +144,11 @@ class StrategyEditForm extends Component {
             <Panel.Footer>
               <Button
                 onClick={() => this.editStrategy(this.props.strategy._id)}
-                //style={{ marginBottom: "100px" }}
               >
                 Confirm Changes
+              </Button>
+              <Button onClick={() => this.disableEditing()}>
+                Dismiss Changes
               </Button>
             </Panel.Footer>
           </form>
@@ -199,6 +158,7 @@ class StrategyEditForm extends Component {
   }
 }
 
+// Defines required props
 StrategyEditForm.propTypes = {
   deleteStrategy: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired

@@ -7,140 +7,51 @@ import {
   Button,
   Glyphicon,
   Modal,
-  FormGroup,
-  ControlLabel,
-  FormControl,
-  HelpBlock,
   Panel,
   Col
 } from "react-bootstrap";
-import { deleteStrategy, editStrategy } from "../../actions/strategyActions";
-//import TacticItem from "../overview/TacticItem";
-import StrategyEditForm from "../overview/StrategyEditForm";
-import TacticListItem from "../overview/TacticListItem";
+
+import StrategyEditForm from "./StrategyEditForm";
+import TacticListItem from "./TacticListItem";
 
 class Strategy extends Component {
   constructor(props, context) {
     super(props, context);
-
+    // set initial state: no editing, no modal
     this.state = {
       editing: false,
-      showRemoveModal: false,
       showRemoveModal: false,
       name: this.props.strategy.name,
       description: this.props.strategy.description,
       assignedTactics: this.props.strategy.assignedTactics
     };
-
-    this.onChange = this.onChange.bind(this);
-    this.onChangeAssignmentArray = this.onChangeAssignmentArray.bind(this);
-    this.onChangeArray = this.onChangeArray.bind(this);
-    this.onChangeAssignedTactics = this.onChangeAssignedTactics.bind(this);
   }
 
-  onChange(e) {
-    //alert(e.target.name);
-    //alert(e.target.value);
-    this.setState({ [e.target.name]: e.target.value });
-  }
-
-  onChangeAssignmentArray(e) {
-    //alert(e.target.name);
-    //alert(e.target.value);
-    var tacticArray = this.state.assignedTactics;
-    tacticArray[e.target.name].name = e.target.value;
-    this.setState({
-      assignedTactics: tacticArray
-    });
-  }
-
-  onChangeArray(index, e) {
-    e.preventDefault();
-    alert(e.target.name);
-    alert(e.target.value);
-    this.setState({ [e.target.name[index]]: e.target.value });
-  }
-
-  editStrategy = () => {
-    const strategyData = {
-      name: this.state.name,
-      description: this.state.description,
-      assignedTactics: this.state.assignedTactics,
-      id: this.props.strategy._id
-    };
-    console.log(
-      "function editstrategy called in EditToolbar:" +
-        strategyData.name +
-        strategyData.description
-    );
-    this.props.editStrategy(strategyData);
-  };
-
-  deleteStrategy = id => {
-    console.log("function deletestrategy called in EditToolbar");
-    this.props.deleteStrategy(id, this.props.history);
-    //this.props.history.push("/overview");
-  };
-
-  removeTacticFromArray = index => {
-    var tacticArray = this.state.assignedTactics;
-    //alert(tacticArray.getType());
-    //alert(name);
-    //alert(tacticArray.indexOf(name));
-    tacticArray.splice(index, 1);
-    this.setState({
-      assignedTactics: tacticArray
-    });
-  };
-
-  newTacticField = () => {
-    var emptyTacticObject = { name: "", description: "" };
-    var tacticArray = this.state.assignedTactics;
-    tacticArray.push(emptyTacticObject);
-    this.setState({
-      assignedTactics: tacticArray
-    });
-
-    /*  var tacticField = document.createElement("INPUT");
-    tacticField.setAttribute("type", "text");
-    //var textnode = document.createTextNode("Water");
-    node.appendChild(textnode);
-    document.getElementById("myList").appendChild(node);*/
-  };
-
-  onChangeAssignedTactics = (name, index) => {
-    var tacticArray = this.state.assignedTactics;
-    //alert(tacticArray[index].name);
-    alert(name);
-    tacticArray[index].name = name;
-    //alert(tacticArray[index].name);
-    this.setState({
-      assignedTactics: tacticArray
-    });
-  };
-
+  //enables editmode
   enableEditing = () => {
     this.setState({
       editing: true
     });
   };
 
+  //disables editmode
   disableEditing = () => {
     this.setState({
       editing: false
     });
   };
 
+  /* strategies are not allowed to be deleted --> no modal for confirmation needed
+
   handleShowRemoveModal() {
-    alert("hallo");
     this.setState({ showRemoveModal: true });
   }
   handleCloseRemoveModal() {
     this.setState({ showRemoveModal: false });
   }
+*/
 
   render() {
-    //alert("render");
     const strategy = this.props.strategy;
     return (
       <div>
@@ -164,6 +75,8 @@ class Strategy extends Component {
                         <Button onClick={() => this.enableEditing()}>
                           <Glyphicon glyph="pencil" />
                         </Button>
+                      </ButtonGroup>
+                      {/* Strategies are not allowed to be deleted
                         <Button onClick={this.handleShowRemoveModal}>
                           <Glyphicon glyph="remove" />
                         </Button>
@@ -194,7 +107,7 @@ class Strategy extends Component {
                             </Button>
                           </Modal.Footer>
                         </Modal>
-                      </div>
+                            </div>*/}
                     </ButtonToolbar>
                   </Col>
                 </Panel.Title>
@@ -220,8 +133,8 @@ class Strategy extends Component {
   }
 }
 
+// defines required props
 Strategy.propTypes = {
-  deleteStrategy: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 
@@ -231,5 +144,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { deleteStrategy, editStrategy }
+  {}
 )(Strategy);

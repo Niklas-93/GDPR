@@ -17,12 +17,15 @@ class StrategyOverview extends Component {
   }
 }
 
+// Defines strategies as required props
 StrategyOverview.propTypes = {
   strategies: PropTypes.array.isRequired
 };
+
 const mapStateToProps = state => ({
   strategy: state.strategy
 });
+
 export default connect(
   mapStateToProps,
   { getStrategies }

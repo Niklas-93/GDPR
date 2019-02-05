@@ -13,7 +13,6 @@ import {
   Collapse,
   ListGroupItem
 } from "react-bootstrap";
-import EditToolbarStrategies from "./EditToolbarTactics";
 import store from "../../store";
 
 class StrListItem extends Component {

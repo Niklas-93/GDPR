@@ -10,25 +10,23 @@ import store from "./store";
 
 import PrivateRoute from "./components/common/PrivateRoute";
 
-//import NavigationBar from "./components/navigation/NavigationBar/NavigationBar";
 import NavigationBar from "./components/layout/NavigationBar";
 import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Overview from "./components/overview/Overview";
 import DPOoverview from "./components/overview/DPOoverview";
-import CreatePattern from "./components/overview/CreatePattern";
+import CreatePattern from "./components/patternDetail/CreatePattern";
 import CreateProject from "./components/overview/CreateProject";
 import EditProject from "./components/overview/EditProject";
 import DetailProject from "./components/overview/DetailProject";
-//import Createtactic from "./components/overview/Createtactic";
 import { Footer } from "./components/layout/Footer";
 import Search from "./components/layout/Search";
 import PMoverview from "./components/layout/PMoverview";
-import StrategyOverview from "./components/overview/StrategyOverview";
+import StrategyOverview from "./components/strategyOverview/StrategyOverview";
 
 import "./App.css";
-import PatternDetail from "./components/overview/PatternDetail";
+import PatternDetail from "./components/patternDetail/PatternDetail";
 
 // Check for token
 if (localStorage.jwtToken) {
@@ -105,11 +103,6 @@ class App extends Component {
                   path="/project/:id"
                   component={DetailProject}
                 />
-                {/*{" "}
-                <PrivateRoute
-                  path="/create-tactic"
-                  component={Createtactic}
-              />*/}
               </Switch>
             </div>
             <Footer />

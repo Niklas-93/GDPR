@@ -1,11 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
-import classnames from "classnames";
 import { connect } from "react-redux";
-
 import Spinner from "../common/Spinner";
-//import { createPattern } from "../../actions/patternActions";
 import {
   setAssignedTactics,
   setAssignedStrategies,
@@ -14,16 +11,14 @@ import {
 } from "../../actions/patternActions";
 import TextAreaField from "../common/TextAreaField";
 import TextField from "../common/TextField";
-import StrListGroupField from "../common/StrListGroupField";
-import TacListGroupField from "../common/TacListGroupField";
 import { getStrategies } from "../../actions/strategyActions";
-import { Button, Row, Col, Panel, Tab, Tabs } from "react-bootstrap";
-import store from "../../store";
-import StrategyFeed from "./StrategyFeed";
+import { Button, Panel, Tab, Tabs } from "react-bootstrap";
+import StrategyFeed from "../overview/StrategyFeed";
 
 class CreatePattern extends Component {
   constructor() {
     super();
+    // set all pattern fields initially to empty strings
     this.state = {
       summary: "",
       name: "",
@@ -46,7 +41,7 @@ class CreatePattern extends Component {
       errors: {},
       activeKey: 1
     };
-
+    // bind functions
     this.onChange = this.onChange.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
   }
@@ -87,15 +82,12 @@ class CreatePattern extends Component {
   // checks if fields are empty, sets errors
   setErrorIfEmpty = textField => {
     if (this.state[textField] == "") {
-      this.setState(
-        {
-          errors: {
-            ...this.state.errors,
-            [textField]: textField + " is required!"
-          }
+      this.setState({
+        errors: {
+          ...this.state.errors,
+          [textField]: textField + " is required!"
         }
-        // alert(this.state.errors[textField])
-      );
+      });
     } else {
       this.setState({
         errors: {
@@ -104,16 +96,11 @@ class CreatePattern extends Component {
         }
       });
     }
-    console.log(textField);
-    console.log(this.state.errors[textField]);
   };
 
   // executed when trying to go to next tab
   handleSelect = activeKey => {
     // check if fields are empty, set corresponding errors
-
-    // this.setErrorIfEmpty("problem");
-
     setTimeout(() => {
       this.setErrorIfEmpty("name");
       this.setErrorIfEmpty("summary");
@@ -136,17 +123,7 @@ class CreatePattern extends Component {
   };
 
   render() {
-    // get Patterns from server, display spinner while waiting
-    const { loading, tactics } = this.props;
-
-    let tacticContent;
-
-    if (tactics === null || loading) {
-      tacticContent = <Spinner />;
-    } else {
-      tacticContent = <TacListGroupField tactics={this.props.strategies} />;
-    }
-    //get strategies from serverm display spinner while waiting
+    //get strategies from server, display spinner while waiting
     const { strategies, loading3 } = this.props.strategy;
     let strategyContent;
     if (strategies === null || loading3) {
@@ -158,8 +135,10 @@ class CreatePattern extends Component {
     }
 
     const { errors } = this.state;
+    // set initial state of seeing other tabs (strategies/additionals) to false
     var seeStrategies = false;
     var seeAdditionals = false;
+    // check if required fields are set, if yes, show strategy tab
     if (
       this.state.name != "" &&
       this.state.summary != "" &&
@@ -169,6 +148,7 @@ class CreatePattern extends Component {
     ) {
       seeStrategies = true;
     }
+    // check if at least one tactic is set, if yes, show additionals tab
     if (this.props.pattern.chosenTactics.length != 0) {
       seeAdditionals = true;
     }
@@ -180,13 +160,12 @@ class CreatePattern extends Component {
             activeKey={this.state.activeKey}
             onSelect={this.handleSelect}
             id="Select-View"
-            //onSelect={() => this.handleSelect()}
           >
             <Tab eventKey={1} title="1. Basic Information">
               <TextField
                 label="Name of pattern"
                 name="name"
-                value={this.state.name} // must be changede to name
+                value={this.state.name}
                 placeholder="Enter the name of the pattern"
                 onChange={this.onChange}
                 error={errors.name}
@@ -195,7 +174,7 @@ class CreatePattern extends Component {
               <TextAreaField
                 label="Summary"
                 name="summary"
-                value={this.state.summary} // must be changed to summary
+                value={this.state.summary}
                 placeholder="Enter Summary"
                 onChange={this.onChange}
                 error={errors.summary}
@@ -346,6 +325,7 @@ class CreatePattern extends Component {
     );
   }
 }
+
 //Definition of required props, improves Debugging
 CreatePattern.propTypes = {
   createPattern: PropTypes.func.isRequired,

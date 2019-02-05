@@ -1,11 +1,6 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
-import classnames from "classnames";
 import { connect } from "react-redux";
 import isEmpty from "../../validation/is-empty";
-
-//import { createPattern } from "../../actions/patternActions";
 import {
   getPattern,
   editPattern,
@@ -17,89 +12,37 @@ import TextAreaField from "../common/TextAreaField";
 import TextField from "../common/TextField";
 import EditToolbar from "../common/EditToolbar";
 import Spinner from "../common/Spinner";
-import PatternDetail_StrategiesWithTactics from "../overview/PatternDetail_StrategiesWithTactics";
-import {
-  Button,
-  FormGroup,
-  Checkbox,
-  Col,
-  FormControl,
-  Input,
-  Panel,
-  Tabs,
-  Tab
-} from "react-bootstrap";
-import StrategyFeed from "./StrategyFeed";
+import PatternDetail_StrategiesWithTactics from "./PatternDetail_StrategiesWithTactics";
+import { Button, Col, Panel, Tabs, Tab } from "react-bootstrap";
+import StrategyFeed from "../overview/StrategyFeed";
 import { getStrategies } from "../../actions/strategyActions";
-
-/*GET_PATTERN ohne Funktion*/
 
 class PatternDetail extends Component {
   constructor(props) {
     super(props);
-    //this.props.getPattern(this.props.match.params._id),
+    // set initial data
     this.state = {
       pattern: {},
-      /*name: "",
-      context: "",
-      summary: "",
-      problem: "",
-      forcesConcerns: "",
-      solution: "",
-      structure: "",
-      implementation: "",
-      consequences: "",
-      liabilities: "",
-      examples: "",
-      relatedPatterns: "",
-       sources: "",
-      knownUses: "",
-      assignedTactics: [],*/
       errors: {},
       editing: false,
       assignedStrategiesWithAllTactics: [],
       actualID: "",
       activeKey: 1
     };
+    // bind functions
     this.handleSelect = this.handleSelect.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onChangePattern = this.onChangePattern.bind(this);
-
-    // this.onSubmit = this.onSubmit.bind(this);
-    //this.props.getPattern(this.props.match.params._id);
   }
-  componentWillReceiveProps = nextProps => {
-    /*  console.log("nextProps");
-    console.log(nextProps);
-    if (
-      nextProps.match.params._id != this.props.pattern.pattern._id &&
-      typeof this.props.pattern.pattern._id == "string"
-    ) {
-      //  alert("hallo");
-      this.props.getPattern(nextProps.match.params._id);
-      this.props.getStrategies();
-    }
-    //  this.props.getPattern(this.props.match.params._id);
-    // this.props.getStrategies();*/
-  };
   componentDidMount() {
-    //console.log(this.props.location.state);
-    //alert(this.props.match.params._id);
-    // alert(this.props.getPattern(this.props.match.params._id));
-    //alert(this.props.pattern.loading);
+    // get initial props
     this.props.getPattern(this.props.match.params._id);
     this.props.getStrategies();
     this.props.setEditingToFalse();
-    //alert(this.props.pattern.pattern[0].name);
-    //this.setState({ pattern: this.props.pattern });
   }
 
   onChangePattern(e) {
-    //alert(e);
-    //console.log(e);
-    // alert(e.target.name);
-    //alert(e.target.value);
-    //this.setState({ [pattern(e.target.name)]: e.target.value });
+    // handles changes of the input fields while editing
     this.setState({
       pattern: {
         ...this.state.pattern,
@@ -126,21 +69,17 @@ class PatternDetail extends Component {
     ) {
       this.setState({ activeKey });
     }
-    // this.setState({ activeKey });
   };
 
   // checks if fields are empty, sets errors
   setErrorIfEmpty = textField => {
     if (this.state[textField] == "") {
-      this.setState(
-        {
-          errors: {
-            ...this.state.errors,
-            [textField]: textField + " is required!"
-          }
+      this.setState({
+        errors: {
+          ...this.state.errors,
+          [textField]: textField + " is required!"
         }
-        // alert(this.state.errors[textField])
-      );
+      });
     } else {
       this.setState({
         errors: {
@@ -149,12 +88,9 @@ class PatternDetail extends Component {
         }
       });
     }
-    console.log(textField);
-    console.log(this.state.errors[textField]);
   };
-
+  // Delete element from pattern
   removeElement = element => {
-    //alert(element);
     this.setState({
       pattern: {
         ...this.state.pattern,
@@ -162,12 +98,13 @@ class PatternDetail extends Component {
       }
     });
   };
+
   onChange(e) {
     alert(e.target.name);
     alert(e.target.value);
     this.setState({ [e.target.name]: e.target.value });
   }
-
+  // on confirmation of changes of pattern
   editPattern = () => {
     const editedPattern = this.state.pattern;
     editedPattern.assignedTactics = this.props.pattern.chosenTactics;
@@ -176,7 +113,7 @@ class PatternDetail extends Component {
     this.props.editPattern(editedPattern);
     this.handleEditing();
   };
-
+  // handle the edit mode of the pattern => active/passive
   handleEditing = () => {
     this.setState({
       pattern: this.props.pattern.pattern
@@ -184,6 +121,7 @@ class PatternDetail extends Component {
     this.props.handleEditing();
   };
 
+  //checks if property of pattern is empty
   isEmpty(patternProperty) {
     if ((patternProperty = "")) {
       return true;
@@ -192,66 +130,22 @@ class PatternDetail extends Component {
     }
   }
 
-  onChangeAssignedTactics = id => {
-    let insertAssignedTactics = this.state.assignedTactics;
-    //onChangeAssignedTactics(id) {
-    //this.setState({ assignedTactics[this.state.assignedTactics.indexOf(id)]: true });
-    // alert("hallo");
-    if (this.state.assignedTactics.includes(id)) {
-      insertAssignedTactics = this.state.assignedTactics.splice(
-        this.state.assignedTactics.indexOf(id),
-        1
-      );
-      this.setState({
-        assignedTactics: insertAssignedTactics
-      });
-      alert("included" + this.state.assignedTactics.length);
-    } else {
-      insertAssignedTactics = this.state.assignedTactics.push(id);
-      this.setState({
-        assignedTactics: insertAssignedTactics
-      });
-      alert("not included" + this.state.assignedTactics.length);
-    }
-  };
-  onDropdownSelected(e) {
-    console.log("THE VAL", e.target.value);
-    //here you will see the current selected value of the select input
-  }
   render() {
+    // get basic props
     const { errors } = this.state;
     const { isAuthenticated } = this.props.auth;
-    //const { editPattern } = this.props.patterneditPattern;
-    // const { pattern, loading } = this.props.pattern;
     const { pattern, loading, editPattern } = this.props.pattern;
-    //const pattern2 = pattern.pattern;
-
-    //const pattern1 = pattern.pattern;
-    //const { loading } = this.props.pattern.loading;
-    //console.log(typeof pattern.pattern);
     let patternContent;
-    //alert(loading);
-    //alert(pattern);
-    //alert(editPattern);
+
+    //check if pattern-props are loaded, otherwise show spinner
     if (pattern === null || loading || Object.keys(pattern).length === 0) {
-      // alert("falsch");
-      console.log("falsch");
-      console.log(pattern);
-      console.log(loading);
-      console.log(typeof pattern);
       patternContent = <Spinner />;
     } else {
-      //alert("richtig");
-      console.log("richtig");
-      console.log(pattern);
-      console.log(loading);
-      console.log(typeof pattern);
-
       const detailPattern = pattern.pattern;
-      //patternContent = <h1>{detailPattern.name}</h1>;
       const { strategies, loading3 } = this.props.strategy;
       let strategyContent;
 
+      //check if strategy-props are loaded, otherwise show spinner
       if (strategies === null || loading3) {
         strategyContent = <Spinner />;
       } else {
@@ -259,9 +153,10 @@ class PatternDetail extends Component {
           <StrategyFeed strategies={strategies} isFilter={false} />
         );
       }
-
+      // set initial state of seeing other tabs (strategies/additionals) to false
       var seeStrategies = false;
       var seeAdditionals = false;
+      // check if required fields are set, if yes, show strategy tab
       if (
         this.state.name != "" &&
         this.state.summary != "" &&
@@ -271,9 +166,11 @@ class PatternDetail extends Component {
       ) {
         seeStrategies = true;
       }
+      // check if at least one tactic is set, if yes, show additionals tab
       if (this.props.pattern.chosenTactics.length != 0) {
         seeAdditionals = true;
       }
+      // Define patternContent dependent on Role (Guest/DPO) and editMode
       patternContent = (
         <div style={{ marginBottom: "70px" }}>
           {!editPattern ? (
@@ -565,249 +462,9 @@ class PatternDetail extends Component {
         </div>
       );
     }
-    return (
-      <Col xs={12}>
-        {patternContent}
-        {/*pats.map((pattern, index) => (
-          <h1>{pattern._id}</h1>
-        ))*/}
-        {/*{this.state.editing && isAuthenticated ? (
-          <form onSubmit={this.onSubmit}>
-            <TextField
-              label="Name of pattern"
-              name="Editname"
-              value={this.state.Editname} // must be changede to name
-              placeholder="Enter the name of the pattern"
-              onChange={this.onChange}
-            />
-
-            <TextAreaField
-              label="Description"
-              name="Editsummary"
-              value={this.state.Editsummary} // must be changed to summary
-              placeholder="Enter Summary"
-              onChange={this.onChange}
-            />
-            <TextAreaField
-              label="Context"
-              name="Editcontext"
-              value={this.state.Editcontext}
-              placeholder="Enter Context"
-              onChange={this.onChange}
-            />
-
-            <TextAreaField
-              label="Problem"
-              name="Editproblem"
-              value={this.state.Editproblem}
-              placeholder="Enter Problem"
-              onChange={this.onChange}
-            />
-            <TextAreaField
-              label="Forces and Concerns"
-              name="EditforcesConcerns"
-              value={this.state.EditforcesConcerns}
-              placeholder="Enter Forces and Concerns"
-              onChange={this.onChange}
-            />
-            <TextAreaField
-              label="Solution"
-              name="Editsolution"
-              value={this.state.Editsolution}
-              placeholder="Enter Solution"
-              onChange={this.onChange}
-            />
-            <TextAreaField
-              label="Structure"
-              name="Editstructure"
-              value={this.state.Editstructure}
-              placeholder="Enter Structure"
-              onChange={this.onChange}
-            />
-            <TextAreaField
-              label="Implementation"
-              name="Editimplementation"
-              value={this.state.Editimplementation}
-              placeholder="Enter Implementation"
-              onChange={this.onChange}
-            />
-            <TextAreaField
-              label="Consequences"
-              name="Editconsequences"
-              value={this.state.Editconsequences}
-              placeholder="Enter Consequences"
-              onChange={this.onChange}
-            />
-
-            <TextAreaField
-              label="Examples"
-              name="Editexamples"
-              value={this.state.Editexamples}
-              placeholder="Enter Examples"
-              onChange={this.onChange}
-            />
-
-            <TextAreaField
-              label="known Uses"
-              name="EditknownUses"
-              value={this.state.EditknownUses}
-              placeholder="Enter known Uses"
-              onChange={this.onChange}
-            />
-
-            <TextAreaField
-              label="related Patterns"
-              name="EditrelatedPatterns"
-              value={this.state.EditrelatedPatterns}
-              placeholder="Enter related Patterns"
-              onChange={this.onChange}
-            />
-
-            <TextAreaField
-              label="Sources"
-              name="Editsources"
-              value={this.state.Editsources}
-              placeholder="Enter Sources"
-              onChange={this.onChange}
-            />
-            {/*<FormGroup>
-              {this.state.assignedTactics.map(tactic => (
-                <Checkbox
-                  name="assignedTactics"
-                  checked
-                  onChange={() => this.onChangeAssignedTactics(tactic._id)}
-                  value={tactic._id}
-                >
-                  {tactic.name}
-                </Checkbox>
-              ))}
-              </FormGroup>*/}
-        {/*
-
-            <Button
-              bsStyle="primary"
-              style={{ marginBottom: "70px" }}
-              onClick={this.editPattern}
-            >
-              Save Changes
-            </Button>
-            <Button
-              bsStyle="primary"
-              style={{ marginBottom: "70px" }}
-              onClick={this.dismissChanges}
-            >
-              Dismiss Changes
-            </Button>
-          </form>
-        ) : (
-          <div style={{ marginBottom: "70px" }}>
-            {isAuthenticated ? (
-              <Col xs={12}>
-                <Col xs={6}>
-                  <h3>{this.state.name}</h3>
-                </Col>
-                <Col xs={6}>
-                  <EditToolbar
-                    name={this.state.name}
-                    _id={this.props.match.params._id}
-                    enableEditing={() => this.enableEditing()}
-                  />
-                </Col>
-              </Col>
-            ) : (
-              <h3>{this.state.name}</h3>
-            )}
-            <PatternDetail_StrategiesWithTactics
-              assignedStrategiesWithAllTactics={
-                this.state.assignedStrategiesWithAllTactics
-              }
-            />
-            <Col xs={12}>
-              <Col xs={12}>
-                <h1>halllo</h1>
-                <h1>{patternContent}</h1>
-                <h1>hlo</h1>
-                <h5>Summary</h5>
-                <div>{this.state.summary}</div>
-                <h5>Context</h5>
-                <div>{this.state.context}</div>
-                <h5>Problem</h5>
-                <div>{this.state.problem}</div>
-                {!isEmpty(this.state.forcesConcerns) ? (
-                  <span>
-                    <h5>Forces and Concerns</h5>
-                    <div>{this.state.forcesConcerns}</div>
-                  </span>
-                ) : (
-                  ""
-                )}
-                <h5>Solution</h5>
-                <div>{this.state.solution}</div>
-                {!isEmpty(this.state.structure) ? (
-                  <span>
-                    <h5>Structure</h5>
-                    <div>{this.state.structure}</div>
-                  </span>
-                ) : (
-                  ""
-                )}
-                {!isEmpty(this.state.implementation) ? (
-                  <span>
-                    <h5>Implementation</h5>
-                    <div>{this.state.implementation}</div>
-                  </span>
-                ) : (
-                  ""
-                )}
-                {!isEmpty(this.state.consequences) ? (
-                  <span>
-                    <h5>Consequences</h5>
-                    <div>{this.state.consequences}</div>
-                  </span>
-                ) : (
-                  ""
-                )}
-                <h5>Examples</h5>
-                <div>{this.state.examples}</div>
-                {!isEmpty(this.state.knownUses) ? (
-                  <span>
-                    <h5>Known Uses</h5>
-                    <div>{this.state.knownUses}</div>
-                  </span>
-                ) : (
-                  ""
-                )}
-                {!isEmpty(this.state.relatedPatterns) ? (
-                  <span>
-                    <h5>related Patterns</h5>
-                    <div>{this.state.relatedPatterns}</div>
-                  </span>
-                ) : (
-                  ""
-                )}
-
-                {!isEmpty(this.state.sources) ? (
-                  <span>
-                    <h5>Sources</h5>
-                    <div>{this.state.sources}</div>
-                  </span>
-                ) : (
-                  ""
-                )}
-              </Col>
-            </Col>
-          </div>
-        )}*/}
-      </Col>
-    );
+    return <Col xs={12}>{patternContent}</Col>;
   }
 }
-
-PatternDetail.propTypes = {
-  createPattern: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
-};
 
 const mapStateToProps = state => ({
   auth: state.auth,
@@ -825,7 +482,6 @@ export default connect(
     editPattern,
     handleEditing,
     getStrategies,
-
     setEditingToFalse
   }
 )(PatternDetail);

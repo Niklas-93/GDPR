@@ -1,25 +1,22 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Panel, Col, Tabs, Tab, Button, Collapse } from "react-bootstrap";
-import EditToolbarStrategy from "../common/editToolbarStrategy";
 import { setChosenTactics } from "../../actions/patternActions";
 
 class ChooseTactic extends Component {
   constructor(props, context) {
     super(props, context);
   }
+
+  // pass chosen tactic to store - stays only there until submission
   setChosenTactics = tactic => {
-    //alert(tactic);
     this.props.setChosenTactics(tactic);
   };
 
   render() {
     const assignedTactics = this.props.pattern.chosenTactics;
     const tactic = this.props.tactic;
-    console.log("assignedTactics");
-    console.log(assignedTactics);
     let tacticContent;
+    // display selected tactics with blue background, others normal
     if (assignedTactics.includes(tactic._id)) {
       tacticContent = (
         <span>
@@ -46,11 +43,6 @@ class ChooseTactic extends Component {
     return <span>{tacticContent}</span>;
   }
 }
-
-ChooseTactic.propTypes = {
-  strategy: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
-};
 
 const mapStateToProps = state => ({
   strategy: state.strategy,

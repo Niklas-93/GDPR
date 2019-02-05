@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import { Col } from "react-bootstrap";
 
 class PatternDetail_StrategiesWithTactics extends Component {
+  //displays the strategies and assigned Tactics in PatternDetail
+
   render() {
+    //get assigned strategies and tactics as prop from patterndetail
     const { assignedStrategiesWithAllTactics } = this.props;
 
     return (

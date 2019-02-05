@@ -2,14 +2,13 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Panel, Col, Tabs, Tab, Button, Collapse } from "react-bootstrap";
-import EditToolbarStrategy from "../common/editToolbarStrategy";
 import {
   setFilterForPatterns,
   setStrategyAsFilter,
   deselectStrategyAsFilter
 } from "../../actions/patternActions";
 import TacticFilter from "./TacticFilter";
-import ChooseTactic from "./ChooseTactic";
+import ChooseTactic from "../patternDetail/ChooseTactic";
 
 class StrategyItem extends Component {
   constructor(props, context) {
