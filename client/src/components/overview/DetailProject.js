@@ -202,7 +202,9 @@ class DetailProject extends Component {
           }
         }
       }
-
+      if (max < 4) {
+        max = 3.5;
+      }
       return max;
     }
 
