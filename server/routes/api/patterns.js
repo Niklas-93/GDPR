@@ -182,7 +182,13 @@ router.post("/createpattern", (req, res) => {
         problem: req.body.problem,
         solution: req.body.solution,
         consequences: req.body.consequences,
-        examples: req.body.examples
+        constraints: req.body.constraints,
+        benefits: req.body.benefits,
+        liabilities: req.body.liabilities,
+        examples: req.body.examples,
+        knownUses: req.body.knownUses,
+        relatedPatterns: req.body.relatedPatterns,
+        sources: req.body.sources
       });
       newPattern
         .save()
@@ -444,6 +450,9 @@ router.post(
     if (req.body.solution) patternFields.solution = req.body.solution;
     if (req.body.consequences)
       patternFields.consequences = req.body.consequences;
+    if (req.body.constraints) patternFields.constraints = req.body.constraints;
+    if (req.body.benefits) patternFields.benefits = req.body.benefits;
+    if (req.body.liabilities) patternFields.liabilities = req.body.liabilities;
     if (req.body.examples) patternFields.examples = req.body.examples;
     if (req.body.knownUses) patternFields.knownUses = req.body.knownUses;
     if (req.body.relatedPatterns)

@@ -11,7 +11,8 @@ class StrategyFeed extends Component {
   };
   render() {
     const { strategies } = this.props;
-
+    console.log("Strategyfeed");
+    console.log(strategies);
     return strategies.map((strategy, index) => (
       <span>
         {this.indexIsEven(index) && !this.props.isFilter ? (

@@ -16,6 +16,7 @@ class PatternDetail_StrategiesWithTactics extends Component {
               {strategy.assignedTactics.map(tactic => (
                 <li>
                   <span class="dotForTactic" /> {tactic.name}
+                  <br />
                 </li>
               ))}
             </ul>

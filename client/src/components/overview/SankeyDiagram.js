@@ -2,7 +2,7 @@ import React, { Component } from "react";
 //import ReactSankey from "react-sankey";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
-import { Sankey } from "react-vis";
+import { Sankey, Hint } from "react-vis";
 import { withRouter } from "react-router-dom";
 
 const nodes3 = [
@@ -24,83 +24,9 @@ const links3 = [
   //{ source: 1, target: 2, value: 20 }
 ];
 
-/*const createCustomNode = (chartConfig, node) => {
-  return (
-    <g key={node.id} transform={`translate(${node.x},${node.y})`}>
-      <rect
-        height={node.height}
-        width={chartConfig.node.width}
-        style={{
-          stroke: "#ff5252",
-          fill: "url(#custom-linear-gradient)",
-          strokeWidth: "1px"
-        }}
-      />
-      <text
-        x={chartConfig.node.width / 2}
-        y={node.height / 2}
-        style={{
-          fontSize: "20px",
-          fill: "#b57272",
-          textAnchor: "middle",
-          alignmentBaseline: "central"
-        }}
-      >
-        {`${node.title}`}
-      </text>
-    </g>
-  );
-};*/
 const createNode = (title, value, id) => ({ title, value, id });
 const createLink = (sourceId, targetId) => ({ sourceId, targetId });
 
-/*const nodes = {
-  "0": createNode("Brazil", 5091520, 0),
-  "1": createNode("Portugal", 3967612, 1),
-  "2": createNode("Spain", 3948389, 2),
-  "3": createNode("England", 1974194, 3),
-  "4": createNode("France", 1202, 4),
-  "5": createNode("Canada", 1974184, 5),
-  "6": createNode("Conversion", 348, 6),
-  "7": createNode("Mexico", 3936731, 7),
-  "8": createNode("USA", 1983806, 8),
-  "9": createNode("Angola", 661228, 9),
-  "10": createNode("Senegal", 199236, 10),
-  "11": createNode("Conversion", 348, 11),
-  "12": createNode("Morocco", 1983082, 12),
-  "13": createNode("South Africa", 1290205, 13),
-  "14": createNode("Italy", 348123, 14),
-  "15": createNode("Conversion", 123, 15),
-  "16": createNode("Mali", 1201, 16),
-  "17": createNode("Conversion", 1302, 17),
-  "18": createNode("Conversion", 1403, 18),
-  "19": createNode("Conversion", 1504, 19),
-  "20": createNode("Conversion", 1605, 20)
-  createCustomNode(chartConfig, node1)
-};*/
-
-/*const links = [
-  createLink(0, 1),
-  createLink(1, 2),
-  createLink(1, 7),
-  createLink(1, 8),
-  createLink(2, 3),
-  createLink(2, 5),
-  createLink(2, 16),
-  createLink(3, 4),
-  createLink(3, 17),
-  createLink(3, 18),
-  createLink(3, 19),
-  createLink(3, 20),
-  createLink(5, 6),
-  createLink(7, 12),
-  createLink(8, 9),
-  createLink(8, 10),
-  createLink(9, 11),
-  createLink(12, 13),
-  createLink(12, 14),
-  createLink(13, 15)
-];*/
 const nodes2 = {
   0: {
     title: "Node 0",
@@ -145,13 +71,51 @@ const links2 = [
   { sourceId: 2, targetId: 4 },
   { sourceId: 3, targetId: 5 },
   { sourceId: 4, targetId: 5 }
-  // { sourceId: 4, targetId: 5 },
-
-  //{ sourceId: 2, targetId: 6 }
-  // { sourceId: 3, targetId: 6 }
 ];
 
 class SankeyDiagram extends React.Component {
+  state = {
+    activeNode: null,
+    activeLink: null
+  };
+  _renderHint() {
+    const { activeNode } = this.state;
+    console.log("activeNode");
+    console.log(activeNode);
+    if (activeNode === null) {
+      return null;
+    }
+
+    // calculate center x,y position of link for positioning of hint
+    const x = activeNode.x1 + (activeNode.x0 - activeNode.x1) / 2;
+    const y = activeNode.y0 - (activeNode.y0 - activeNode.y1) / 2;
+
+    const hintValue = {};
+    const label = `${activeNode.description}`;
+    //  hintValue[label] = activeNode.value;
+    hintValue["Description"] = label;
+    console.log(hintValue);
+    console.log(x);
+    console.log(y);
+
+    /* console.log("hintlabel");
+    console.log(hintValue);
+    let hintValue2;
+    hintValue2 = hintValue.slice(0, -3);*/
+    return (
+      <Hint
+        x={x}
+        y={y}
+        value={hintValue}
+        style={{
+          background: "#337ab7",
+          color: "white",
+          padding: "10px 10px 10px 10px"
+        }}
+      />
+    );
+  }
+
   render() {
     let SankeyDiagramContent;
     const { loading } = this.props.pattern;
@@ -160,34 +124,18 @@ class SankeyDiagram extends React.Component {
       //alert("waiting1");
       SankeyDiagramContent = <Spinner />;
     } else {
-      const { strategies, loading } = this.props.strategy;
+      var strategies = this.props.strategy.strategies;
+      if (this.props.pattern.visibilityFilters.length !== 0) {
+        //  loading = this.props.strategy;
+        strategies = this.props.pattern.visibilityFilters;
+      }
 
       if (strategies === null || loading || strategies.length === 0) {
         // alert("waiting2");
         SankeyDiagramContent = <Spinner />;
       } else {
-        // const strategies = this.props.strategy.strategies;
-        //console.log("node1[0]");
-        console.log(patterns);
-        /*var nodes = {
-          0: {
-            title: "Node 1",
-            value: 20,
-            id: "0"
-          }
-        };*/
         var nodes = [];
-        var links = [
-          /*
-          { sourceId: 0, targetId: 1 },
-          { sourceId: 0, targetId: 2 },
-          { sourceId: 0, targetId: 3 },
-          { sourceId: 0, targetId: 4 },
-          { sourceId: 0, targetId: 5 },
-          { sourceId: 0, targetId: 6 },
-          { sourceId: 0, targetId: 7 },
-          { sourceId: 0, targetId: 8 }*/
-        ];
+        var links = [];
 
         var strategyCounter = 1;
         var tacticCounter = 9;
@@ -207,7 +155,11 @@ class SankeyDiagram extends React.Component {
               value: 10,
               id: strategyCounter.toString()
             };*/
-          nodes[strategyCounter] = { name: strategy.name, color: "#337ab7" };
+          nodes[strategyCounter] = {
+            name: strategy.name,
+            color: "#337ab7",
+            description: strategy.description
+          };
 
           strategy.assignedTactics.forEach(tactic => {
             links.push({
@@ -215,48 +167,54 @@ class SankeyDiagram extends React.Component {
               target: tacticCounter,
               value: 10,
               color: "#ddd",
-              key: strategy._id
+              key: strategy._id,
+              active: true
             });
             /*nodes[tacticCounter] = {
               title: tactic.name,
               value: 5,
               id: tacticCounter.toString()
             };*/
-            nodes[tacticCounter] = { name: tactic.name, color: "#337ab7" };
-            console.log(nodes);
+            nodes[tacticCounter] = {
+              name: tactic.name,
+              color: "#337ab7",
+              description: tactic.description
+            };
+            //   console.log(nodes);
             var assignedPatterns = 0;
             var linksToPatterns = [];
-            console.log("start suche tactic in pattern");
-            console.log(nodes[tacticCounter].name);
+            //   console.log("start suche tactic in pattern");
+            //  console.log(nodes[tacticCounter].name);
             patterns.forEach(pattern => {
-              console.log(pattern.name);
+              //    console.log(pattern.name);
               //  nodes[tacticCounter + 1] = { name: pattern.name };
               pattern.assignedStrategiesWithAllTactics.forEach(
                 strategyInPattern => {
-                  console.log(strategyInPattern.name);
+                  //      console.log(strategyInPattern.name);
                   if (strategyInPattern.name == strategy.name) {
-                    console.log("Übereinstimmung der strategies");
-                    console.log(strategyInPattern.name);
+                    //     console.log("Übereinstimmung der strategies");
+                    //    console.log(strategyInPattern.name);
                     strategyInPattern.assignedTactics.forEach(
                       tacticInPattern => {
-                        console.log(
-                          "durchsuchen aller tactics in der gefundenen strategie"
-                        );
-                        console.log(tacticInPattern.name);
+                        //        console.log(
+                        //        "durchsuchen aller tactics in der gefundenen strategie"
+                        //    );
+                        //      console.log(tacticInPattern.name);
                         if (tacticInPattern.name == tactic.name) {
-                          console.log("Übereinstiimung der tactics");
-                          console.log(tacticInPattern.name);
+                          //       console.log("Übereinstiimung der tactics");
+                          //     console.log(tacticInPattern.name);
                           for (let index = 9; index < nodes.length; index++) {
-                            console.log("Länge");
+                            /*          console.log("Länge");
                             console.log(nodes.length);
                             console.log(index);
-                            console.log(nodes[index].name);
+                            console.log(nodes[index].name);*/
                             if (nodes[index].name == pattern.name) {
-                              console.log("gefunden in nodes");
+                              //     console.log("gefunden in nodes");
                               linksToPatterns.push({
                                 source: tacticCounter,
                                 target: index,
-                                color: "#ddd"
+                                color: "#ddd",
+                                active: true
                                 // value: 10
                               });
                               index = nodes.length;
@@ -276,12 +234,18 @@ class SankeyDiagram extends React.Component {
                 links.push(link);
               });
             } else {
+              tacticCounter++;
+              nodes[tacticCounter] = {
+                name: "",
+                opacity: 0.0
+              };
               links.push({
-                source: tacticCounter,
-                target: 0,
+                source: tacticCounter - 1,
+                target: tacticCounter,
                 value: 10,
                 opacity: 0.1,
-                color: "white"
+                color: "white",
+                active: false
               });
             }
 
@@ -297,103 +261,45 @@ class SankeyDiagram extends React.Component {
         });*/
         console.log(nodes);
         console.log(links);
-        // var patternCounter = tacticCounter + 1;
-        /*patterns.forEach(pattern => {
-          nodes[patternCounter] = {
-            title: pattern.name,
-            value: 5,
-            id: patternCounter.toString()
-          };
-          nodes.push({name: pattern.name})
-          pattern.assignedStrategiesWithAllTactics.forEach(strategy => {
-            strategy.assignedTactics.forEach(tactic => {
-              for (let index = 0; index < nodes.length; index++) {
-                //alert(nodes);
-              //  console.log(nodes[index].title);
 
-                console.log(tactic.name);
-              //  console.log(typeof nodes[index].title);
-                console.log(typeof tactic.name);
-                if (nodes[index].name == tactic.name) {
-                  console.log("Treffer");
-                 // console.log(nodes[0].title);
-                  console.log(tactic.name);
-                  links.push({
-                    source: Number(nodes[index].id),
-                    target: patternCounter
-                  });
-                  index = Object.keys(nodes).length;
-                }
-              }
-            });
-          });
-          patternCounter++;
-        });*/
-        /*  var nodes3 = nodes[0]; 
-    var nodes4 = nodes[1];
-    nodes = { nodes3, nodes4 };*/
-        // links = links.slice(0, 2);
-        /* nodes = {
-        0: nodes[0],
-        1: nodes[1],
-        2: nodes[2]
-        /*3: nodes[3],
-      4: nodes[4],
-      5: nodes[5],
-      6: nodes[6],
-      7: nodes[7],
-      8: nodes[8],
-      9: nodes[9],
-      10: nodes[10],
-      11: nodes[11],
-      12: nodes[12],
-      13: nodes[13]
-      };*/
-        // nodes.push({ name: "fake" });
-        //  links.push({ source: 30, target: 52, value: 10 });
-        console.log("nodes");
-        console.log(nodes);
+        var minHeight = strategies.length * 400;
+        if (strategies.length > 5) {
+          minHeight = strategies.length * 300;
+        }
+        const { activeLink } = this.state;
+        links = links.map((d, i) => ({
+          ...d,
+          opacity:
+            activeLink && i === activeLink.index && activeLink.active
+              ? 0.9
+              : 0.3
+        }));
 
-        console.log("links");
-        console.log(links);
-        console.log("nodes3");
-        console.log(nodes3);
-
-        console.log("links3");
-        console.log(links3);
-        // links = [...links, (links[38] = { source: 8, target: 35, value: 10 })];
-        //console.log(nodes[0]);
         SankeyDiagramContent = (
-          /*<ReactSankey
-            rootID={"0"}
-            nodes={nodes2}
-            links={links2}
-            chartConfig={chartConfig}
-          />*/ <Sankey
+          <Sankey
+            layout={200}
+            style={{ zIndex: 0 }}
             nodes={nodes}
             links={links}
-            width={1100}
-            height={1500}
+            width={900}
+            height={minHeight}
             nodeWidth={20}
             //  labelRotation={10}
 
             onValueClick={(datapoint, event) => {
               //console.log(datapoint);
-              //console.log(event);
-              // alert(datapoint);
-              // console.log(datapoint);
+
               if (datapoint.id) {
                 this.props.history.push("/patterndetail/" + datapoint.id);
               }
-              // does something on click
-              // you can access the value of the event
             }}
-            onValueMouseOver={(datapoint, event) => {
-              // does something on click
-              // you can access the value of the event
-              // alert(datapoint);
-            }}
-          />
+            onValueMouseOver={node => this.setState({ activeNode: node })}
+            onValueMouseOut={node => this.setState({ activeNode: null })}
+            onLinkMouseOver={node => this.setState({ activeLink: node })}
+            onLinkMouseOut={() => this.setState({ activeLink: null })}
+          >
+            {this._renderHint()}
+          </Sankey>
         );
       }
     }

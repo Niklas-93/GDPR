@@ -101,60 +101,54 @@ class Overview extends Component {
   };
 
   getVisiblePatterns = (patterns, filters) => {
-    //alert(filter);
-    //alert(patterns);
-    /*var visiblePatterns = [];
-    var patternz = [
-      {
-        name: "dies",
-        assignedStrategiesWithAllTactics: [
-          { name: "hallo", assignedTactics: [{ name: "Share" }] }
-        ]
-      }
-    ];
-    visiblePatterns = patternz.filter(function(pattern) {
-      return pattern.assignedStrategiesWithAllTactics.assignedTactics.includes(
-        filter
-      );
-    });
-    return visiblePatterns;*/
-    //patterns.forEach(element => {});
     if (filters.length == 0) {
       visiblePatterns = patterns;
     } else {
       var visiblePatterns = [];
       patterns.forEach(pattern => {
         pattern.assignedStrategiesWithAllTactics.forEach(strategy => {
-          strategy.assignedTactics.forEach(tactic => {
-            if (filters.includes(tactic.name)) {
-              if (!visiblePatterns.includes(tactic.name)) {
-                visiblePatterns.push(pattern);
-              }
+          filters.forEach(filter => {
+            if (strategy._id == filter._id) {
+              strategy.assignedTactics.forEach(tactic => {
+                filter.assignedTactics.forEach(tacticFilter => {
+                  if (tacticFilter._id == tactic._id) {
+                    //visiblePatterns.push(pattern);
+                    visiblePatterns = visiblePatterns.concat(
+                      patterns.filter(
+                        patternFilter => patternFilter._id == pattern._id
+                      )
+                    );
+                    return;
+                  }
+                });
+                return;
+              });
+              return;
             }
           });
+          return;
         });
+        return;
       });
     }
-    //console.log("visible Patterns");
-    //console.log(visiblePatterns);
-    //alert(visiblePatterns);
     return visiblePatterns;
   };
   render() {
     const { patterns, loading } = this.props.pattern;
     //console.log(patterns);
-    const visiblePatterns = this.getVisiblePatterns(
-      this.props.pattern.patterns,
-      this.props.pattern.visibilityFilters
-    );
-    let patternContent;
 
+    let patternContent;
+    var visiblePatterns = [];
     if (patterns === null || loading) {
       patternContent = <Spinner />;
     } else {
+      visiblePatterns = this.getVisiblePatterns(
+        this.props.pattern.patterns,
+        this.props.pattern.visibilityFilters
+      );
       patternContent = <PatternFeed patterns={visiblePatterns} />;
     }
-
+    //alert(visiblePatterns);
     /*const { tactics, loading2 } = this.props.tactic;
     let tacticContent;
 
@@ -169,6 +163,8 @@ class Overview extends Component {
     if (strategies === null || loading3) {
       strategyContent = <Spinner />;
     } else {
+      // console.log("strategyinOverview");
+      // console.log(strategies);
       strategyContent = (
         <StrategyFeed strategies={strategies} isFilter={true} />
       );
@@ -200,6 +196,9 @@ class Overview extends Component {
             pullRight={true}
             onSetOpen={this.onSetSidebarOpen}
             styles={{
+              overlay: {
+                zIndex: -1
+              },
               sidebar: {
                 background: "white",
                 position: "fixed",
@@ -245,7 +244,7 @@ class Overview extends Component {
             <br />
             <Col xs={12}>
               <span className={"h4"}>
-                Patterns <Badge>{patterns.length}</Badge>
+                Patterns <Badge>{visiblePatterns.length}</Badge>
               </span>
               <Link to="/create-pattern">
                 <Button className={"glyphicon-button"}>

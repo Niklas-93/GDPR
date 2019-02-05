@@ -17,14 +17,14 @@ class StrategyItem extends Component {
   }
   setStrategyAsFilter = strategy => {
     //e.preventDefault();
-    this.props.setStrategyAsFilter(strategy.assignedTactics);
+    this.props.setStrategyAsFilter(strategy);
     /*  var strategyPanelStyle = document.getElementById(strategy.name).style;
     strategyPanelStyle.borderColor = "#337ab7";
     strategyPanelStyle.borderWidth = "3px";*/
   };
 
   deselectStrategyAsFilter = strategy => {
-    this.props.deselectStrategyAsFilter(strategy.assignedTactics);
+    this.props.deselectStrategyAsFilter(strategy);
     /* var strategyPanelStyle = document.getElementById(strategy.name).style;
     strategyPanelStyle.borderColor = "#ddd";
     strategyPanelStyle.borderWidth = "1px";*/
@@ -35,31 +35,12 @@ class StrategyItem extends Component {
     const visibilityFilters = pattern.visibilityFilters;
     let strategyHeading;
     let cssClassesofStrategyPanel;
+    // check if strategy is in sidebar as potential filter or not
     if (isFilter) {
-      var counterAllTacticsIncludedinFilters = 0;
-      strategy.assignedTactics.forEach(tactic => {
-        if (visibilityFilters.includes(tactic.name)) {
-          counterAllTacticsIncludedinFilters++;
-        }
-      });
-      if (
-        strategy.assignedTactics.length == counterAllTacticsIncludedinFilters
-      ) {
-        strategyHeading = (
-          <span>
-            <Panel.Title toggle className={"inline"}>
-              <span class="h5">{strategy.name}</span>
-            </Panel.Title>
-            <Panel.Title className={"inline"}>
-              <span
-                className={"dotForActiveStrategyFilter"}
-                onClick={() => this.deselectStrategyAsFilter(strategy)}
-              />
-            </Panel.Title>
-          </span>
-        );
-        cssClassesofStrategyPanel = "activeStrategyPanel";
-      } else {
+      // if strategy is in sidebar
+      var strategyIsSelected = false;
+      // check if any strategies are set as filters
+      if (visibilityFilters.length == 0) {
         strategyHeading = (
           <span>
             <Panel.Title toggle className={"inline"}>
@@ -75,7 +56,76 @@ class StrategyItem extends Component {
         );
         cssClassesofStrategyPanel = "passiveStrategyPanel";
       }
+      // if any strategies are set as filters
+      else {
+        console.log("visibilityFilters");
+        console.log(visibilityFilters);
+        console.log("strategy");
+        console.log(strategy);
+        var filters = visibilityFilters.filter(
+          visibilityFilter => visibilityFilter._id == strategy._id
+        );
+
+        if (filters.length !== 0) {
+          // if strategy is set as filter
+
+          if (
+            filters[0].assignedTactics.length == strategy.assignedTactics.length
+          ) {
+            //if all tactics are set as filters
+            strategyHeading = (
+              <span>
+                <Panel.Title toggle className={"inline"}>
+                  <span class="h5">{strategy.name}</span>
+                </Panel.Title>
+                <Panel.Title className={"inline"}>
+                  <span
+                    className={"dotForActiveStrategyFilter"}
+                    onClick={() => this.deselectStrategyAsFilter(strategy)}
+                  />
+                </Panel.Title>
+              </span>
+            );
+            cssClassesofStrategyPanel = "activeStrategyPanel";
+          }
+          // if not all tactis are set as filters
+          else {
+            strategyHeading = (
+              <span>
+                <Panel.Title toggle className={"inline"}>
+                  <span class="h5">{strategy.name}</span>
+                </Panel.Title>
+                <Panel.Title className={"inline"}>
+                  <span
+                    className={"dotForStrategyFilter"}
+                    onClick={() => this.setStrategyAsFilter(strategy)}
+                  />
+                </Panel.Title>
+              </span>
+            );
+            cssClassesofStrategyPanel = "passiveStrategyPanel";
+          }
+        }
+        // if no tactic of actual strategy is set as filter
+        else {
+          strategyHeading = (
+            <span>
+              <Panel.Title toggle className={"inline"}>
+                <span class="h5">{strategy.name}</span>
+              </Panel.Title>
+              <Panel.Title className={"inline"}>
+                <span
+                  className={"dotForStrategyFilter"}
+                  onClick={() => this.setStrategyAsFilter(strategy)}
+                />
+              </Panel.Title>
+            </span>
+          );
+          cssClassesofStrategyPanel = "passiveStrategyPanel";
+        }
+      }
     } else {
+      // if strategy is not in sidebar
       strategyHeading = (
         <Panel.Title toggle>
           <span class="h5">{strategy.name}</span>
@@ -105,7 +155,10 @@ class StrategyItem extends Component {
                 {isFilter ? (
                   <span>
                     {strategy.assignedTactics.map(tactic => (
-                      <TacticFilter tactic={tactic} />
+                      <TacticFilter
+                        tactic={tactic}
+                        strategyAsFilter={strategy}
+                      />
                     ))}
                   </span>
                 ) : (

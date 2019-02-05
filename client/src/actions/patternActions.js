@@ -16,7 +16,10 @@ import {
   SET_EDITING_OF_PATTERN,
   SET_CHOSEN_TACTICS,
   CLEAR_CHOSEN_TACTICS,
-  SET_STRATEGY_AS_FILTER
+  SET_STRATEGY_AS_FILTER,
+  DESELECT_TACTIC_AS_FILTER,
+  LINK_TO_PATTERN_AFTER_SEARCH,
+  SET_EDITING_TO_FALSE
 } from "./types";
 
 // create Pattern
@@ -169,10 +172,17 @@ export const setAssignedStrategies = strategy => {
 };
 
 // Set Filter for Patterns
-export const setFilterForPatterns = filter => {
+export const setFilterForPatterns = (tacticFilter, strategyFilter) => {
   return {
     type: SET_FILTER_FOR_PATTERNS,
-    payload: filter
+    payload: { tacticFilter: tacticFilter, strategyFilter: strategyFilter }
+  };
+};
+// Deselect Tactic as Filter for Patterns
+export const deselectTacticAsFilter = (tacticFilter, strategyFilter) => {
+  return {
+    type: DESELECT_TACTIC_AS_FILTER,
+    payload: { tacticFilter: tacticFilter, strategyFilter: strategyFilter }
   };
 };
 //Clear all Filters
@@ -203,6 +213,13 @@ export const handleEditing = () => {
   };
 };
 
+// Set Editing of Pattern to false if editing was left without dismiss button
+export const setEditingToFalse = () => {
+  return {
+    type: SET_EDITING_TO_FALSE
+  };
+};
+
 // Set Chosen tactics
 export const setChosenTactics = tactic => {
   return {
@@ -214,5 +231,13 @@ export const setChosenTactics = tactic => {
 export const clearChosenTactics = () => {
   return {
     type: CLEAR_CHOSEN_TACTICS
+  };
+};
+
+// Link to Pattern after Search and fill Pattern
+export const linkToPatternAfterSearch = Pattern => {
+  return {
+    type: LINK_TO_PATTERN_AFTER_SEARCH,
+    payload: Pattern
   };
 };

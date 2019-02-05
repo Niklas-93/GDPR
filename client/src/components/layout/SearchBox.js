@@ -23,7 +23,9 @@ import "react-bootstrap-typeahead/css/Typeahead.css";
 import {
   setFilterForPatterns,
   setStrategyAsFilter,
-  clearAllFilters
+  clearAllFilters,
+  linkToPatternAfterSearch,
+  getPattern
 } from "../../actions/patternActions";
 
 class SearchBox extends Component {
@@ -139,12 +141,14 @@ class SearchBox extends Component {
     if (searchItem.length != 0) {
       // is Pattern
       if (selectedItem.summary != undefined) {
+        //this.props.linkToPatternAfterSearch(selectedItem);
+        this.props.getPattern(selectedItem._id);
         this.props.history.push("/patterndetail/" + selectedItem._id);
       }
       // is Strategy
       else if (selectedItem.assignedTactics != undefined) {
         this.props.clearAllFilters();
-        this.props.setStrategyAsFilter(selectedItem.assignedTactics);
+        this.props.setStrategyAsFilter(selectedItem);
         this.props.history.push("/overview");
       }
       // is Tactic
@@ -256,6 +260,8 @@ export default connect(
     searchInBackend,
     setStrategyAsFilter,
     setFilterForPatterns,
-    clearAllFilters
+    clearAllFilters,
+    linkToPatternAfterSearch,
+    getPattern
   }
 )(withRouter(SearchBox));

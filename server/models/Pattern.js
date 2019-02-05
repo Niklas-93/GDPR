@@ -16,7 +16,8 @@ const PatternSchema = new Schema({
     required: true
   },
   summary: {
-    type: String
+    type: String,
+    required: true
   },
   problem: {
     type: String,
@@ -38,12 +39,17 @@ const PatternSchema = new Schema({
   consequences: {
     type: String
   },
+  constraints: {
+    type: String
+  },
+  benefits: {
+    type: String
+  },
   liabilities: {
     type: String
   },
   examples: {
-    type: String,
-    required: true
+    type: String
   },
   relatedPatterns: {
     type: String

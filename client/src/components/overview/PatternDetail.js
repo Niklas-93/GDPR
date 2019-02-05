@@ -10,7 +10,8 @@ import {
   getPattern,
   editPattern,
   createPattern,
-  handleEditing
+  handleEditing,
+  setEditingToFalse
 } from "../../actions/patternActions";
 import TextAreaField from "../common/TextAreaField";
 import TextField from "../common/TextField";
@@ -24,7 +25,9 @@ import {
   Col,
   FormControl,
   Input,
-  Panel
+  Panel,
+  Tabs,
+  Tab
 } from "react-bootstrap";
 import StrategyFeed from "./StrategyFeed";
 import { getStrategies } from "../../actions/strategyActions";
@@ -55,12 +58,13 @@ class PatternDetail extends Component {
       errors: {},
       editing: false,
       assignedStrategiesWithAllTactics: [],
-      actualID: ""
+      actualID: "",
+      activeKey: 1
     };
-
+    this.handleSelect = this.handleSelect.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onChangePattern = this.onChangePattern.bind(this);
-    this.onAddElementToArray = this.onAddElementToArray.bind(this);
+
     // this.onSubmit = this.onSubmit.bind(this);
     //this.props.getPattern(this.props.match.params._id);
   }
@@ -85,6 +89,7 @@ class PatternDetail extends Component {
     //alert(this.props.pattern.loading);
     this.props.getPattern(this.props.match.params._id);
     this.props.getStrategies();
+    this.props.setEditingToFalse();
     //alert(this.props.pattern.pattern[0].name);
     //this.setState({ pattern: this.props.pattern });
   }
@@ -102,25 +107,52 @@ class PatternDetail extends Component {
       }
     });
   }
-
-  onAddElementToArray(e) {
-    //alert(e);
-    //console.log(e);
-    // alert(e.target.name);
-    //alert(e.target.value);
-    //this.setState({ [pattern(e.target.name)]: e.target.value });
-    if (typeof e.target.value == "undefined") {
-      return false;
+  handleSelect = activeKey => {
+    // check if fields are empty, set corresponding errors
+    setTimeout(() => {
+      this.setErrorIfEmpty("name");
+      this.setErrorIfEmpty("summary");
+      this.setErrorIfEmpty("context");
+      this.setErrorIfEmpty("problem");
+      this.setErrorIfEmpty("solution");
+    }, 10);
+    // if all fields are set, go to next tab
+    if (
+      this.state.name != "" &&
+      this.state.summary != "" &&
+      this.state.context != "" &&
+      this.state.problem != "" &&
+      this.state.solution != ""
+    ) {
+      this.setState({ activeKey });
     }
+    // this.setState({ activeKey });
+  };
 
-    this.setState({
-      pattern: {
-        ...this.state.pattern,
-        [e.target.value]: ""
-      }
-    });
-    //alert(e.target.value);
-  }
+  // checks if fields are empty, sets errors
+  setErrorIfEmpty = textField => {
+    if (this.state[textField] == "") {
+      this.setState(
+        {
+          errors: {
+            ...this.state.errors,
+            [textField]: textField + " is required!"
+          }
+        }
+        // alert(this.state.errors[textField])
+      );
+    } else {
+      this.setState({
+        errors: {
+          ...this.state.errors,
+          [textField]: undefined
+        }
+      });
+    }
+    console.log(textField);
+    console.log(this.state.errors[textField]);
+  };
+
   removeElement = element => {
     //alert(element);
     this.setState({
@@ -135,30 +167,6 @@ class PatternDetail extends Component {
     alert(e.target.value);
     this.setState({ [e.target.name]: e.target.value });
   }
-
-  /*onSubmit(e) {
-    e.preventDefault();
-
-    const newPattern = {
-      name: this.state.name,
-      sources: this.state.sources,
-      summary: this.state.summary,
-      context: this.state.context,
-      problem: this.state.problem,
-      forcesConcerns: this.state.forcesConcerns,
-      solution: this.state.solution,
-      structure: this.state.structure,
-      implementation: this.state.implementation,
-      consequences: this.state.consequences,
-      benefits: this.state.benefits,
-      examples: this.state.examples,
-      relatedPatterns: this.state.relatedPatterns,
-      sources: this.state.sources,
-      knownUses: this.state.knownUser
-    };
-
-    this.props.createPattern(newPattern, this.props.history);
-  }*/
 
   editPattern = () => {
     const editedPattern = this.state.pattern;
@@ -238,18 +246,6 @@ class PatternDetail extends Component {
       console.log(pattern);
       console.log(loading);
       console.log(typeof pattern);
-      //console.log(pattern.pattern.assignedTactics);
-      //alert(loading);
-      //alert(pattern);
-      //var pats = [pattern];
-      //console.log(pattern2.pattern);
-      //alert(Object.keys(pattern));
-      //pattern = Object.assign(pattern);
-      /*this.setState({
-        pattern: {
-          pattern
-        }
-      });*/
 
       const detailPattern = pattern.pattern;
       //patternContent = <h1>{detailPattern.name}</h1>;
@@ -263,100 +259,21 @@ class PatternDetail extends Component {
           <StrategyFeed strategies={strategies} isFilter={false} />
         );
       }
-      /* let allOptionalPatternElements;
-      allOptionalPatternElements = {
-        alsoKnownAs: "",
-        sources: ""
-      };*/
-      var missingPatternElements = [];
-      /*Object.keys(pattern).forEach(patternElement => {
-        if (isEmpty(patternElement)) {
-          missingPatternElements.push(patternElement);
-        }
-      });*/
-      if (typeof this.state.pattern.consequences == "undefined") {
-        missingPatternElements.push("consequences");
-      }
-      let addConsequences;
-      //alert(this.state.pattern.sources);
-      if (typeof this.state.pattern.consequences !== "undefined") {
-        addConsequences = (
-          <div>
-            <TextAreaField
-              label="Consequences"
-              name="consequences"
-              value={this.state.pattern.consequences}
-              placeholder="Enter Consequences"
-              onChange={this.onChangePattern}
-            />
-            <span
-              className={"removeElementFromPattern"}
-              onClick={() => this.removeElement("consequences")}
-            >
-              Remove Consequences...
-            </span>
-          </div>
-        );
-      } else {
-        addConsequences = <span />;
-      }
-      if (typeof this.state.pattern.knownUses == "undefined") {
-        //alert("knownuses");
-        missingPatternElements.push("knownUses");
-      }
 
-      let addKnownUses;
-      //alert(this.state.pattern.sources);
-      if (typeof this.state.pattern.knownUses !== "undefined") {
-        addKnownUses = (
-          <div>
-            <TextAreaField
-              label="known Uses"
-              name="knownUses"
-              value={this.state.pattern.knownUses}
-              placeholder="Enter known Uses"
-              onChange={this.onChangePattern}
-            />
-            <span
-              className={"removeElementFromPattern"}
-              onClick={() => this.removeElement("knownUses")}
-            >
-              Remove known Uses...
-            </span>
-          </div>
-        );
-      } else {
-        addKnownUses = <span />;
+      var seeStrategies = false;
+      var seeAdditionals = false;
+      if (
+        this.state.name != "" &&
+        this.state.summary != "" &&
+        this.state.context != "" &&
+        this.state.problem != "" &&
+        this.state.solution != ""
+      ) {
+        seeStrategies = true;
       }
-      if (typeof this.state.pattern.sources == "undefined") {
-        missingPatternElements.push("sources");
+      if (this.props.pattern.chosenTactics.length != 0) {
+        seeAdditionals = true;
       }
-      let addSources;
-      //alert(this.state.pattern.sources);
-      if (typeof this.state.pattern.sources !== "undefined") {
-        addSources = (
-          <div>
-            <TextAreaField
-              label="Sources"
-              name="sources"
-              value={this.state.pattern.sources}
-              placeholder="Enter Sources"
-              onChange={this.onChangePattern}
-            />
-            <span
-              className={"removeElementFromPattern"}
-              onClick={() => this.removeElement("sources")}
-            >
-              Remove Sources...
-            </span>
-          </div>
-        );
-      } else {
-        addSources = <span />;
-      }
-
-      console.log("missingpatternelements");
-      console.log(missingPatternElements);
       patternContent = (
         <div style={{ marginBottom: "70px" }}>
           {!editPattern ? (
@@ -412,6 +329,30 @@ class PatternDetail extends Component {
                       <div>{pattern.consequences}</div>
                     </span>
                   )}
+                  {isEmpty(pattern.constraints) ? (
+                    <span />
+                  ) : (
+                    <span>
+                      <h4>Constraints</h4>
+                      <div>{pattern.constraints}</div>
+                    </span>
+                  )}
+                  {isEmpty(pattern.benefits) ? (
+                    <span />
+                  ) : (
+                    <span>
+                      <h4>Benefits</h4>
+                      <div>{pattern.benefits}</div>
+                    </span>
+                  )}
+                  {isEmpty(pattern.liabilities) ? (
+                    <span />
+                  ) : (
+                    <span>
+                      <h4>Liabilities</h4>
+                      <div>{pattern.liabilities}</div>
+                    </span>
+                  )}
                   {isEmpty(pattern.examples) ? (
                     <span />
                   ) : (
@@ -449,85 +390,176 @@ class PatternDetail extends Component {
             </Panel>
           ) : (
             <div>
-              <Col xs={6} xsOffset={6}>
-                <Button
-                  bsStyle="primary"
-                  style={{ marginBottom: "70px" }}
-                  onClick={this.editPattern}
+              <Panel>
+                <Tabs
+                  defaultActiveKey={1}
+                  activeKey={this.state.activeKey}
+                  onSelect={this.handleSelect}
+                  id="Select-View"
+                  //onSelect={() => this.handleSelect()}
                 >
-                  Save Changes
-                </Button>
-                <Button
-                  bsStyle="primary"
-                  style={{ marginBottom: "70px" }}
-                  onClick={this.handleEditing}
-                >
-                  Dismiss Changes
-                </Button>
-              </Col>
-              <TextField
-                label="Name of pattern"
-                name="name"
-                value={this.state.pattern.name}
-                placeholder="Enter the name of the pattern"
-                onChange={this.onChangePattern}
-              />
-              {strategyContent}
-              <TextAreaField
-                label="Summary"
-                name="summary"
-                value={this.state.pattern.summary}
-                placeholder="Enter Summary"
-                onChange={this.onChangePattern}
-              />
-              <TextAreaField
-                label="Context"
-                name="context"
-                value={this.state.pattern.context}
-                placeholder="Enter Context"
-                onChange={this.onChangePattern}
-              />
-              <TextAreaField
-                label="Problem"
-                name="problem"
-                value={this.state.pattern.problem}
-                placeholder="Enter Problem"
-                onChange={this.onChangePattern}
-              />
-              <TextAreaField
-                label="Solution"
-                name="solution"
-                value={this.state.pattern.solution}
-                placeholder="Enter Solution"
-                onChange={this.onChangePattern}
-              />
+                  <Tab eventKey={1} title="1. Basic Information">
+                    <TextField
+                      label="Name of pattern"
+                      name="name"
+                      value={this.state.pattern.name}
+                      placeholder="Enter the name of the pattern"
+                      onChange={this.onChangePattern}
+                    />
 
-              <TextAreaField
-                label="Examples"
-                name="examples"
-                value={this.state.pattern.examples}
-                placeholder="Enter Examples"
-                onChange={this.onChangePattern}
-              />
-              <div class="form-group">
-                <label for="exampleFormControlSelect">
-                  Add Element to Pattern
-                </label>
-                <select
-                  class="form-control"
-                  id="exampleFormControlSelect"
-                  onChange={this.onAddElementToArray}
-                  name="missingPatternElements"
-                >
-                  <option value={undefined}>Please select...</option>
-                  {missingPatternElements.map(missingElement => (
-                    <option value={missingElement}>{missingElement}</option>
-                  ))}
-                </select>
-                {addConsequences}
-                {addKnownUses}
-                {addSources}
-              </div>
+                    <TextAreaField
+                      label="Summary"
+                      name="summary"
+                      value={this.state.pattern.summary}
+                      placeholder="Enter Summary"
+                      onChange={this.onChangePattern}
+                    />
+                    <TextAreaField
+                      label="Context"
+                      name="context"
+                      value={this.state.pattern.context}
+                      placeholder="Enter Context"
+                      onChange={this.onChangePattern}
+                    />
+                    <TextAreaField
+                      label="Problem"
+                      name="problem"
+                      value={this.state.pattern.problem}
+                      placeholder="Enter Problem"
+                      onChange={this.onChangePattern}
+                    />
+                    <TextAreaField
+                      label="Solution"
+                      name="solution"
+                      value={this.state.pattern.solution}
+                      placeholder="Enter Solution"
+                      onChange={this.onChangePattern}
+                    />
+                    <Button
+                      bsStyle="primary"
+                      className={"col-xs-12"}
+                      onClick={() => this.handleSelect(2)}
+                    >
+                      Set assigned Strategies
+                    </Button>
+                  </Tab>
+                  {seeStrategies ? (
+                    <Tab eventKey={2} title="2. Assigned Strategies">
+                      {" "}
+                      <br />
+                      <br />
+                      {strategyContent} <br />
+                      <br />
+                      {seeAdditionals ? (
+                        <Button
+                          className={"col-xs-12"}
+                          bsStyle="primary"
+                          onClick={() => this.handleSelect(3)}
+                        >
+                          Set additional Information
+                        </Button>
+                      ) : (
+                        <span>
+                          <div style={{ fontWeight: "bold", color: "red" }}>
+                            At least one tactic must be chosen!
+                          </div>
+                          <Button
+                            className={"col-xs-12"}
+                            bsStyle="primary"
+                            onClick={() => this.handleSelect(3)}
+                            disabled
+                          >
+                            Set additional Information
+                          </Button>
+                        </span>
+                      )}
+                    </Tab>
+                  ) : (
+                    <Tab eventKey={2} title="2. Assigned Strategies" disabled />
+                  )}
+                  {seeAdditionals ? (
+                    <Tab eventKey={3} title="3. Additional Information">
+                      <TextAreaField
+                        label="Consequences"
+                        name="consequences"
+                        value={this.state.pattern.consequences}
+                        placeholder="Enter Consequences"
+                        onChange={this.onChangePattern}
+                      />
+                      <TextAreaField
+                        label="Constraints"
+                        name="constraints"
+                        value={this.state.pattern.constraints}
+                        placeholder="Enter Constraints"
+                        onChange={this.onChangePattern}
+                      />
+                      <TextAreaField
+                        label="Benefits"
+                        name="benefits"
+                        value={this.state.pattern.benefits}
+                        placeholder="Enter Benefits"
+                        onChange={this.onChangePattern}
+                      />
+                      <TextAreaField
+                        label="Liabilities"
+                        name="liabilities"
+                        value={this.state.pattern.liabilities}
+                        placeholder="Enter Liabiliities"
+                        onChange={this.onChangePattern}
+                      />
+
+                      <TextAreaField
+                        label="Examples"
+                        name="examples"
+                        value={this.state.pattern.examples}
+                        placeholder="Enter Examples"
+                        onChange={this.onChangePattern}
+                      />
+                      <TextAreaField
+                        label="Known Uses"
+                        name="knownUses"
+                        value={this.state.pattern.knownUses}
+                        placeholder="Enter known Uses"
+                        onChange={this.onChangePattern}
+                      />
+                      <TextAreaField
+                        label="Related Patterns"
+                        name="relatedPatterns"
+                        value={this.state.pattern.relatedPatterns}
+                        placeholder="Enter related Patterns"
+                        onChange={this.onChangePattern}
+                      />
+                      <TextAreaField
+                        label="Sources"
+                        name="sources"
+                        value={this.state.pattern.sources}
+                        placeholder="Enter Sources"
+                        onChange={this.onChangePattern}
+                      />
+                      <Button
+                        bsStyle="primary"
+                        className={"col-xs-6"}
+                        onClick={this.editPattern}
+                      >
+                        Save Changes
+                      </Button>
+                      <Button
+                        bsStyle="primary"
+                        className={"col-xs-6"}
+                        onClick={this.handleEditing}
+                      >
+                        Dismiss Changes
+                      </Button>
+                    </Tab>
+                  ) : (
+                    <Tab
+                      eventKey={3}
+                      title="3. Additional Information"
+                      disabled
+                    />
+                  )}
+                </Tabs>
+              </Panel>
             </div>
           )}
         </div>
@@ -792,6 +824,8 @@ export default connect(
     getPattern,
     editPattern,
     handleEditing,
-    getStrategies
+    getStrategies,
+
+    setEditingToFalse
   }
 )(PatternDetail);

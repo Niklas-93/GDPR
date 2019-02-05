@@ -214,6 +214,8 @@ g g:first-of-type {
   height: 10000px;*/
   margin: 0 0 0 -0px;
 }
+rect {
+}
 rect:hover {
   fill: #23527c !important
   ;
@@ -222,7 +224,12 @@ rect:hover {
   background-color: #337ab7 !important;
   color: white !important;
 }
+/*
 path:hover {
   opacity: 1 !important;
   stroke: #bbb !important;
 }
+.rv-sankey__link:hover {
+  opacity: 1 !important;
+  stroke: #bbb !important;
+}*/

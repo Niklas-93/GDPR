@@ -34,6 +34,7 @@ class CreatePattern extends Component {
       structure: "",
       implementation: "",
       consequences: "",
+      constraints: "",
       benefits: "",
       liabilities: "",
       examples: "",
@@ -47,85 +48,22 @@ class CreatePattern extends Component {
     };
 
     this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
   }
 
   componentDidMount() {
+    // get strategies for Selection
     this.props.getStrategies();
+    // clear tactics if component is called for more than one time / more than one new pattern
     this.props.clearChosenTactics();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.errors) {
-      this.setState({ errors: nextProps.errors });
-    }
-  }
-  checkIfEmpty(e) {
-    alert(e);
-    if (this.state.summary == "") {
-      this.setState({
-        errors: {
-          ...this.state.errors,
-          summary: "Summary is required!"
-        }
-      });
-    } else {
-      this.setState({
-        errors: {
-          ...this.state.errors,
-          summary: undefined
-        }
-      });
-    }
-  }
+  //handles change of input fields
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
-    if (e.target.value == "") {
-      this.setState({
-        errors: {
-          ...this.state.errors,
-          [e.target.name]: [e.target.name] + " is required!"
-        }
-      });
-    } else {
-      this.setState({
-        errors: {
-          ...this.state.errors,
-          [e.target.name]: undefined
-        }
-      });
-    }
   }
 
-  onSubmit(e) {
-    e.preventDefault();
-
-    const newPattern = {
-      name: this.state.name,
-      sources: this.state.sources,
-      summary: this.state.summary,
-      context: this.state.context,
-      problem: this.state.problem,
-      forcestactics: this.state.forcestactics,
-      solution: this.state.solution,
-      structure: this.state.structure,
-      implementation: this.state.implementation,
-      consequences: this.state.consequences,
-      benefits: this.state.benefits,
-      liabilities: this.state.liabilities,
-      examples: this.state.examples,
-      relatedPatterns: this.state.relatedPatterns,
-      sources: this.state.sources,
-      knownUses: this.state.knownUses,
-      assignedTactics: this.props.pattern.chosenTactics
-      // assignedStrategies: store.getState().pattern.assignedStrategies,
-      // assignedTactics: store.getState().pattern.assignedTactics.id //Fehlerquelle
-    };
-    console.log(this.props.history);
-    //this.props.createPattern(newPattern, this.props.history);
-  }
-
+  // create a new pattern
   createPattern = () => {
     const newPattern = {
       name: this.state.name,
@@ -134,41 +72,73 @@ class CreatePattern extends Component {
       problem: this.state.problem,
       solution: this.state.solution,
       consequences: this.state.consequences,
+      constraints: this.state.constraints,
+      benefits: this.state.benefits,
+      liabilities: this.state.liabilities,
       examples: this.state.examples,
+      knownUses: this.state.knownUses,
+      relatedPatterns: this.state.relatedPatterns,
+      sources: this.state.sources,
       assignedTactics: this.props.pattern.chosenTactics
     };
     this.props.createPattern(newPattern, this.props.history);
   };
 
-  handleSelect(activeKey) {
-    //alert(`selected ${activeKey}`);
-
-    this.setState({ activeKey });
-  }
-
-  onClickTextField = textField => {
-    //alert("hallloo");
-    if (this.state.summary == "") {
-      this.setState({
-        errors: {
-          ...this.state.errors,
-          summary: "Summary is required!"
+  // checks if fields are empty, sets errors
+  setErrorIfEmpty = textField => {
+    if (this.state[textField] == "") {
+      this.setState(
+        {
+          errors: {
+            ...this.state.errors,
+            [textField]: textField + " is required!"
+          }
         }
-      });
+        // alert(this.state.errors[textField])
+      );
     } else {
       this.setState({
         errors: {
           ...this.state.errors,
-          summary: undefined
+          [textField]: undefined
         }
       });
     }
+    console.log(textField);
+    console.log(this.state.errors[textField]);
   };
+
+  // executed when trying to go to next tab
+  handleSelect = activeKey => {
+    // check if fields are empty, set corresponding errors
+
+    // this.setErrorIfEmpty("problem");
+
+    setTimeout(() => {
+      this.setErrorIfEmpty("name");
+      this.setErrorIfEmpty("summary");
+      this.setErrorIfEmpty("context");
+      this.setErrorIfEmpty("problem");
+      this.setErrorIfEmpty("solution");
+    }, 10);
+
+    // if all fields are set, go to next tab
+    if (
+      this.state.name != "" &&
+      this.state.summary != "" &&
+      this.state.context != "" &&
+      this.state.problem != "" &&
+      this.state.solution != ""
+    ) {
+      this.setState({ activeKey });
+    }
+    // this.setState({ activeKey });
+  };
+
   render() {
-    //const { loading2, strategies } = this.props;
+    // get Patterns from server, display spinner while waiting
     const { loading, tactics } = this.props;
 
-    //let strategyContent;
     let tacticContent;
 
     if (tactics === null || loading) {
@@ -176,14 +146,7 @@ class CreatePattern extends Component {
     } else {
       tacticContent = <TacListGroupField tactics={this.props.strategies} />;
     }
-
-    /*if (strategies === null || loading2) {
-      strategyContent = <Spinner />;
-    } else {
-      strategyContent = (
-        <StrListGroupField strategies={this.props.strategies} />
-      );
-    }*/
+    //get strategies from serverm display spinner while waiting
     const { strategies, loading3 } = this.props.strategy;
     let strategyContent;
     if (strategies === null || loading3) {
@@ -210,7 +173,7 @@ class CreatePattern extends Component {
       seeAdditionals = true;
     }
     return (
-      <form onSubmit={this.onSubmit}>
+      <form>
         <Panel>
           <Tabs
             defaultActiveKey={1}
@@ -265,24 +228,13 @@ class CreatePattern extends Component {
                 error={errors.solution}
                 onBlur={this.onChange}
               />{" "}
-              {seeStrategies ? (
-                <Button
-                  bsStyle="primary"
-                  className={"col-xs-12"}
-                  onClick={() => this.handleSelect(2)}
-                >
-                  Set assigned Strategies
-                </Button>
-              ) : (
-                <Button
-                  bsStyle="primary"
-                  onClick={() => this.handleSelect(2)}
-                  disabled
-                  className={"col-xs-12"}
-                >
-                  Set assigned Strategies
-                </Button>
-              )}
+              <Button
+                bsStyle="primary"
+                className={"col-xs-12"}
+                onClick={() => this.handleSelect(2)}
+              >
+                Set assigned Strategies
+              </Button>
             </Tab>
             {seeStrategies ? (
               <Tab eventKey={2} title="2. Assigned Strategies">
@@ -327,12 +279,54 @@ class CreatePattern extends Component {
                   placeholder="Enter Consequences"
                   onChange={this.onChange}
                 />
+                <TextAreaField
+                  label="Constraints"
+                  name="constraints"
+                  value={this.state.constraints}
+                  placeholder="Enter Constraints"
+                  onChange={this.onChange}
+                />
+                <TextAreaField
+                  label="Benefits"
+                  name="benefits"
+                  value={this.state.benefits}
+                  placeholder="Enter Benefits"
+                  onChange={this.onChange}
+                />
+                <TextAreaField
+                  label="Liabilities"
+                  name="liabilities"
+                  value={this.state.liabilities}
+                  placeholder="Enter Liabilities"
+                  onChange={this.onChange}
+                />
 
                 <TextAreaField
                   label="Examples"
                   name="examples"
                   value={this.state.examples}
                   placeholder="Enter Examples"
+                  onChange={this.onChange}
+                />
+                <TextAreaField
+                  label="Known Uses"
+                  name="knownUses"
+                  value={this.state.knownUses}
+                  placeholder="Enter known Uses"
+                  onChange={this.onChange}
+                />
+                <TextAreaField
+                  label="Related Patterns"
+                  name="relatedPatterns"
+                  value={this.state.relatedPatterns}
+                  placeholder="Enter related Patterns"
+                  onChange={this.onChange}
+                />
+                <TextAreaField
+                  label="Sources"
+                  name="sources"
+                  value={this.state.sources}
+                  placeholder="Enter Sources"
                   onChange={this.onChange}
                 />
                 <Button
@@ -347,23 +341,12 @@ class CreatePattern extends Component {
               <Tab eventKey={3} title="3. Additional Information" disabled />
             )}
           </Tabs>
-
-          {/*<Row className="show-grid">
-          <Col md={6}>
-            <h4>Which Strategies will be covered</h4>
-            {strategyContent}
-          </Col>
-          <Col md={6}>
-            <h4>Choose also the covered Tactic</h4>
-            {tacticContent}
-          </Col>
-        </Row>*/}
         </Panel>
       </form>
     );
   }
 }
-
+//Definition of required props, improves Debugging
 CreatePattern.propTypes = {
   createPattern: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
@@ -373,7 +356,7 @@ CreatePattern.propTypes = {
   getTactics: PropTypes.func.isRequired,
   getStrategies: PropTypes.func.isRequired
 };
-
+//Definition of needed props in Component
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
@@ -384,7 +367,7 @@ const mapStateToProps = state => ({
   pattern: state.pattern,
   strategy: state.strategy
 });
-
+//Definition of used functions/states in Component, that interact with Store
 export default connect(
   mapStateToProps,
   {
