@@ -113,11 +113,16 @@ class Overview extends Component {
                 filter.assignedTactics.forEach(tacticFilter => {
                   if (tacticFilter._id == tactic._id) {
                     //visiblePatterns.push(pattern);
-                    visiblePatterns = visiblePatterns.concat(
-                      patterns.filter(
-                        patternFilter => patternFilter._id == pattern._id
-                      )
+                    const alreadyIncluded = visiblePatterns.filter(
+                      visiblePattern => visiblePattern.name == pattern.name
                     );
+                    if (alreadyIncluded.length == 0) {
+                      visiblePatterns = visiblePatterns.concat(
+                        patterns.filter(
+                          patternFilter => patternFilter._id == pattern._id
+                        )
+                      );
+                    }
                     return;
                   }
                 });
@@ -146,6 +151,7 @@ class Overview extends Component {
         this.props.pattern.patterns,
         this.props.pattern.visibilityFilters
       );
+      //visiblePatterns = this.props.pattern.patterns;
       patternContent = <PatternFeed patterns={visiblePatterns} />;
     }
     //alert(visiblePatterns);

@@ -172,11 +172,20 @@ export const setAssignedStrategies = strategy => {
 };
 
 // Set Filter for Patterns
-export const setFilterForPatterns = (tacticFilter, strategyFilter) => {
+/*export const setFilterForPatterns = (tacticFilter, strategyFilter) => {
   return {
     type: SET_FILTER_FOR_PATTERNS,
     payload: { tacticFilter: tacticFilter, strategyFilter: strategyFilter }
   };
+};*/
+export const setFilterForPatterns = (
+  tacticFilter,
+  strategyFilter
+) => dispatch => {
+  dispatch({
+    type: SET_FILTER_FOR_PATTERNS,
+    payload: { tacticFilter: tacticFilter, strategyFilter: strategyFilter }
+  });
 };
 // Deselect Tactic as Filter for Patterns
 export const deselectTacticAsFilter = (tacticFilter, strategyFilter) => {

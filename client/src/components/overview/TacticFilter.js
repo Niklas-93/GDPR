@@ -14,6 +14,7 @@ class TacticFilter extends Component {
   }
   setFilterForPatterns = (tactic, strategy) => {
     // pass selected tactic and corresponding strategy to patternActions
+
     this.props.setFilterForPatterns(tactic, strategy);
   };
 

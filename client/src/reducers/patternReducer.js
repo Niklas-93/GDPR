@@ -100,16 +100,31 @@ export default function(state = initialState, action) {
         )
       };*/
     case SET_FILTER_FOR_PATTERNS:
+      const strategySafe = action.payload.strategyFilter;
+      const tacticSafe = action.payload.tacticFilter;
       console.log("filter");
       console.log(action.payload);
+      console.log("state");
+      console.log(state);
       var strategyIsIncluded = state.visibilityFilters.filter(
         strategyFilter =>
           strategyFilter._id == action.payload.strategyFilter._id
       );
+      //var strategyIsIncluded = [];
       // check if corresponding strategy is already set as filter
       if (strategyIsIncluded.length == 0) {
-        var strategyToInsert = action.payload.strategyFilter;
-        strategyToInsert.assignedTactics = [action.payload.tacticFilter];
+        console.log("vorher");
+        alert(action.payload.strategyFilter.name);
+        var strategyToInsert = strategySafe;
+        var tacticToInsert = tacticSafe;
+        strategyToInsert.assignedTactics = [tacticToInsert];
+        strategyToInsert.name = "test";
+        //action.payload.strategyFilter = strategySafe;
+        console.log("strategyToInsert");
+        console.log(strategyToInsert);
+        console.log("payload");
+        alert(action.payload.strategyFilter.name);
+        //action.payload.strategyFilter = strategySafe;
         // if corresponding strategy is not set as filter and no other filters are already set
         if (state.visibilityFilters.length == 0) {
           console.log("empty filters");
@@ -117,35 +132,8 @@ export default function(state = initialState, action) {
             ...state,
             visibilityFilters: [strategyToInsert]
           };
-        } else {
-          //if corresponding strategy is not set as filter, but already others
-          console.log("not empty filters");
-          return {
-            ...state,
-            visibilityFilters: [state.visibilityFilters, strategyToInsert]
-          };
         }
-        //if corresponding strategy is already set
-      } else {
-        // add tactic to strategy
-        strategyIsIncluded[0].assignedTactics.push(action.payload.tacticFilter);
-        // convert strategy back to object
-        strategyIsIncluded = strategyIsIncluded[0];
-
-        // delete old strategy from filters
-        state.visibilityFilters = state.visibilityFilters.filter(
-          strategyFilter =>
-            strategyFilter._id != action.payload.strategyFilter._id
-        );
-
-        // add new strategy to filters
-
-        return {
-          ...state,
-          visibilityFilters: [...state.visibilityFilters, strategyIsIncluded]
-        };
       }
-
     case DESELECT_TACTIC_AS_FILTER:
       // Select corresponding strategy from filters
       var strategyInFilters = state.visibilityFilters.filter(
