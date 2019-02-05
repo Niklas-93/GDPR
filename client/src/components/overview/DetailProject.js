@@ -357,41 +357,39 @@ class DetailProject extends Component {
             />
             <Row>
               <Col md={6} className="doneTasks">
-                <h4>Done</h4>
-                <div>
-                  <ul>
-                    {this.props.finishedTactics
-                      ? this.props.finishedTactics.map(tac => (
-                          <Col md={6} key={tac}>
-                            <li key={tac}>{tac}</li>
-                          </Col>
-                        ))
-                      : ""}
-                  </ul>
-                </div>
+                <Panel bsStyle="primary">
+                  <Panel.Heading>
+                    <Panel.Title componentClass="h4">Done</Panel.Title>
+                  </Panel.Heading>
+                  <Panel.Body>
+                    <ul>
+                      {this.props.finishedTactics
+                        ? this.props.finishedTactics.map(tac => (
+                            <Col md={6} key={tac}>
+                              <li key={tac}>{tac}</li>
+                            </Col>
+                          ))
+                        : ""}
+                    </ul>
+                  </Panel.Body>
+                </Panel>
               </Col>
-              <span
-                className="vl"
-                style={{
-                  height: this.props.finishedTactics
-                    ? Math.max(
-                        this.props.finishedTactics.length,
-                        doneTacticArray().length
-                      ) + "%"
-                    : ""
-                }}
-              />
+
               <Col md={6} className="openTasks">
-                <h4>Open</h4>
-                <div>
-                  <ul>
-                    {doneTacticArray().map(tac => (
-                      <Col md={6} key={tac}>
-                        <li key={tac}>{tac}</li>
-                      </Col>
-                    ))}
-                  </ul>
-                </div>
+                <Panel bsStyle="primary">
+                  <Panel.Heading>
+                    <Panel.Title componentClass="h4">Open</Panel.Title>
+                  </Panel.Heading>
+                  <Panel.Body>
+                    <ul>
+                      {doneTacticArray().map(tac => (
+                        <Col md={6} key={tac}>
+                          <li key={tac}>{tac}</li>
+                        </Col>
+                      ))}
+                    </ul>
+                  </Panel.Body>
+                </Panel>
               </Col>
             </Row>
           </Panel.Body>
