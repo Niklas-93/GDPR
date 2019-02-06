@@ -35,6 +35,8 @@ import { getTactics } from "../../actions/tacticActions";
 import { getStrategies } from "../../actions/strategyActions";
 import store from "../../store";
 
+import "./CreateProject.css";
+
 class EditProject extends Component {
   constructor() {
     super();
@@ -179,7 +181,11 @@ class EditProject extends Component {
           </Row>
         </span>
 
-        <Button bsStyle="primary" onClick={this.onSubmit}>
+        <Button
+          bsStyle="primary"
+          className="projectButton"
+          onClick={this.onSubmit}
+        >
           Save changes
         </Button>
 
@@ -188,7 +194,9 @@ class EditProject extends Component {
             this.props.location.pathname.length - 24
           )}`}
         >
-          <Button bsStyle="info">Stop editing and discard changes </Button>
+          <Button bsStyle="info" className="projectButton">
+            Stop editing and discard changes{" "}
+          </Button>
         </Link>
       </form>
     );

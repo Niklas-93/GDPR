@@ -24,6 +24,8 @@ import { getTactics } from "../../actions/tacticActions";
 import { getStrategies } from "../../actions/strategyActions";
 import store from "../../store";
 
+import "./CreateProject.css";
+
 class CreateProject extends Component {
   constructor() {
     super();
@@ -176,11 +178,19 @@ class CreateProject extends Component {
           </Col>
         </Row>
 
-        <Button bsStyle="primary" onClick={this.onSubmit}>
+        <Button
+          className="projectButton"
+          bsStyle="primary"
+          onClick={this.onSubmit}
+        >
           Create Project
         </Button>
         <Link to="/PMoverview">
-          <Button bsStyle="info" onClick={this.props.resetAssignedStrategies}>
+          <Button
+            className="projectButton"
+            bsStyle="info"
+            onClick={this.props.resetAssignedStrategies}
+          >
             Abort
           </Button>
         </Link>

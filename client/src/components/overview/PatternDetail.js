@@ -387,7 +387,10 @@ class PatternDetail extends Component {
                   <h4>Context</h4>
                   <div>{pattern.context}</div>
                   <h4>Problem</h4>
-                  <div>{pattern.problem}</div>
+
+                  <div style={{ whiteSpace: "pre-line" }}>
+                    {pattern.problem}
+                  </div>
                   <h4>Solution</h4>
                   <div>{pattern.solution}</div>
                   {isEmpty(pattern.consequences) ? (

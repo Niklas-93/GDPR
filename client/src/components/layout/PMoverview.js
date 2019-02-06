@@ -43,6 +43,38 @@ class PMoverview extends Component {
   render() {
     const { projects, loading } = this.props.project;
 
+    projects.sort(function(a, b) {
+      var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+      var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+
+      // namen müssen gleich sein
+      return 0;
+    });
+
+    projects.sort(function(a, b) {
+      var nameA = (
+        a.assignedTactics.length - a.finishedTactics.length
+      ).toString(); //
+      var nameB = (
+        b.assignedTactics.length - b.finishedTactics.length
+      ).toString();
+
+      if (nameA < nameB) {
+        return 1;
+      }
+      if (nameA > nameB) {
+        return -1;
+      }
+
+      return 0;
+    });
+
     let projectContent;
 
     if (projects === null || loading) {
@@ -71,20 +103,23 @@ class PMoverview extends Component {
       <div>
         <PageHeader>
           Project Overview{" "}
-          <Button onClick={() => this.props.getProjects()}>
-            <i className="fas fa-sync" />
-          </Button>{" "}
-        </PageHeader>
-        <Grid>
-          {projectContent}
           {this.props.auth.user.role === "Project Manager" ? (
             <Link to="/create-project">
-              <Button bsStyle="primary">Create New Project</Button>
+              <Button onMouseOver>
+                <i className="fas fa-plus" />
+              </Button>
             </Link>
           ) : (
             ""
           )}
-        </Grid>
+          <Button
+            className="updateButton"
+            onClick={() => this.props.getProjects()}
+          >
+            <i className="fas fa-sync" />
+          </Button>{" "}
+        </PageHeader>
+        <Grid>{projectContent}</Grid>
       </div>
     );
   }

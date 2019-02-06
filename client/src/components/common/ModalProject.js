@@ -39,7 +39,7 @@ class ModalProject extends Component {
     return (
       <span>
         <Button
-          bsStyle="primary"
+          bsStyle="info"
           style={{ margin: "1em" }}
           onClick={this.handleShow}
         >

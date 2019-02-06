@@ -60,7 +60,7 @@ class ProjectItem extends Component {
       <Col xs={4}>
         <Panel
           className={panelHeight}
-          bsStyle={finished ? "success" : "primary"}
+          bsStyle={finished ? "success" : undefined}
         >
           <Panel.Heading>
             <Link to={`/project/${project._id}`}>

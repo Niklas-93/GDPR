@@ -43,9 +43,8 @@ class DetailProject extends Component {
   }
 
   componentDidMount() {
-    this.props.getProject(this.props.match.params.id);
-
     this.props.getDevelopers();
+    this.props.getProject(this.props.match.params.id);
 
     setTimeout(() => {
       this.props.switchAttrForEditProject();
@@ -77,6 +76,7 @@ class DetailProject extends Component {
 
   createDoneArray() {
     var doneArr = [];
+
     if (this.props.project.assignedStrategiesWithAllTactics) {
       var tactics = this.props.project.assignedStrategiesWithAllTactics;
     }
@@ -133,6 +133,8 @@ class DetailProject extends Component {
   }
 
   render() {
+    let projectContent;
+
     if (this.props.project.assignedStrategiesWithAllTactics) {
       var tactics = this.props.project.assignedStrategiesWithAllTactics;
       tactics.sort(function(a, b) {
@@ -187,6 +189,7 @@ class DetailProject extends Component {
     var progress = 0;
     var finTac = this.props.finishedTactics;
     var allTac = this.props.project.assignedTactics;
+
     if (this.props.finishedTactics && this.props.project.assignedTactics) {
       progress = (finTac.length * 100) / allTac.length;
     }
@@ -208,6 +211,196 @@ class DetailProject extends Component {
       return max;
     }
 
+    if (this.props.project === null || this.props.loading) {
+      projectContent = <Spinner />;
+    } else {
+      projectContent = (
+        <div>
+          <Panel>
+            <Panel.Heading>
+              <Panel.Title componentClass="h1">
+                {this.props.project.name}
+              </Panel.Title>
+            </Panel.Heading>
+            <Panel.Body>
+              <Row>
+                <Col md={12}>
+                  <Panel>
+                    <Panel.Heading>
+                      <Panel.Title componentClass="h4">Description</Panel.Title>
+                    </Panel.Heading>
+                    <Panel.Body>{this.props.project.description}</Panel.Body>
+                  </Panel>
+                </Col>
+                <Col md={3}>
+                  <Panel>
+                    <Panel.Heading>
+                      <Panel.Title componentClass="h4">
+                        Assigned Developer
+                      </Panel.Title>
+                    </Panel.Heading>
+                    <Panel.Body>
+                      {this.props.project.assignedDevelopers
+                        ? this.props.project.assignedDevelopers.map(dev => (
+                            <div key={dev._id}>{dev.name}</div>
+                          ))
+                        : ""}
+                    </Panel.Body>
+                  </Panel>
+                </Col>
+                <Col md={9}>
+                  <Panel>
+                    <Panel.Heading>
+                      <Panel.Title componentClass="h4">
+                        Assigned Strategies and tactics{" "}
+                        <Button onClick={() => this.updateProject()}>
+                          <i className="fas fa-sync" />
+                        </Button>{" "}
+                      </Panel.Title>
+                    </Panel.Heading>
+                    <Panel.Body>
+                      <form>
+                        {tactics
+                          ? tactics.map(str => (
+                              <Col key={str._id} md={3}>
+                                <Panel
+                                  className="strategyPanel"
+                                  style={{
+                                    height:
+                                      getMaxAssignedTacticsForHeight() * 40 +
+                                      "px"
+                                  }}
+                                >
+                                  <Panel.Heading>
+                                    <Panel.Title componentClass="h4">
+                                      {str.name}
+                                    </Panel.Title>
+                                  </Panel.Heading>
+
+                                  <Panel.Body>
+                                    <ul id="ulTac">
+                                      {str.assignedTactics.map(tac => (
+                                        <li id="liTac" key={tac._id}>
+                                          <input
+                                            name={tac.name}
+                                            type="checkbox"
+                                            checked={this.handleChecked(
+                                              tac,
+                                              (counter = counter + 1)
+                                            )}
+                                            onChange={this.handleInputChange}
+                                          />
+                                          {tac.name}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </Panel.Body>
+                                </Panel>
+                              </Col>
+                            ))
+                          : ""}
+                      </form>
+                    </Panel.Body>
+                  </Panel>
+                </Col>
+              </Row>
+            </Panel.Body>
+
+            <Link to="/PMoverview">
+              <Button bsStyle="primary" className="projectButton">
+                Back to Overview
+              </Button>
+            </Link>
+
+            {this.props.auth.user.role === "Project Manager" ? (
+              <span>
+                <Link to={`/project/edit-project/${this.props.project._id}`}>
+                  <Button bsStyle="primary" className="projectButton">
+                    Edit Project
+                  </Button>
+                </Link>
+                <ModalProject
+                  onClick={this.onClickDelete}
+                  project={this.props.project}
+                />{" "}
+              </span>
+            ) : (
+              ""
+            )}
+          </Panel>
+
+          <Panel>
+            <Panel.Heading>
+              <Panel.Title componentClass="h4">
+                {progress === 0
+                  ? "Project haven't started yet"
+                  : progress < 100
+                  ? "Project is ongoing"
+                  : "Project is completed"}
+              </Panel.Title>
+            </Panel.Heading>
+            <Panel.Body>
+              <ProgressBar
+                striped
+                bsStyle={
+                  progress < 75
+                    ? "danger"
+                    : progress < 100
+                    ? "warning"
+                    : "success"
+                }
+                label={`${progress.toFixed(0)}%`}
+                now={progress}
+              />
+              <Row>
+                <Col md={6} className="doneTasks">
+                  <Panel>
+                    <Panel.Heading>
+                      <Panel.Title componentClass="h4">Done</Panel.Title>
+                    </Panel.Heading>
+                    <Panel.Body>
+                      <ul>
+                        {this.props.finishedTactics
+                          ? this.props.finishedTactics.map(tac => (
+                              <Col md={6} key={tac}>
+                                <li key={tac}>{tac}</li>
+                              </Col>
+                            ))
+                          : ""}
+                      </ul>
+                    </Panel.Body>
+                  </Panel>
+                </Col>
+
+                <Col md={6} className="openTasks">
+                  <Panel>
+                    <Panel.Heading>
+                      <Panel.Title componentClass="h4">Open</Panel.Title>
+                    </Panel.Heading>
+                    <Panel.Body>
+                      <ul>
+                        {doneTacticArray().map(tac => (
+                          <Col md={6} key={tac}>
+                            <li key={tac}>{tac}</li>
+                          </Col>
+                        ))}
+                      </ul>
+                    </Panel.Body>
+                  </Panel>
+                </Col>
+              </Row>
+            </Panel.Body>
+          </Panel>
+          <CommentBox
+            project={this.props.project}
+            getProject={() => {
+              this.updateProject();
+            }}
+          />
+        </div>
+      );
+    }
+
     return (
       <div>
         {this.props.project === ""
@@ -219,187 +412,7 @@ class DetailProject extends Component {
           ? this.props.history.push("/PMoverview")
           : ""}
 
-        <Panel bsStyle="primary">
-          <Panel.Heading>
-            <Panel.Title className="indPanel" componentClass="h1">
-              {this.props.project.name}
-            </Panel.Title>
-          </Panel.Heading>
-          <Panel.Body>
-            <Row>
-              <Col md={12}>
-                <Panel bsStyle="primary">
-                  <Panel.Heading>
-                    <Panel.Title componentClass="h4">Description</Panel.Title>
-                  </Panel.Heading>
-                  <Panel.Body>{this.props.project.description}</Panel.Body>
-                </Panel>
-              </Col>
-              <Col md={3}>
-                <Panel bsStyle="primary">
-                  <Panel.Heading>
-                    <Panel.Title componentClass="h4">
-                      Assigned Developer
-                    </Panel.Title>
-                  </Panel.Heading>
-                  <Panel.Body>
-                    {this.props.project.assignedDevelopers
-                      ? this.props.project.assignedDevelopers.map(dev => (
-                          <div key={dev._id}>{dev.name}</div>
-                        ))
-                      : ""}
-                  </Panel.Body>
-                </Panel>
-              </Col>
-              <Col md={9}>
-                <Panel bsStyle="primary">
-                  <Panel.Heading>
-                    <Panel.Title componentClass="h4">
-                      Assigned Strategies and tactics{" "}
-                      <Button onClick={() => this.updateProject()}>
-                        <i className="fas fa-sync" />
-                      </Button>{" "}
-                    </Panel.Title>
-                  </Panel.Heading>
-                  <Panel.Body>
-                    <form>
-                      {tactics
-                        ? tactics.map(str => (
-                            <Col key={str._id} md={3}>
-                              <Panel
-                                className="strategyPanel"
-                                style={{
-                                  height:
-                                    getMaxAssignedTacticsForHeight() * 40 + "px"
-                                }}
-                              >
-                                <Panel.Heading>
-                                  <Panel.Title componentClass="h4">
-                                    {str.name}
-                                  </Panel.Title>
-                                </Panel.Heading>
-
-                                <Panel.Body>
-                                  <ul id="ulTac">
-                                    {str.assignedTactics.map(tac => (
-                                      <li id="liTac" key={tac._id}>
-                                        <input
-                                          name={tac.name}
-                                          type="checkbox"
-                                          checked={this.handleChecked(
-                                            tac,
-                                            (counter = counter + 1)
-                                          )}
-                                          onChange={this.handleInputChange}
-                                        />
-                                        {tac.name}
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </Panel.Body>
-                              </Panel>
-                            </Col>
-                          ))
-                        : ""}
-                    </form>
-                  </Panel.Body>
-                </Panel>
-              </Col>
-            </Row>
-          </Panel.Body>
-
-          <Link to="/PMoverview">
-            <Button bsStyle="primary" className="projectButton">
-              Back to Overview
-            </Button>
-          </Link>
-
-          {this.props.auth.user.role === "Project Manager" ? (
-            <span>
-              <Link to={`/project/edit-project/${this.props.project._id}`}>
-                <Button bsStyle="primary" className="projectButton">
-                  Edit Project
-                </Button>
-              </Link>
-              <ModalProject
-                onClick={this.onClickDelete}
-                project={this.props.project}
-              />{" "}
-            </span>
-          ) : (
-            ""
-          )}
-        </Panel>
-
-        <Panel bsStyle="primary">
-          <Panel.Heading>
-            <Panel.Title componentClass="h4">
-              {progress === 0
-                ? "Project haven't started yet"
-                : progress < 100
-                ? "Project is ongoing"
-                : "Project is completed"}
-            </Panel.Title>
-          </Panel.Heading>
-          <Panel.Body>
-            <ProgressBar
-              striped
-              bsStyle={
-                progress < 75
-                  ? "danger"
-                  : progress < 100
-                  ? "warning"
-                  : "success"
-              }
-              label={`${progress.toFixed(0)}%`}
-              now={progress}
-            />
-            <Row>
-              <Col md={6} className="doneTasks">
-                <Panel bsStyle="primary">
-                  <Panel.Heading>
-                    <Panel.Title componentClass="h4">Done</Panel.Title>
-                  </Panel.Heading>
-                  <Panel.Body>
-                    <ul>
-                      {this.props.finishedTactics
-                        ? this.props.finishedTactics.map(tac => (
-                            <Col md={6} key={tac}>
-                              <li key={tac}>{tac}</li>
-                            </Col>
-                          ))
-                        : ""}
-                    </ul>
-                  </Panel.Body>
-                </Panel>
-              </Col>
-
-              <Col md={6} className="openTasks">
-                <Panel bsStyle="primary">
-                  <Panel.Heading>
-                    <Panel.Title componentClass="h4">Open</Panel.Title>
-                  </Panel.Heading>
-                  <Panel.Body>
-                    <ul>
-                      {doneTacticArray().map(tac => (
-                        <Col md={6} key={tac}>
-                          <li key={tac}>{tac}</li>
-                        </Col>
-                      ))}
-                    </ul>
-                  </Panel.Body>
-                </Panel>
-              </Col>
-            </Row>
-          </Panel.Body>
-        </Panel>
-
-        <CommentBox
-          project={this.props.project}
-          getProject={() => {
-            this.updateProject();
-          }}
-        />
+        {projectContent}
       </div>
     );
   }
@@ -419,7 +432,8 @@ const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
   project: state.project.project,
-  finishedTactics: state.project.finishedTactics
+  finishedTactics: state.project.finishedTactics,
+  loading: state.project.loading
 });
 
 export default connect(
