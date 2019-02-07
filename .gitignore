@@ -6,3 +6,4 @@ package-lock.json
 client/package-lock.json
 client/yarn.lock
 node_modules
+config/keys_dev.js
