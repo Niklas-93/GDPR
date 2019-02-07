@@ -234,7 +234,12 @@ router.get("/project/:id", (req, res) => {
 // @access  Public
 
 router.post("/project/edit", (req, res) => {
-  const errors = {};
+  const { errors, isValid } = validateProjectInput(req.body);
+
+  // Check Validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
 
   const projectFields = {};
   const userFields = {};

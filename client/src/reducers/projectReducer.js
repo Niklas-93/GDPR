@@ -39,12 +39,7 @@ export default function(state = initialState, action) {
         projects: action.payload,
         loading: false
       };
-    case GET_PROJECT:
-      return {
-        ...state,
-        project: action.payload,
-        loading: false
-      };
+
     case SET_COMMENT:
       //console.log(action.payload);
       return {
@@ -59,61 +54,26 @@ export default function(state = initialState, action) {
         finishedTactics: action.payload.finishedTactics,
         loading: false
       };
-    /*case SET_FINISHED_TACTIC:
-      console.log(action.payload);
-      const addfinishedTactic = tac => {
-        if (tac !== undefined) {
-          return state.finishedTactic.concat(tac);
-        } else {
-          return state.finishedTactic;
-        }
-      };
 
-      const remfinishedTactic = tac => {
-        var arr = state.finishedTactic;
-
-        var index = arr.indexOf(tac);
-        if (index !== -1) {
-          arr.splice(index, 1);
-        }
-        return arr;
-      };
-
-      if (state.finishedTactic.indexOf(action.payload) === -1) {
-        var newArray = addfinishedTactic(action.payload);
-      } else {
-        var newArray = remfinishedTactic(action.payload);
-      }
-      return {
-        ...state,
-        finishedTactic: newArray,
-        loading: false
-      };*/
-
-    case SWITCH_ATTR_FOR_EDIT_PROJECT:
-      //console.log(state.project.assignedStrategies);
-      //console.log(state.project.assignedTactics);
-      //console.log(state.project.assignedDevelopers);
-
+    case GET_PROJECT:
       var tempArr = [];
 
-      if (state.project.assignedStrategiesWithAllTactics) {
+      if (action.payload.assignedStrategiesWithAllTactics) {
         for (
           var i = 0;
-          i < state.project.assignedStrategiesWithAllTactics.length;
+          i < action.payload.assignedStrategiesWithAllTactics.length;
           i++
         ) {
           for (
             var j = 0;
             j <
-            state.project.assignedStrategiesWithAllTactics[i].assignedTactics
+            action.payload.assignedStrategiesWithAllTactics[i].assignedTactics
               .length;
             j++
           ) {
             tempArr.push(
-              state.project.assignedStrategiesWithAllTactics[i].assignedTactics[
-                j
-              ]
+              action.payload.assignedStrategiesWithAllTactics[i]
+                .assignedTactics[j]
             );
           }
         }
@@ -121,28 +81,30 @@ export default function(state = initialState, action) {
 
       return {
         ...state,
-        assignedStrategies: state.project.assignedStrategies,
+        project: action.payload,
+        assignedStrategies: action.payload.assignedStrategies,
         assignedTactics: tempArr,
-        assignedDevelopers: state.project.assignedDevelopers,
-        finishedTactics: state.project.finishedTactics,
-        comment: state.project.comment,
-        commentAttendees: state.project.commentAttendees,
+        assignedDevelopers: action.payload.assignedDevelopers,
+        finishedTactics: action.payload.finishedTactics,
+        comment: action.payload.comment,
+        commentAttendees: action.payload.commentAttendees,
         loading: false
       };
+    /*
+    case GET_PROJECT:
+      return {
+        ...state,
+        project: action.payload,
+        loading: false
+      };
+*/
     case SET_ASSIGNED_DEVELOPER:
       const addDeveloper = dev => {
-        //console.log([...dev].concat(state.assignedDevelopers));
-        // console.log(...[dev].concat(state.assignedDevelopers));
-        //console.log(state.assignedDevelopers.concat(dev));
-        //return "test";
         if (dev !== undefined) {
           return state.assignedDevelopers.concat(dev);
         } else {
           return state.assignedDevelopers;
         }
-
-        /*[...dev].concat(this.props.developer)*/
-        /*[...dev.concat(state.assignedDevelopers)]*/
       };
 
       const remDeveloper = dev => {

@@ -39,7 +39,7 @@ class DevListItem extends Component {
         el.name === this.props.developer.name
           ? this.setState(() => {
               return {
-                bsStyle: !this.state.bsStyle ? "success" : undefined
+                bsStyle: !this.state.bsStyle ? "info" : undefined
               };
             })
           : ""
@@ -52,7 +52,7 @@ class DevListItem extends Component {
       this.props.setAssignedDevelopers(this.props.developer);
       return {
         assignedDevelopers: this.props.developer,
-        bsStyle: !this.state.bsStyle ? "success" : undefined
+        bsStyle: !this.state.bsStyle ? "info" : undefined
         //nameDeveloper: newArray[0]
       };
     });

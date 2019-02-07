@@ -11,7 +11,8 @@ import {
   setAssignedTactics,
   setAssignedStrategies,
   resetAssignedStrategies,
-  addAssignedProjects
+  addAssignedProjects,
+  resetErrors
 } from "../../actions/projectActions";
 import TextAreaField from "../common/TextAreaField";
 import TextField from "../common/TextField";
@@ -23,6 +24,8 @@ import { getDevelopers } from "../../actions/userActions";
 import { getTactics } from "../../actions/tacticActions";
 import { getStrategies } from "../../actions/strategyActions";
 import store from "../../store";
+
+import "./CreateProject.css";
 
 class CreateProject extends Component {
   constructor() {
@@ -49,6 +52,7 @@ class CreateProject extends Component {
     this.props.getDevelopers();
     this.props.getStrategies();
     this.props.resetAssignedStrategies();
+    this.props.resetErrors();
   }
 
   onChange(e) {
@@ -137,6 +141,7 @@ class CreateProject extends Component {
           value={this.state.name}
           placeholder="Enter the name of the project"
           onChange={this.onChange}
+          error={this.props.errors.name}
         />
 
         <TextAreaField
@@ -145,30 +150,49 @@ class CreateProject extends Component {
           value={this.state.description}
           placeholder="Enter description"
           onChange={this.onChange}
+          error={this.props.errors.description}
         />
 
         <Row className="show-grid">
           <Col md={3}>
             <h4>Choose your strategies</h4>
             {strategyContent}
+            {this.props.errors.assignedStrategy
+              ? this.props.errors.assignedStrategy
+              : ""}
           </Col>
           <Col md={3}>
             {" "}
             <h4>and the according tactics</h4>
             {tacticContent}
+            {this.props.errors.assignedTactic &&
+            !this.props.errors.assignedStrategy
+              ? this.props.errors.assignedTactic
+              : ""}
           </Col>
 
           <Col md={6}>
             <h4>Choose your developer</h4>
             {developerContent}
+            {this.props.errors.assignedDevelopers
+              ? this.props.errors.assignedDevelopers
+              : ""}
           </Col>
         </Row>
 
-        <Button bsStyle="primary" onClick={this.onSubmit}>
+        <Button
+          className="projectButton"
+          bsStyle="primary"
+          onClick={this.onSubmit}
+        >
           Create Project
         </Button>
         <Link to="/PMoverview">
-          <Button bsStyle="info" onClick={this.props.resetAssignedStrategies}>
+          <Button
+            className="projectButton"
+            bsStyle="info"
+            onClick={this.props.resetAssignedStrategies}
+          >
             Abort
           </Button>
         </Link>
@@ -213,6 +237,7 @@ export default connect(
     setAssignedTactics,
     setAssignedStrategies,
     resetAssignedStrategies,
-    addAssignedProjects
+    addAssignedProjects,
+    resetErrors
   }
 )(withRouter(CreateProject));

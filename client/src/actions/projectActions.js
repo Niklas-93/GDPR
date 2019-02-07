@@ -2,6 +2,7 @@ import axios from "axios";
 
 import {
   GET_ERRORS,
+  RESET_ERRORS,
   DELETE_PROJECT,
   PROJECT_LOADING,
   GET_PROJECTS,
@@ -24,6 +25,25 @@ export const createProject = (projectData, history) => dispatch => {
   axios
     .post("/api/projects/createproject", projectData)
     .then(res => history.push("/PMoverview"))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Edit Project
+export const editProject = (projectData, history) => dispatch => {
+  axios
+    .post(`/api/projects/project/edit`, projectData)
+    .then(res =>
+      dispatch({
+        type: GET_PROJECT,
+        payload: res.data
+      })
+    )
+    .then(res => history.push(`/project/${projectData.id}`))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -70,25 +90,6 @@ export const getProject = id => dispatch => {
     );
 };
 
-// Match Developer
-export const matchDev = id => dispatch => {
-  dispatch(setProjectLoading());
-  axios
-    .get(`/api/users/user/${id}`)
-    .then(res =>
-      dispatch({
-        type: MATCH_USER,
-        payload: res.data
-      })
-    )
-    .catch(err =>
-      dispatch({
-        type: MATCH_USER,
-        payload: err.data
-      })
-    );
-};
-
 // Delete Project
 export const deleteProject = id => dispatch => {
   console.log(id);
@@ -104,26 +105,6 @@ export const deleteProject = id => dispatch => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
-      })
-    );
-};
-
-// Edit Project
-export const editProject = (projectData, history) => dispatch => {
-  axios
-    .post(`/api/projects/project/edit`, projectData)
-    .then(
-      res =>
-        dispatch({
-          type: GET_PROJECT,
-          payload: res.data
-        }),
-      history.push(`/project/${projectData.id}`)
-    )
-    .catch(err =>
-      dispatch({
-        type: GET_PROJECT,
-        payload: null
       })
     );
 };
@@ -200,12 +181,11 @@ export const setFinishedTactic = tacticData => dispatch => {
     );
 };
 
-/*export const setFinishedTactic = tactic => {
+export const resetErrors = error => {
   return {
-    type: SET_FINISHED_TACTIC,
-    payload: tactic
+    type: RESET_ERRORS
   };
-};*/
+};
 
 // Reset assignedTactics
 export const resetAssignedStrategies = strategy => {

@@ -1,0 +1,25 @@
+#ulTac {
+  padding-left: 16px;
+}
+
+.strategyPanel {
+}
+
+.projectButton {
+  margin: 1em;
+  float: right;
+}
+
+.vl {
+  border-left: 2px solid #afacac;
+  position: absolute;
+}
+
+.indPanel {
+  background-color: rgb(51, 122, 183);
+  color: white;
+}
+
+.shownText {
+  white-space: pre-line;
+}

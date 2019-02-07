@@ -34,13 +34,6 @@ class ProjectItem extends Component {
       return arr;
     }
 
-    //console.log(aggrTac());
-    //console.log(tactics);
-
-    // this.props.project.assignedStrategiesWithAllTactics.map(strategies =>
-    //   strategies.assignedTactics.map(tactic => console.log(tactic))
-    // );
-
     const { project, auth } = this.props;
     const open = this.state.open;
     let more;
@@ -60,45 +53,26 @@ class ProjectItem extends Component {
     //  'is-invalid': error
     //})}
 
+    var finished =
+      project.assignedTactics.length === project.finishedTactics.length;
+
     return (
       <Col xs={4}>
         <Panel
-          //onMouseLeave={() => this.props.getProject(project._id)}
           className={panelHeight}
-          bsStyle={
-            project.assignedTactics.length === project.finishedTactics.length
-              ? "success"
-              : undefined
-          }
+          bsStyle={finished ? "success" : undefined}
         >
           <Panel.Heading>
             <Link to={`/project/${project._id}`}>
-              <h4>{project.name}</h4>
+              <h4 className={!finished ? "heading" : ""}>{project.name}</h4>
             </Link>
           </Panel.Heading>
-          <Panel.Body>
+          <Panel.Body className="shownText">
             <h4>Description</h4>
             {descriptionFirstPart}
 
             <Collapse in={this.state.open}>
-              <div>
-                {descriptionSecondPart}
-                <Row>
-                  <Col md={6} mdPush={6}>
-                    <h4>Tactics:</h4>
-
-                    {aggrTac().map(tactic => (
-                      <div key={tactic._id}>{tactic.name} </div>
-                    ))}
-                  </Col>
-                  <Col md={6} mdPull={6}>
-                    <h4>Developer:</h4>
-                    {project.assignedDevelopers.map(developer => (
-                      <div key={developer._id}>{developer.name} </div>
-                    ))}
-                  </Col>
-                </Row>
-              </div>
+              <div>{descriptionSecondPart}</div>
             </Collapse>
             <div className="extendMore" onClick={this.extendMore}>
               {more}

@@ -68,6 +68,4 @@ class TacListGroupField extends Component {
   }
 }
 
-TacListGroupField.propTypes = { tactics: PropTypes.array.isRequired };
-
 export default TacListGroupField;
