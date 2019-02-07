@@ -12,7 +12,8 @@ import {
   setAssignedStrategies,
   resetAssignedStrategies,
   switchAttrForEditProject,
-  getProject
+  getProject,
+  resetErrors
 } from "../../actions/projectActions";
 import TextAreaField from "../common/TextAreaField";
 import TextField from "../common/TextField";
@@ -34,6 +35,8 @@ import { getDevelopers } from "../../actions/userActions";
 import { getTactics } from "../../actions/tacticActions";
 import { getStrategies } from "../../actions/strategyActions";
 import store from "../../store";
+
+import "./CreateProject.css";
 
 class EditProject extends Component {
   constructor() {
@@ -59,6 +62,7 @@ class EditProject extends Component {
     this.props.getProject(this.props.match.params.id);
     this.props.getDevelopers();
     this.props.getStrategies();
+    this.props.resetErrors();
   }
 
   onChange(e) {
@@ -139,6 +143,7 @@ class EditProject extends Component {
             value={this.state.name}
             placeholder={store.getState().project.project.name}
             onChange={this.onChange}
+            error={this.props.errors.name}
           />
 
           <TextAreaField
@@ -147,42 +152,53 @@ class EditProject extends Component {
             value={this.state.description}
             placeholder={store.getState().project.project.description}
             onChange={this.onChange}
+            error={this.props.errors.description}
           />
 
           <Row className="show-grid">
             <Col md={3}>
               <h4>Choose your strategies</h4>
               {strategyContent}
+              {this.props.errors.assignedStrategy
+                ? this.props.errors.assignedStrategy
+                : ""}
             </Col>
             <Col md={3}>
               {" "}
               <h4>and the according tactics</h4>
               {tacticContent}
+              {this.props.errors.assignedTactic &&
+              !this.props.errors.assignedStrategy
+                ? this.props.errors.assignedTactic
+                : ""}
             </Col>
 
             <Col md={6}>
               <h4>Choose your developer</h4>
               {developerContent}
+              {this.props.errors.assignedDevelopers
+                ? this.props.errors.assignedDevelopers
+                : ""}
             </Col>
           </Row>
         </span>
 
-        <Link
-          to={`/project/${this.props.location.pathname.substr(
-            this.props.location.pathname.length - 24
-          )}`}
+        <Button
+          bsStyle="primary"
+          className="projectButton"
+          onClick={this.onSubmit}
         >
-          <Button bsStyle="primary" onClick={this.onSubmit}>
-            Save changes
-          </Button>
-        </Link>
+          Save changes
+        </Button>
 
         <Link
           to={`/project/${this.props.location.pathname.substr(
             this.props.location.pathname.length - 24
           )}`}
         >
-          <Button bsStyle="info">Stop editing and discard changes </Button>
+          <Button bsStyle="info" className="projectButton">
+            Stop editing and discard changes{" "}
+          </Button>
         </Link>
       </form>
     );
@@ -226,6 +242,7 @@ export default connect(
     setAssignedStrategies,
     resetAssignedStrategies,
     switchAttrForEditProject,
-    getProject
+    getProject,
+    resetErrors
   }
 )(withRouter(EditProject));

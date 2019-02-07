@@ -11,6 +11,7 @@ import {
   FormControl
 } from "react-bootstrap";
 import store from "../../store";
+import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 
 import TextAreaField from "../common/TextAreaField";
 import "./CommentBox.css";
@@ -171,7 +172,16 @@ class CommentBox extends Component {
       <div>
         <Panel>
           <Panel.Heading>
-            <Panel.Title componentClass="h3">Comment Box</Panel.Title>
+            <Panel.Title componentClass="h3">
+              Comment Box{" "}
+              <BtnWithMouseOverPop
+                onClick={() =>
+                  this.props.getProject(this.props.match.params.id)
+                }
+                title="update comments"
+                icon="fas fa-sync"
+              />
+            </Panel.Title>
           </Panel.Heading>
           <Panel.Body id="commentBox">
             <div className="chatBox">
@@ -193,7 +203,9 @@ class CommentBox extends Component {
                           ""
                         )}
                         <Panel>
-                          <Panel.Body>{comment.content}</Panel.Body>
+                          <Panel.Body className="shownText">
+                            {comment.content}
+                          </Panel.Body>
                         </Panel>
                       </div>
                     ))
@@ -206,7 +218,11 @@ class CommentBox extends Component {
               placeholder="Enter your comment"
               onChange={this.onChange}
               location={this.props.location}
-              onSubmit={this.onSubmit}
+              onSubmit={
+                this.state.comment.content !== ""
+                  ? this.onSubmit
+                  : () => alert("You can't send a empty message")
+              }
               value={this.state.comment.content}
             />
           </Panel.Body>

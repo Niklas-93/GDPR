@@ -10,3 +10,7 @@
   overflow-y: scroll;
   height: 400px;
 }
+
+.shownText {
+  white-space: pre-line;
+}

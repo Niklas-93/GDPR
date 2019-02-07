@@ -1,0 +1,39 @@
+.ulTac {
+  padding-left: 16px;
+  list-style-type: none;
+}
+
+.strategyPanel {
+}
+
+.projectButton {
+  margin: 1em;
+  float: right;
+}
+
+.vl {
+  border-left: 2px solid #afacac;
+  position: absolute;
+}
+
+.indPanel {
+  background-color: rgb(51, 122, 183);
+  color: white;
+}
+
+.shownText {
+  white-space: pre-line;
+}
+
+.panelBodyTactics {
+  background: #f5f5f5;
+  border: 0px;
+}
+
+.panelTitle {
+  border: 5px;
+}
+
+.tacticDots {
+  color: #337ab7;
+}

@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import "./PMoverview.css";
 import { Link } from "react-router-dom";
 import Spinner from "../common/Spinner";
+import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import ProjectFeed from "../overview/ProjectFeed";
 import {
   getProjects,
@@ -12,6 +13,9 @@ import {
 } from "../../actions/projectActions";
 import { getDevelopers } from "../../actions/userActions";
 import {
+  Popover,
+  Badge,
+  OverlayTrigger,
   Col,
   Thumbnail,
   Grid,
@@ -26,6 +30,10 @@ import authReducer from "../../reducers/authReducer";
 
 class PMoverview extends Component {
   componentDidMount() {
+    if (this.props.auth.user.role === "Data Protection Officer") {
+      this.props.history.push("/Overview");
+      alert("You don't have the permission to see projects!");
+    }
     this.props.getProjects();
     this.props.getDevelopers();
 
@@ -38,6 +46,38 @@ class PMoverview extends Component {
 
   render() {
     const { projects, loading } = this.props.project;
+
+    projects.sort(function(a, b) {
+      var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+      var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+
+      // namen müssen gleich sein
+      return 0;
+    });
+
+    projects.sort(function(a, b) {
+      var nameA = (
+        a.assignedTactics.length - a.finishedTactics.length
+      ).toString(); //
+      var nameB = (
+        b.assignedTactics.length - b.finishedTactics.length
+      ).toString();
+
+      if (nameA < nameB) {
+        return 1;
+      }
+      if (nameA > nameB) {
+        return -1;
+      }
+
+      return 0;
+    });
 
     let projectContent;
 
@@ -66,21 +106,26 @@ class PMoverview extends Component {
     return (
       <div>
         <PageHeader>
-          Project Overview{" "}
-          <Button onClick={() => this.props.getProjects()}>
-            <i className="fas fa-sync" />
-          </Button>{" "}
-        </PageHeader>
-        <Grid>
-          {projectContent}
+          Project Overview <Badge>{projects.length} </Badge>
+          {" ä"}
           {this.props.auth.user.role === "Project Manager" ? (
-            <Link to="/create-project">
-              <Button bsStyle="primary">Create New Project</Button>
-            </Link>
+            <BtnWithMouseOverPop
+              icon="fas fa-plus"
+              title="Add new project"
+              link="/create-project"
+            />
           ) : (
             ""
           )}
-        </Grid>
+          <BtnWithMouseOverPop
+            className="updateButton"
+            icon="fas fa-sync"
+            title="Update projects"
+            link="#"
+            onClick={() => this.props.getProjects()}
+          />
+        </PageHeader>
+        <Grid>{projectContent}</Grid>
       </div>
     );
   }

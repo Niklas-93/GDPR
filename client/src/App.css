@@ -16,6 +16,10 @@ img {
   padding-top: 80px;
 }
 
+body {
+  white-space: pre-line;
+}
+
 .dark-overlay {
   background-color: rgba(0, 0, 0, 0.7);
   position: absolute;
