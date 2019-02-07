@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import "./PMoverview.css";
 import { Link } from "react-router-dom";
 import Spinner from "../common/Spinner";
+import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import ProjectFeed from "../overview/ProjectFeed";
 import {
   getProjects,
@@ -12,6 +13,8 @@ import {
 } from "../../actions/projectActions";
 import { getDevelopers } from "../../actions/userActions";
 import {
+  Popover,
+  OverlayTrigger,
   Col,
   Thumbnail,
   Grid,
@@ -104,20 +107,21 @@ class PMoverview extends Component {
         <PageHeader>
           Project Overview{" "}
           {this.props.auth.user.role === "Project Manager" ? (
-            <Link to="/create-project">
-              <Button onMouseOver>
-                <i className="fas fa-plus" />
-              </Button>
-            </Link>
+            <BtnWithMouseOverPop
+              icon="fas fa-plus"
+              title="Add new project"
+              link="/create-project"
+            />
           ) : (
             ""
           )}
-          <Button
+          <BtnWithMouseOverPop
             className="updateButton"
+            icon="fas fa-sync"
+            title="Update projects"
+            link="#"
             onClick={() => this.props.getProjects()}
-          >
-            <i className="fas fa-sync" />
-          </Button>{" "}
+          />
         </PageHeader>
         <Grid>{projectContent}</Grid>
       </div>

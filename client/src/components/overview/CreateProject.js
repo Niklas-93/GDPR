@@ -11,7 +11,8 @@ import {
   setAssignedTactics,
   setAssignedStrategies,
   resetAssignedStrategies,
-  addAssignedProjects
+  addAssignedProjects,
+  resetErrors
 } from "../../actions/projectActions";
 import TextAreaField from "../common/TextAreaField";
 import TextField from "../common/TextField";
@@ -51,6 +52,7 @@ class CreateProject extends Component {
     this.props.getDevelopers();
     this.props.getStrategies();
     this.props.resetAssignedStrategies();
+    this.props.resetErrors();
   }
 
   onChange(e) {
@@ -235,6 +237,7 @@ export default connect(
     setAssignedTactics,
     setAssignedStrategies,
     resetAssignedStrategies,
-    addAssignedProjects
+    addAssignedProjects,
+    resetErrors
   }
 )(withRouter(CreateProject));

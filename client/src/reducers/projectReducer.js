@@ -39,12 +39,7 @@ export default function(state = initialState, action) {
         projects: action.payload,
         loading: false
       };
-    case GET_PROJECT:
-      return {
-        ...state,
-        project: action.payload,
-        loading: false
-      };
+
     case SET_COMMENT:
       //console.log(action.payload);
       return {
@@ -60,26 +55,25 @@ export default function(state = initialState, action) {
         loading: false
       };
 
-    case SWITCH_ATTR_FOR_EDIT_PROJECT:
+    case GET_PROJECT:
       var tempArr = [];
 
-      if (state.project.assignedStrategiesWithAllTactics) {
+      if (action.payload.assignedStrategiesWithAllTactics) {
         for (
           var i = 0;
-          i < state.project.assignedStrategiesWithAllTactics.length;
+          i < action.payload.assignedStrategiesWithAllTactics.length;
           i++
         ) {
           for (
             var j = 0;
             j <
-            state.project.assignedStrategiesWithAllTactics[i].assignedTactics
+            action.payload.assignedStrategiesWithAllTactics[i].assignedTactics
               .length;
             j++
           ) {
             tempArr.push(
-              state.project.assignedStrategiesWithAllTactics[i].assignedTactics[
-                j
-              ]
+              action.payload.assignedStrategiesWithAllTactics[i]
+                .assignedTactics[j]
             );
           }
         }
@@ -87,14 +81,23 @@ export default function(state = initialState, action) {
 
       return {
         ...state,
-        assignedStrategies: state.project.assignedStrategies,
+        project: action.payload,
+        assignedStrategies: action.payload.assignedStrategies,
         assignedTactics: tempArr,
-        assignedDevelopers: state.project.assignedDevelopers,
-        finishedTactics: state.project.finishedTactics,
-        comment: state.project.comment,
-        commentAttendees: state.project.commentAttendees,
+        assignedDevelopers: action.payload.assignedDevelopers,
+        finishedTactics: action.payload.finishedTactics,
+        comment: action.payload.comment,
+        commentAttendees: action.payload.commentAttendees,
         loading: false
       };
+    /*
+    case GET_PROJECT:
+      return {
+        ...state,
+        project: action.payload,
+        loading: false
+      };
+*/
     case SET_ASSIGNED_DEVELOPER:
       const addDeveloper = dev => {
         if (dev !== undefined) {

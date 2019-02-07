@@ -2,6 +2,7 @@ import axios from "axios";
 
 import {
   GET_ERRORS,
+  RESET_ERRORS,
   DELETE_PROJECT,
   PROJECT_LOADING,
   GET_PROJECTS,
@@ -180,12 +181,11 @@ export const setFinishedTactic = tacticData => dispatch => {
     );
 };
 
-/*export const setFinishedTactic = tactic => {
+export const resetErrors = error => {
   return {
-    type: SET_FINISHED_TACTIC,
-    payload: tactic
+    type: RESET_ERRORS
   };
-};*/
+};
 
 // Reset assignedTactics
 export const resetAssignedStrategies = strategy => {

@@ -67,7 +67,7 @@ class ProjectItem extends Component {
               <h4 className={!finished ? "heading" : ""}>{project.name}</h4>
             </Link>
           </Panel.Heading>
-          <Panel.Body>
+          <Panel.Body className="shownText">
             <h4>Description</h4>
             {descriptionFirstPart}
 

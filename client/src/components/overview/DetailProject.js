@@ -15,6 +15,7 @@ import ModalProject from "../common/ModalProject";
 import PropTypes from "prop-types";
 import store from "../../store";
 
+import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import Spinner from "../common/Spinner";
 import CommentBox from "../common/CommentBox";
 
@@ -46,10 +47,6 @@ class DetailProject extends Component {
     this.props.getDevelopers();
     this.props.getProject(this.props.match.params.id);
 
-    setTimeout(() => {
-      this.props.switchAttrForEditProject();
-    }, 1000);
-
     this.createDoneArray();
     this.setState({ default: false });
   }
@@ -64,9 +61,6 @@ class DetailProject extends Component {
 
   updateProject() {
     this.props.getProject(this.props.match.params.id);
-    setTimeout(() => {
-      this.props.switchAttrForEditProject();
-    }, 1000);
   }
 
   onClickDelete(id) {
@@ -229,7 +223,9 @@ class DetailProject extends Component {
                     <Panel.Heading>
                       <Panel.Title componentClass="h4">Description</Panel.Title>
                     </Panel.Heading>
-                    <Panel.Body>{this.props.project.description}</Panel.Body>
+                    <Panel.Body className="shownText">
+                      {this.props.project.description}
+                    </Panel.Body>
                   </Panel>
                 </Col>
                 <Col md={3}>
@@ -253,9 +249,11 @@ class DetailProject extends Component {
                     <Panel.Heading>
                       <Panel.Title componentClass="h4">
                         Assigned Strategies and tactics{" "}
-                        <Button onClick={() => this.updateProject()}>
-                          <i className="fas fa-sync" />
-                        </Button>{" "}
+                        <BtnWithMouseOverPop
+                          onClick={() => this.updateProject()}
+                          icon="fas fa-sync"
+                          title="update tactics"
+                        />
                       </Panel.Title>
                     </Panel.Heading>
                     <Panel.Body>

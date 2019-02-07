@@ -19,3 +19,7 @@
   background-color: rgb(51, 122, 183);
   color: white;
 }
+
+.shownText {
+  white-space: pre-line;
+}

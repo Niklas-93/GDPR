@@ -11,6 +11,7 @@ import {
   FormControl
 } from "react-bootstrap";
 import store from "../../store";
+import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 
 import TextAreaField from "../common/TextAreaField";
 import "./CommentBox.css";
@@ -173,13 +174,13 @@ class CommentBox extends Component {
           <Panel.Heading>
             <Panel.Title componentClass="h3">
               Comment Box{" "}
-              <Button
+              <BtnWithMouseOverPop
                 onClick={() =>
                   this.props.getProject(this.props.match.params.id)
                 }
-              >
-                <i className="fas fa-sync" />
-              </Button>
+                title="update comments"
+                icon="fas fa-sync"
+              />
             </Panel.Title>
           </Panel.Heading>
           <Panel.Body id="commentBox">
