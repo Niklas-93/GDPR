@@ -5,8 +5,11 @@ import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
 import SearchBox from "./SearchBox";
 import { withRouter } from "react-router-dom";
+
+import store from "../../store";
 import {
   Navbar,
+  Breadcrumb,
   Nav,
   NavItem,
   NavDropdown,
@@ -19,6 +22,19 @@ import {
 } from "react-bootstrap";
 import "./NavigationBar.css";
 class Navigationbar extends Component {
+  constructor() {
+    super();
+    this.state = {
+      currentPage: "",
+
+      errors: {}
+    };
+  }
+
+  componentDidMount() {
+    this.setState({ currentPage: this.props.location.pathname });
+  }
+
   onLogoutClick(e) {
     e.preventDefault();
     this.props.logoutUser();
@@ -47,6 +63,7 @@ class Navigationbar extends Component {
         <Link to="/login">Login</Link>
       </MenuItem>
     );
+
     return (
       <Navbar inverse collapseOnSelect fixedTop>
         <Navbar.Header>
@@ -58,7 +75,7 @@ class Navigationbar extends Component {
         <Navbar.Collapse>
           <Navbar.Form pullLeft>
             <div className="placeholder" />
-            <SearchBox /> {/*<Button type="submit">Search!</Button>*/}
+            <SearchBox />
           </Navbar.Form>
 
           <Image

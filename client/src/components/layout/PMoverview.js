@@ -14,6 +14,7 @@ import {
 import { getDevelopers } from "../../actions/userActions";
 import {
   Popover,
+  Badge,
   OverlayTrigger,
   Col,
   Thumbnail,
@@ -105,7 +106,8 @@ class PMoverview extends Component {
     return (
       <div>
         <PageHeader>
-          Project Overview{" "}
+          Project Overview <Badge>{projects.length} </Badge>
+          {" ä"}
           {this.props.auth.user.role === "Project Manager" ? (
             <BtnWithMouseOverPop
               icon="fas fa-plus"

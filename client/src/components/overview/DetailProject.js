@@ -262,7 +262,7 @@ class DetailProject extends Component {
                           ? tactics.map(str => (
                               <Col key={str._id} md={3}>
                                 <Panel
-                                  className="strategyPanel"
+                                  className="strategyPanel panelBodyTactics"
                                   style={{
                                     height:
                                       getMaxAssignedTacticsForHeight() * 40 +
@@ -276,21 +276,32 @@ class DetailProject extends Component {
                                   </Panel.Heading>
 
                                   <Panel.Body>
-                                    <ul id="ulTac">
-                                      {str.assignedTactics.map(tac => (
-                                        <li id="liTac" key={tac._id}>
-                                          <input
-                                            name={tac.name}
-                                            type="checkbox"
-                                            checked={this.handleChecked(
-                                              tac,
-                                              (counter = counter + 1)
-                                            )}
-                                            onChange={this.handleInputChange}
-                                          />
-                                          {tac.name}
-                                        </li>
-                                      ))}
+                                    <ul className="ulTac">
+                                      <Row>
+                                        {str.assignedTactics.map(tac => (
+                                          <li id="liTac" key={tac._id}>
+                                            <Col md={9}>
+                                              <span className="dotForTactic" />
+                                              {"  "}
+
+                                              {tac.name}
+                                            </Col>
+                                            <Col md={3}>
+                                              <input
+                                                name={tac.name}
+                                                type="checkbox"
+                                                checked={this.handleChecked(
+                                                  tac,
+                                                  (counter = counter + 1)
+                                                )}
+                                                onChange={
+                                                  this.handleInputChange
+                                                }
+                                              />
+                                            </Col>
+                                          </li>
+                                        ))}
+                                      </Row>
                                     </ul>
                                   </Panel.Body>
                                 </Panel>
@@ -357,11 +368,13 @@ class DetailProject extends Component {
                       <Panel.Title componentClass="h4">Done</Panel.Title>
                     </Panel.Heading>
                     <Panel.Body>
-                      <ul>
+                      <ul className="ulTac">
                         {this.props.finishedTactics
                           ? this.props.finishedTactics.map(tac => (
                               <Col md={6} key={tac}>
-                                <li key={tac}>{tac}</li>
+                                <li key={tac}>
+                                  <span className="dotForTactic" /> {tac}
+                                </li>
                               </Col>
                             ))
                           : ""}
@@ -376,10 +389,12 @@ class DetailProject extends Component {
                       <Panel.Title componentClass="h4">Open</Panel.Title>
                     </Panel.Heading>
                     <Panel.Body>
-                      <ul>
+                      <ul className="ulTac">
                         {doneTacticArray().map(tac => (
                           <Col md={6} key={tac}>
-                            <li key={tac}>{tac}</li>
+                            <li key={tac}>
+                              <span className="dotForTactic" /> {tac}
+                            </li>
                           </Col>
                         ))}
                       </ul>
