@@ -8,33 +8,16 @@ import EditToolbar from "../common/EditToolbar";
 class PatternItem extends Component {
   constructor(props, context) {
     super(props, context);
-
-    this.state = {
-      open: false
-    };
   }
-  extendMore = () => {
-    this.setState({ open: !this.state.open });
-  };
 
   render() {
-    const { pattern, auth } = this.props;
-    //alert(typeof pattern);
-    const open = this.state.open;
-    let more;
+    const { pattern } = this.props;
     let patternDescriptionFirstPart = pattern.summary;
+
+    // if summary is too long, cut it after 28 words
     if (pattern.summary.split(" ").length > 30) {
       patternDescriptionFirstPart = pattern.summary.split(" ", 28).join(" ");
       patternDescriptionFirstPart = patternDescriptionFirstPart + "...";
-    }
-    //let patternDescriptionFirstPart = pattern.summary.split(" ", 30).join(" ");
-    let patternDescriptionSecondPart = pattern.summary.substring(
-      patternDescriptionFirstPart.length
-    );
-    if (open) {
-      more = <p>Less...</p>;
-    } else {
-      more = <p>More...</p>;
     }
 
     return (
@@ -54,15 +37,8 @@ class PatternItem extends Component {
                 <div className={"h4"}>{pattern.name}</div>
               </Link>
             </div>
-
-            {/*<div>
-              {pattern.assignedTactics.map(tactic => (
-                <span>{tactic.name} </span>
-              ))}
-              </div>*/}
           </Panel.Heading>
           <Panel.Body className={"adjusted-PanelBody"}>
-            {/*patternDescriptionFirstPart*/}
             <ul className={"StrategyListInPatterns"}>
               {pattern.assignedStrategiesWithAllTactics.map(strategy => (
                 <li>
@@ -71,34 +47,6 @@ class PatternItem extends Component {
               ))}
             </ul>
             {patternDescriptionFirstPart}
-            {/*<Collapse in={this.state.open}>
-              <div>
-                patternDescriptionSecondPart
-                {pattern.context}
-                {pattern.problem}
-                {pattern.forcesConcerns}
-                {pattern.solution}
-                {pattern.structure}
-                {pattern.implementation}
-                {pattern.consequences}
-                {pattern.liabilities}
-                {pattern.examples}
-                {pattern.relatedPatterns}
-                {pattern.sources}
-                {pattern.knownUses}
-              </div>
-            </Collapse>*/}
-            {/*<Link
-              to={{
-                pathname: "/patterndetail/" + pattern._id,
-                state: { pattern }
-              }}
-            >
-              <div className={"h4"}>More...</div>
-            </Link>*/}
-            {/*<div className="extendMore" onClick={this.extendMore}>
-              {more}
-              </div>*/}
           </Panel.Body>
         </Panel>
       </Col>
@@ -107,8 +55,7 @@ class PatternItem extends Component {
 }
 
 PatternItem.propTypes = {
-  pattern: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  pattern: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

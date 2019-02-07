@@ -8,7 +8,7 @@ import {
   DELETE_STRATEGY
 } from "./types";
 
-// create Tactic
+// create Strategy -- disabled in Components
 export const createStrategy = (strategyData, history) => dispatch => {
   axios
     .post("/api/strategies/createstrategy", strategyData)
@@ -21,7 +21,7 @@ export const createStrategy = (strategyData, history) => dispatch => {
     );
 };
 
-// Get Tactics
+// Get Strategies
 export const getStrategies = () => dispatch => {
   dispatch(setStrategyLoading());
   axios
@@ -40,9 +40,8 @@ export const getStrategies = () => dispatch => {
     );
 };
 
-// Delete Tactic
+// Delete Strategy -- disabled in Components
 export const deleteStrategy = id => dispatch => {
-  console.log(id);
   axios
     .delete(`/api/strategies/${id}`)
     .then(res =>
@@ -59,9 +58,8 @@ export const deleteStrategy = id => dispatch => {
     );
 };
 
-// Edit Pattern
+// Edit Strategy
 export const editStrategy = strategyData => dispatch => {
-  console.log(strategyData);
   axios
     .post("/api/strategies/editstrategy", strategyData)
     .then(res =>

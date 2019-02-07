@@ -1,23 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import {
-  Panel,
-  Col,
-  Tabs,
-  Tab,
-  Button,
-  Glyphicon,
-  InputGroup,
-  Badge,
-  Image
-} from "react-bootstrap";
+import { Col, Tabs, Tab, Button, Glyphicon, Badge } from "react-bootstrap";
 import Spinner from "../common/Spinner";
-//import SankeyDiagram from "../../img/SankeyDiagram.png";
 import "./Overview.css";
 import PatternFeed from "./PatternFeed";
 import { getPatterns } from "../../actions/patternActions";
-//import TacticFeed from "./TacticFeed";
 import { getTactics } from "../../actions/tacticActions";
 import StrategyFeed from "./StrategyFeed";
 import SankeyDiagram from "./SankeyDiagram";
@@ -25,20 +13,20 @@ import { getStrategies } from "../../actions/strategyActions";
 import Sidebar from "react-sidebar";
 import { Link } from "react-router-dom";
 
+// Define minwidth of screen for sidebar (filter)
 const mql = window.matchMedia(`(min-width: 800px)`);
 
 class Overview extends Component {
   constructor(props) {
     super(props);
+    //set initial state: opened sidebar
     this.state = {
       sidebarOpen: true,
-      sidebarDocked: mql.matches,
-      displaySidebar: "block",
-      sidebarCounter: 0
+      sidebarDocked: mql.matches
     };
+    //bind functions
     this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
     this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
-    // this.hideFilterbar = this.hideFilterbar.bind(this);
   }
 
   componentWillMount() {
@@ -46,6 +34,7 @@ class Overview extends Component {
   }
 
   componentDidMount() {
+    // get initial props : patterns, strategies
     this.props.getPatterns();
     this.props.getTactics();
     this.props.getStrategies();
@@ -56,55 +45,22 @@ class Overview extends Component {
   }
 
   onSetSidebarOpen = () => {
-    //alert("hallo");
     this.setState({ sidebarOpen: !this.state.sidebarOpen });
   };
 
   mediaQueryChanged() {
+    // dock sidebar if screensize is too small
     this.setState({ sidebarDocked: mql.matches, sidebarOpen: false });
   }
 
-  /*hideFilterbar = () => {
-    alert("hallo");
-    this.setState({
-      displaySidebar: "none"
-    });
-  };
-
-  hideFilterbar() {
-    alert("hallo");
-    this.setState({
-      displaySidebar: "none"
-    });
-  }
-*/
-  onSelect() {
-    alert("hallo");
-    this.setState({
-      displaySidebar: "none"
-    });
-  }
-
-  handleSelect = key => {
-    //alert(key);
-    if (this.state.sidebarCounter === 1) {
-      this.setState({
-        displaySidebar: "block",
-        sidebarCounter: 0
-      });
-    } else {
-      this.setState({
-        displaySidebar: "none",
-        sidebarCounter: 1
-      });
-    }
-  };
-
+  // filter patterns according to visibilityFilters from store
   getVisiblePatterns = (patterns, filters) => {
     if (filters.length == 0) {
+      // if no filters are set, take all patterns
       visiblePatterns = patterns;
     } else {
       var visiblePatterns = [];
+      // check for each pattern, if assigned tactics or strategies are set as filters
       patterns.forEach(pattern => {
         pattern.assignedStrategiesWithAllTactics.forEach(strategy => {
           filters.forEach(filter => {
@@ -112,7 +68,6 @@ class Overview extends Component {
               strategy.assignedTactics.forEach(tactic => {
                 filter.assignedTactics.forEach(tacticFilter => {
                   if (tacticFilter._id == tactic._id) {
-                    //visiblePatterns.push(pattern);
                     const alreadyIncluded = visiblePatterns.filter(
                       visiblePattern => visiblePattern.name == pattern.name
                     );
@@ -140,43 +95,37 @@ class Overview extends Component {
   };
   render() {
     const { patterns, loading } = this.props.pattern;
-    //console.log(patterns);
     const { isAuthenticated } = this.props.auth;
     let patternContent;
     var visiblePatterns = [];
+
     if (patterns === null || loading) {
+      // while patterns are loading, show spinner
       patternContent = <Spinner />;
     } else {
+      //if patterns are loaded, filter them according to visibilityFilters from store
       visiblePatterns = this.getVisiblePatterns(
         this.props.pattern.patterns,
         this.props.pattern.visibilityFilters
       );
-      //visiblePatterns = this.props.pattern.patterns;
       patternContent = <PatternFeed patterns={visiblePatterns} />;
     }
-    //alert(visiblePatterns);
-    /*const { tactics, loading2 } = this.props.tactic;
-    let tacticContent;
-
-    if (tactics === null || loading2) {
-      tacticContent = <Spinner />;
-    } else {
-    }*/
 
     const { strategies, loading3 } = this.props.strategy;
     let strategyContent;
 
     if (strategies === null || loading3) {
+      // while strategies are loading, display spinner
       strategyContent = <Spinner />;
     } else {
-      // console.log("strategyinOverview");
-      // console.log(strategies);
+      // if strategies are loaded, display them
       strategyContent = (
         <StrategyFeed strategies={strategies} isFilter={true} />
       );
     }
     return (
       <div style={{ paddingBottom: "660px" }}>
+        {/*if sidebar is open, display full filterbar, otherwise only button to open sidebar*/}
         {this.state.sidebarOpen ? (
           <Sidebar
             sidebarId="Filterbar"
@@ -209,7 +158,6 @@ class Overview extends Component {
                 background: "white",
                 position: "fixed",
                 marginTop: "52px",
-                //display: this.state.displaySidebar,
                 maxWidth: "200px"
               }
             }}
@@ -234,18 +182,13 @@ class Overview extends Component {
                 background: "white",
                 position: "fixed",
                 marginTop: "52px",
-                //display: this.state.displaySidebar,
                 maxWidth: "35px"
               }
             }}
           />
         )}
 
-        <Tabs
-          defaultActiveKey={1}
-          id="Select-View"
-          onSelect={() => this.handleSelect()}
-        >
+        <Tabs defaultActiveKey={1} id="Select-View">
           <Tab eventKey={1} title="Grid View">
             <br />
             <Col xs={12}>
@@ -281,6 +224,7 @@ class Overview extends Component {
   }
 }
 
+// define required props
 Overview.propTypes = {
   getPatterns: PropTypes.func.isRequired,
   pattern: PropTypes.object.isRequired,

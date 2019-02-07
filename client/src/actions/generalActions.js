@@ -1,18 +1,14 @@
 import axios from "axios";
 
 import { SEARCHRESULTS_LOADING, SEARCH_IN_BACKEND } from "./types";
-// Search in Backend
 
+// Search in Backend with Searchbox in Navbar
 export const searchInBackend = searchString => dispatch => {
-  //console.log("id" + id);
+  // Set Loading while getting data
   dispatch(setSearchResultsLoading());
-
-  //alert("seerver");
   axios
     .post(`/api/general/search`, { searchString: searchString })
     .then(res =>
-      // console.log("res" + res.data.pattern)
-
       dispatch({
         type: SEARCH_IN_BACKEND,
         payload: res.data

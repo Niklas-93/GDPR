@@ -54,37 +54,14 @@ export const getPatterns = () => dispatch => {
     );
 };
 
-// Get Pattern
-/*export const getPattern = id => dispatch => {
-  console.log("id" + id);
-  dispatch(setPatternLoading());
-  axios
-    .get(`/api/patterns/${id}`)
-    .then(res =>
-      // console.log("res" + res.data.pattern)
-      dispatch({
-        type: GET_PATTERN,
-        payload: res.data
-      })
-    )
-    .catch(err =>
-      dispatch({
-        type: GET_PATTERN,
-        payload: null
-      })
-    );
-};*/
-
+// get single Pattern
 export const getPattern = id => dispatch => {
-  //console.log("id" + id);
+  // set loading while getting Pattern from server
   dispatch(setPatternLoading());
 
-  //alert("seerver");
   axios
     .get(`/api/patterns/${id}`)
     .then(res =>
-      // console.log("res" + res.data.pattern)
-
       dispatch({
         type: GET_PATTERN,
         payload: res.data
@@ -100,12 +77,8 @@ export const getPattern = id => dispatch => {
 
 // Delete Pattern
 export const deletePattern = (id, history) => dispatch => {
-  console.log(id);
-  //history.push("/overview");
   axios
     .delete(`/api/patterns/${id}`)
-    //.then(res => history.push("/overview"))
-    //.then(res => history.push("/overview"))
     .then(
       dispatch({
         type: DELETE_PATTERN,
@@ -123,8 +96,6 @@ export const deletePattern = (id, history) => dispatch => {
 
 // Edit Pattern
 export const editPattern = patternData => dispatch => {
-  console.log("vorserver");
-  console.log(patternData);
   axios
     .post("/api/patterns/editpattern", patternData)
     .then(res =>
@@ -187,6 +158,7 @@ export const setFilterForPatterns = (
     payload: { tacticFilter: tacticFilter, strategyFilter: strategyFilter }
   });
 };
+
 // Deselect Tactic as Filter for Patterns
 export const deselectTacticAsFilter = (tacticFilter, strategyFilter) => {
   return {
@@ -194,12 +166,14 @@ export const deselectTacticAsFilter = (tacticFilter, strategyFilter) => {
     payload: { tacticFilter: tacticFilter, strategyFilter: strategyFilter }
   };
 };
+
 //Clear all Filters
 export const clearAllFilters = () => {
   return {
     type: CLEAR_ALL_FILTERS
   };
 };
+
 // Set Strategy as Filter for Patterns
 export const setStrategyAsFilter = filters => {
   return {
@@ -207,6 +181,7 @@ export const setStrategyAsFilter = filters => {
     payload: filters
   };
 };
+
 //Deselect Strategy as Filter
 export const deselectStrategyAsFilter = filters => {
   return {
@@ -236,6 +211,7 @@ export const setChosenTactics = tactic => {
     payload: tactic
   };
 };
+
 // Clear Chosen tactics
 export const clearChosenTactics = () => {
   return {

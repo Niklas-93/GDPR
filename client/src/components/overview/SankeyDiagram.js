@@ -1,83 +1,16 @@
 import React, { Component } from "react";
-//import ReactSankey from "react-sankey";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
 import { Sankey, Hint } from "react-vis";
 import { withRouter } from "react-router-dom";
 
-const nodes3 = [
-  { name: "s1" },
-  { name: "s2" },
-  { name: "t1" },
-  { name: "t2" },
-  { name: "p1" },
-  { name: "p2" }
-];
-const links3 = [
-  { source: 2, target: 4, value: 10 },
-  { source: 3, target: 4, value: 10 },
-  { source: 1, target: 3, value: 10 },
-  // { source: 3, target: 5, value: 10 },
-  { source: 0, target: 2, value: 10 },
-  // { source: 2, target: 4, value: 20 },
-  { source: 0, target: 3, value: 10 }
-  //{ source: 1, target: 2, value: 20 }
-];
-
-const createNode = (title, value, id) => ({ title, value, id });
-const createLink = (sourceId, targetId) => ({ sourceId, targetId });
-
-const nodes2 = {
-  0: {
-    title: "Node 0",
-    value: 10,
-    id: "0"
-  },
-  1: {
-    title: "S 1",
-    value: 9,
-    id: "1"
-  },
-  2: {
-    title: "S 2",
-    value: 8,
-    id: "2"
-  },
-  3: {
-    title: "T 3",
-    value: 7,
-    id: "3"
-  },
-  4: {
-    title: "T 4",
-    value: 3,
-    id: "4"
-  },
-  5: {
-    title: "P 5",
-    value: 3,
-    id: "5"
-  },
-  6: {
-    title: "P 6",
-    value: 3,
-    id: "6"
-  }
-};
-const links2 = [
-  { sourceId: 0, targetId: 1 },
-  { sourceId: 0, targetId: 2 },
-  { sourceId: 1, targetId: 3 },
-  { sourceId: 2, targetId: 4 },
-  { sourceId: 3, targetId: 5 },
-  { sourceId: 4, targetId: 5 }
-];
-
 class SankeyDiagram extends React.Component {
+  // Define hovered Links and Nodes
   state = {
     activeNode: null,
     activeLink: null
   };
+
   _renderHint() {
     const { activeNode } = this.state;
     console.log("activeNode");
@@ -267,6 +200,8 @@ class SankeyDiagram extends React.Component {
           minHeight = strategies.length * 300;
         }
         const { activeLink } = this.state;
+
+        // set high opacity for hovered links
         links = links.map((d, i) => ({
           ...d,
           opacity:
@@ -284,17 +219,16 @@ class SankeyDiagram extends React.Component {
             width={900}
             height={minHeight}
             nodeWidth={20}
-            //  labelRotation={10}
-
             onValueClick={(datapoint, event) => {
-              //console.log(datapoint);
-
+              // onClick on pattern (id exists), forward to detailpage
               if (datapoint.id) {
                 this.props.history.push("/patterndetail/" + datapoint.id);
               }
             }}
+            // Set ToolTip for Nodes (strategies and Tactics)
             onValueMouseOver={node => this.setState({ activeNode: node })}
             onValueMouseOut={node => this.setState({ activeNode: null })}
+            //Set hover effect for links
             onLinkMouseOver={node => this.setState({ activeLink: node })}
             onLinkMouseOut={() => this.setState({ activeLink: null })}
           >
@@ -303,11 +237,8 @@ class SankeyDiagram extends React.Component {
         );
       }
     }
-    //console.log(strategies);
 
     return <div>{SankeyDiagramContent}</div>;
-
-    //return <div />;
   }
 }
 const mapStateToProps = state => ({

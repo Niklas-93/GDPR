@@ -270,7 +270,7 @@ class PatternDetail extends Component {
                     <span />
                   ) : (
                     <span>
-                      <h4>relatedPatterns</h4>
+                      <h4>related Patterns</h4>
                       <div>{pattern.relatedPatterns}</div>
                     </span>
                   )}
