@@ -171,7 +171,10 @@ router.post("/createpattern", (req, res) => {
   console.log(req.body);
   Pattern.findOne({ name: req.body.name }).then(pattern => {
     if (pattern) {
-      errors.name = "Pattern already exists";
+      const errors = {};
+      errors.patternAlreadyExists = "Pattern already exists";
+      console.log("errors");
+      console.log(errors);
       return res.status(400).json(errors);
     } else {
       const newPattern = new Pattern({

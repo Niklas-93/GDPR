@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import {
   Button,
   Glyphicon,
@@ -114,9 +115,12 @@ class StrategyEditForm extends Component {
                   <ControlLabel>Assigned Tactics</ControlLabel>
                 </Col>
                 <Col xs={3}>
-                  <Button onClick={() => this.newTacticField()}>
-                    <Glyphicon glyph="plus" />
-                  </Button>
+                  <BtnWithMouseOverPop
+                    icon="fa fa-plus"
+                    title="Add new Tactic"
+                    link="#"
+                    onClick={() => this.newTacticField()}
+                  />
                 </Col>
                 <br />
                 <br />
@@ -133,9 +137,12 @@ class StrategyEditForm extends Component {
                       />
                     </Col>
                     <Col xs={3}>
-                      <Button onClick={() => this.removeTacticFromArray(index)}>
-                        <Glyphicon glyph="remove" />
-                      </Button>
+                      <BtnWithMouseOverPop
+                        icon="glyphicon glyphicon-remove"
+                        title="Delete Tactic"
+                        link="#"
+                        onClick={() => this.removeTacticFromArray(index)}
+                      />
                     </Col>
                   </div>
                 ))}

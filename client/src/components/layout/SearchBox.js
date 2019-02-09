@@ -17,7 +17,8 @@ import {
   AsyncTypeahead,
   GithubMenuItem,
   makeAndHandleRequest,
-  PER_PAGE
+  PER_PAGE,
+  Menu
 } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import {
@@ -131,13 +132,15 @@ class SearchBox extends Component {
     });*/
   }
 
-  handleSelectedSearchItem = searchItem => {
+  handleSelectedSearchItem2 = searchItem => {
     // this.setState({ selected: searchItem }, alert(searchItem));
 
     console.log("searchItem");
     console.log(searchItem);
     console.log(this.props.history);
     const selectedItem = searchItem[0];
+    console.log("sel");
+    console.log(selectedItem);
     if (searchItem.length != 0) {
       // is Pattern
       if (selectedItem.summary != undefined) {
@@ -147,12 +150,14 @@ class SearchBox extends Component {
       }
       // is Strategy
       else if (selectedItem.assignedTactics != undefined) {
+        alert("2");
         this.props.clearAllFilters();
         this.props.setStrategyAsFilter(selectedItem);
         this.props.history.push("/overview");
       }
       // is Tactic
       else {
+        alert("3");
         this.props.clearAllFilters();
         this.props.setFilterForPatterns(selectedItem.name);
         this.props.history.push("/overview");
@@ -160,6 +165,47 @@ class SearchBox extends Component {
     }
   };
 
+  handleSelectedSearchItem = searchItem => {
+    // this.setState({ selected: searchItem }, alert(searchItem));
+
+    console.log("searchItem");
+    // console.log(searchItem);
+    console.log(this.props.history);
+    //const selectedItem = searchItem[0];
+    console.log("sel");
+    console.log(selectedItem);
+    var selectedItem = searchItem[0];
+    if (searchItem.length != 0) {
+      // is Pattern
+      if (selectedItem.summary != undefined) {
+        //this.props.linkToPatternAfterSearch(selectedItem);
+        this.props.getPattern(selectedItem._id);
+        this.props.history.push("/patterndetail/" + selectedItem._id);
+      }
+      // is Strategy
+      else if (selectedItem.assignedTactics != undefined) {
+        // alert("2");
+        this.props.clearAllFilters();
+        this.props.setStrategyAsFilter(selectedItem);
+        this.props.history.push("/overview");
+      }
+      // is Tactic
+      else {
+        // alert("3");
+        this.props.clearAllFilters();
+        this.props.setFilterForPatterns(selectedItem.name);
+        this.props.history.push("/overview");
+      }
+    }
+  };
+
+  differBetweenSearchresults(searchItem) {
+    if (searchItem.summary !== undefined) {
+      return <span className={"searchResultIndicator"}>Pattern: </span>;
+    } else {
+      return <span className={"searchResultIndicator"}>Filter for: </span>;
+    }
+  }
   render() {
     const { loading, searchResults } = this.props.general;
     let searchContent;
@@ -184,7 +230,7 @@ class SearchBox extends Component {
           onChange={selected => this.setState({ selected })}
           // onChange={this.search}
           onSearch={this.__handleSearch}
-          placeholder="Search for Patterns..."
+          placeholder="Search..."
         />
       );
     } else {
@@ -204,13 +250,30 @@ class SearchBox extends Component {
           onChange={selected => this.handleSelectedSearchItem(selected)}
           // onChange={this.search}
           onSearch={this.__handleSearch}
-          placeholder="Search for Patterns..."
-
-          //  results={searchContent} <MenuItem>{option.name}</MenuItem>
-          /* renderMenuItemChildren={(option, props) => (
-            // <MenuItem>{option.name}</MenuItem>
-            
+          placeholder="Search..." /*}
+                </MenuItem>
+              ))}
+            </Menu>
           )}*/
+          /*  renderMenuItemChildren={(result, menuProps, index) => (
+            <MenuItem option={result} position={index}>
+              {this.differBetweenSearchresults(result)}
+              {result.name}
+            </MenuItem>
+          )}*/
+          /*
+           renderMenu={(results, menuProps) => (
+            <Menu {...menuProps}>
+              {results.map((result, index) => (
+                <MenuItem option={result} position={index}>
+                  {this.differBetweenSearchresults(result)}
+                  <span onClick={() => this.handleSelectedSearchItem(result)}>
+                    {result.name}
+                  </span>
+                  </MenuItem>
+              ))}
+              </Menu>)}
+*/
         />
       );
       //  searchContent = <ResultList searchResults={searchResults} />;

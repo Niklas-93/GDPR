@@ -15,14 +15,20 @@ class SankeyDiagram extends React.Component {
     const { activeNode } = this.state;
     console.log("activeNode");
     console.log(activeNode);
-    if (activeNode === null) {
+    if (activeNode === null || activeNode.isPattern == true) {
       return null;
     }
 
-    // calculate center x,y position of link for positioning of hint
-    const x = activeNode.x1 + (activeNode.x0 - activeNode.x1) / 2;
-    const y = activeNode.y0 - (activeNode.y0 - activeNode.y1) / 2;
-
+    // calculate x, y position of hint
+    var x;
+    var y;
+    if (activeNode.index < 9) {
+      x = activeNode.x1 - 50;
+      y = activeNode.y1 - 300;
+    } else {
+      x = activeNode.x1 - 31;
+      y = activeNode.y1 - 100;
+    }
     const hintValue = {};
     const label = `${activeNode.description}`;
     //  hintValue[label] = activeNode.value;
@@ -30,11 +36,6 @@ class SankeyDiagram extends React.Component {
     console.log(hintValue);
     console.log(x);
     console.log(y);
-
-    /* console.log("hintlabel");
-    console.log(hintValue);
-    let hintValue2;
-    hintValue2 = hintValue.slice(0, -3);*/
     return (
       <Hint
         x={x}
@@ -43,7 +44,8 @@ class SankeyDiagram extends React.Component {
         style={{
           background: "#337ab7",
           color: "white",
-          padding: "10px 10px 10px 10px"
+          padding: "10px 10px 10px 10px",
+          borderRadius: "10px"
         }}
       />
     );
@@ -78,7 +80,8 @@ class SankeyDiagram extends React.Component {
             name: pattern.name,
             color: "#337ab7",
             id: pattern._id,
-            key: pattern._id
+            key: pattern._id,
+            isPattern: true
           };
           tacticCounter++;
         });
@@ -209,7 +212,8 @@ class SankeyDiagram extends React.Component {
               ? 0.9
               : 0.3
         }));
-
+        let hintContent;
+        hintContent = this._renderHint();
         SankeyDiagramContent = (
           <Sankey
             layout={200}
@@ -232,13 +236,18 @@ class SankeyDiagram extends React.Component {
             onLinkMouseOver={node => this.setState({ activeLink: node })}
             onLinkMouseOut={() => this.setState({ activeLink: null })}
           >
-            {this._renderHint()}
+            {/*this._renderHint()*/}
+            {hintContent}
           </Sankey>
         );
       }
     }
 
-    return <div>{SankeyDiagramContent}</div>;
+    return (
+      <div style={{ zIndex: "5", position: "relative" }}>
+        {SankeyDiagramContent}
+      </div>
+    );
   }
 }
 const mapStateToProps = state => ({

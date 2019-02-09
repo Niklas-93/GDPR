@@ -17,7 +17,8 @@ const TextAreaField = ({
   info,
   onChange,
   onBlur,
-  onSubmit
+  onSubmit,
+  className
 }) => {
   var validationState;
   if (error != null) {
@@ -49,8 +50,10 @@ const TextAreaField = ({
           </InputGroup>
         </FormGroup>
       ) : (
-        <FormGroup controlId="formControlsTextarea"
-        validationState={validationState}>
+        <FormGroup
+          controlId="formControlsTextarea"
+          validationState={validationState}
+        >
           <ControlLabel>{label}</ControlLabel>
           <FormControl
             componentClass="textarea"
@@ -60,6 +63,7 @@ const TextAreaField = ({
             placeholder={placeholder}
             onChange={onChange}
             onBlur={onBlur}
+            className={className}
           />
           {info && <small className="form-text text-muted">{info}</small>}
           {error && <div className="invalid-feedback">{error}</div>}

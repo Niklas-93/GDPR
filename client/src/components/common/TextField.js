@@ -12,7 +12,8 @@ const TextField = ({
   disabled,
   info,
   error,
-  onBlur
+  onBlur,
+  className
 }) => {
   var validationState;
   if (error != null) {
@@ -32,6 +33,7 @@ const TextField = ({
         onChange={onChange}
         disabled={disabled}
         onBlur={onBlur}
+        className={className}
       />
       {info && <small className="form-text text-muted">{info}</small>}
       {error && <div className="invalid-feedback">{error}</div>}

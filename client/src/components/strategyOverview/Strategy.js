@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import {
   ButtonToolbar,
   ButtonGroup,
@@ -22,8 +23,8 @@ class Strategy extends Component {
       editing: false,
       showRemoveModal: false,
       name: this.props.strategy.name,
-      description: this.props.strategy.description,
-      assignedTactics: this.props.strategy.assignedTactics
+      description: this.props.strategy.description
+      //assignedTactics: this.props.strategy.assignedTactics
     };
   }
 
@@ -70,13 +71,24 @@ class Strategy extends Component {
                 >
                   <Col xs={6}>{strategy.name}</Col>
                   <Col xs={6}>
-                    <ButtonToolbar className={""} componentClass={"span"}>
+                    <ButtonToolbar
+                      className={""}
+                      componentClass={"span"}
+                      style={{ float: "right" }}
+                    >
                       <ButtonGroup>
-                        <Button onClick={() => this.enableEditing()}>
+                        {/* <Button onClick={() => this.enableEditing()}>
                           <Glyphicon glyph="pencil" />
-                        </Button>
+        </Button>*/}
+                        <BtnWithMouseOverPop
+                          icon="glyphicon glyphicon-pencil"
+                          title="Edit Strategy"
+                          link="#"
+                          onClick={() => this.enableEditing()}
+                        />
                       </ButtonGroup>
-                      {/* Strategies are not allowed to be deleted
+                      {/*
+                       Strategies are not allowed to be deleted
                         <Button onClick={this.handleShowRemoveModal}>
                           <Glyphicon glyph="remove" />
                         </Button>

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Col, Tabs, Tab, Button, Glyphicon, Badge } from "react-bootstrap";
 import Spinner from "../common/Spinner";
+import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import "./Overview.css";
 import PatternFeed from "./PatternFeed";
 import { getPatterns } from "../../actions/patternActions";
@@ -11,7 +12,7 @@ import StrategyFeed from "./StrategyFeed";
 import SankeyDiagram from "./SankeyDiagram";
 import { getStrategies } from "../../actions/strategyActions";
 import Sidebar from "react-sidebar";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 // Define minwidth of screen for sidebar (filter)
 const mql = window.matchMedia(`(min-width: 800px)`);
@@ -51,6 +52,20 @@ class Overview extends Component {
   mediaQueryChanged() {
     // dock sidebar if screensize is too small
     this.setState({ sidebarDocked: mql.matches, sidebarOpen: false });
+  }
+
+  // refresh Overview after clicking on refresh button
+  refreshOverview() {
+    this.props.getPatterns();
+    this.props.getStrategies();
+  }
+
+  //automatic refresh of site after 2 Minutes
+  refreshOverviewAfterTwoMinutes() {
+    setTimeout(() => {
+      this.props.getPatterns();
+      this.props.getStrategies();
+    }, 120000);
   }
 
   // filter patterns according to visibilityFilters from store
@@ -94,11 +109,11 @@ class Overview extends Component {
     return visiblePatterns;
   };
   render() {
+    //this.refreshOverviewAfterTwoMinutes();
     const { patterns, loading } = this.props.pattern;
-    const { isAuthenticated } = this.props.auth;
+    const { isDataProtectionOfficer } = this.props.auth;
     let patternContent;
     var visiblePatterns = [];
-
     if (patterns === null || loading) {
       // while patterns are loading, show spinner
       patternContent = <Spinner />;
@@ -193,15 +208,23 @@ class Overview extends Component {
             <br />
             <Col xs={12}>
               <span className={"h4"}>
-                Patterns <Badge>{visiblePatterns.length}</Badge>
-              </span>
-              {isAuthenticated ? (
+                Patterns <Badge>{visiblePatterns.length} </Badge>
+              </span>{" "}
+              <BtnWithMouseOverPop
+                icon="fas fa-sync"
+                title="Update Overview"
+                link="#"
+                onClick={() => this.refreshOverview()}
+              />
+              {isDataProtectionOfficer ? (
                 <span>
-                  <Link to="/create-pattern">
-                    <Button className={"glyphicon-button"}>
-                      <Glyphicon glyph="plus" />
-                    </Button>
-                  </Link>
+                  {" "}
+                  <BtnWithMouseOverPop
+                    icon="fas fa-plus"
+                    title="Create Pattern"
+                    link="#"
+                    onClick={() => this.props.history.push("/create-pattern")}
+                  />
                   <Link to="/strategyoverview" style={{ marginLeft: "450px" }}>
                     Manage Strategies and Tactics...
                   </Link>
@@ -244,4 +267,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { getPatterns, getTactics, getStrategies }
-)(Overview);
+)(withRouter(Overview));

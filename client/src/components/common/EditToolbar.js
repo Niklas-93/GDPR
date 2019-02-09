@@ -5,6 +5,7 @@ import {
   ButtonToolbar,
   ButtonGroup,
   Button,
+  Col,
   Glyphicon,
   Modal,
   FormGroup,
@@ -13,6 +14,7 @@ import {
   HelpBlock,
   Checkbox
 } from "react-bootstrap";
+import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import { Link, withRouter } from "react-router-dom";
 import { deletePattern, editPattern } from "../../actions/patternActions";
 
@@ -98,7 +100,7 @@ class EditToolbar extends Component {
   render() {
     const { pattern } = this.props;
     return (
-      <ButtonToolbar className={"glyphicon-button"}>
+      <ButtonToolbar className={"glyphicon-button"} style={{ float: "right" }}>
         {/*<ButtonGroup>
           <Button onClick={this.handleShowEditModal}>
             <Glyphicon glyph="pencil" />
@@ -106,14 +108,24 @@ class EditToolbar extends Component {
           <Button onClick={this.handleShowRemoveModal}>
             <Glyphicon glyph="remove" />
           </Button>
-              </ButtonGroup>*/}
+        </ButtonGroup>*/}
         <ButtonGroup>
-          <Button onClick={this.props.enableEditing}>
-            <Glyphicon glyph="pencil" />
-          </Button>
-          <Button onClick={this.handleShowRemoveModal}>
+          <BtnWithMouseOverPop
+            icon="glyphicon glyphicon-pencil"
+            title="Edit Pattern"
+            link="#"
+            onClick={() => this.props.enableEditing()}
+          />
+          {"   "}
+          <BtnWithMouseOverPop
+            icon="glyphicon glyphicon-remove"
+            title="Delete Pattern"
+            link="#"
+            onClick={() => this.handleShowRemoveModal()}
+          />
+          {/*<Button onClick={this.handleShowRemoveModal}>
             <Glyphicon glyph="remove" />
-          </Button>
+      </Button>*/}
         </ButtonGroup>
         <div className="static-modal">
           <Modal
@@ -127,14 +139,23 @@ class EditToolbar extends Component {
             </Modal.Header>
 
             <Modal.Footer>
-              <Button
-                class="btn-lg btn-info"
-                onClick={() => this.deletePattern(this.props._id)}
-              >
-                Confirm
-              </Button>
-
-              <Button onClick={this.handleCloseRemoveModal}>Cancel</Button>
+              <Col xs={6}>
+                <Button
+                  className={"col-xs-12"}
+                  bsStyle="danger"
+                  onClick={() => this.deletePattern(this.props._id)}
+                >
+                  Confirm <i className={"glyphicon glyphicon-trash"} />
+                </Button>
+              </Col>
+              <Col xs={6}>
+                <Button
+                  className={"dismiss-button col-xs-12"}
+                  onClick={this.handleCloseRemoveModal}
+                >
+                  Cancel <i className={"glyphicon glyphicon-remove"} />
+                </Button>
+              </Col>
             </Modal.Footer>
           </Modal>
         </div>

@@ -61,11 +61,11 @@ class PatternDetail extends Component {
     }, 10);
     // if all fields are set, go to next tab
     if (
-      this.state.name != "" &&
-      this.state.summary != "" &&
-      this.state.context != "" &&
-      this.state.problem != "" &&
-      this.state.solution != ""
+      this.state.pattern.name != "" &&
+      this.state.pattern.summary != "" &&
+      this.state.pattern.context != "" &&
+      this.state.pattern.problem != "" &&
+      this.state.pattern.solution != ""
     ) {
       this.setState({ activeKey });
     }
@@ -73,7 +73,7 @@ class PatternDetail extends Component {
 
   // checks if fields are empty, sets errors
   setErrorIfEmpty = textField => {
-    if (this.state[textField] == "") {
+    if (this.state.pattern[textField] == "") {
       this.setState({
         errors: {
           ...this.state.errors,
@@ -100,19 +100,16 @@ class PatternDetail extends Component {
   };
 
   onChange(e) {
-    alert(e.target.name);
-    alert(e.target.value);
     this.setState({ [e.target.name]: e.target.value });
   }
   // on confirmation of changes of pattern
   editPattern = () => {
     const editedPattern = this.state.pattern;
     editedPattern.assignedTactics = this.props.pattern.chosenTactics;
-    console.log("editedPattern");
-    console.log(editedPattern);
     this.props.editPattern(editedPattern);
     this.handleEditing();
   };
+
   // handle the edit mode of the pattern => active/passive
   handleEditing = () => {
     this.setState({
@@ -133,7 +130,7 @@ class PatternDetail extends Component {
   render() {
     // get basic props
     const { errors } = this.state;
-    const { isAuthenticated } = this.props.auth;
+    const { isDataProtectionOfficer } = this.props.auth;
     const { pattern, loading, editPattern } = this.props.pattern;
     let patternContent;
 
@@ -181,7 +178,7 @@ class PatternDetail extends Component {
                     <span className={"h3"}>{pattern.name}</span>
                   </Col>
                   <Col xs={6}>
-                    {isAuthenticated ? (
+                    {isDataProtectionOfficer ? (
                       <EditToolbar
                         name={pattern.name}
                         _id={this.props.match.params._id}
@@ -282,6 +279,14 @@ class PatternDetail extends Component {
                       <div>{pattern.sources}</div>
                     </span>
                   )}
+                  <br />
+                  <br />
+                  <Button
+                    className={"col-xs-12 dismiss-button"}
+                    onClick={() => this.props.history.push("/overview")}
+                  >
+                    Go back to Overview
+                  </Button>
                 </Col>
               </Panel.Body>
             </Panel>
@@ -297,44 +302,65 @@ class PatternDetail extends Component {
                 >
                   <Tab eventKey={1} title="1. Basic Information">
                     <TextField
-                      label="Name of pattern"
+                      label="Name of pattern*"
                       name="name"
                       value={this.state.pattern.name}
                       placeholder="Enter the name of the pattern"
                       onChange={this.onChangePattern}
+                      error={errors.name}
+                      className={"patternName"}
                     />
 
                     <TextAreaField
-                      label="Summary"
+                      label="Summary*"
                       name="summary"
                       value={this.state.pattern.summary}
                       placeholder="Enter Summary"
                       onChange={this.onChangePattern}
+                      error={errors.summary}
+                      className={"patternTextarea"}
                     />
                     <TextAreaField
-                      label="Context"
+                      label="Context*"
                       name="context"
                       value={this.state.pattern.context}
                       placeholder="Enter Context"
                       onChange={this.onChangePattern}
+                      error={errors.context}
+                      className={"patternTextarea"}
                     />
                     <TextAreaField
-                      label="Problem"
+                      label="Problem*"
                       name="problem"
                       value={this.state.pattern.problem}
                       placeholder="Enter Problem"
                       onChange={this.onChangePattern}
+                      error={errors.problem}
+                      className={"patternTextarea"}
                     />
                     <TextAreaField
-                      label="Solution"
+                      label="Solution*"
                       name="solution"
                       value={this.state.pattern.solution}
                       placeholder="Enter Solution"
                       onChange={this.onChangePattern}
+                      error={errors.solution}
+                      className={"patternTextarea"}
                     />
+                    <Col xs={12}>
+                      <span style={{ color: "#a9a9a9" }}>
+                        * fields are required
+                      </span>
+                    </Col>
+                    <Button
+                      className={"col-xs-6 dismiss-button"}
+                      onClick={this.handleEditing}
+                    >
+                      Dismiss Changes
+                    </Button>
                     <Button
                       bsStyle="primary"
-                      className={"col-xs-12"}
+                      className={"col-xs-6"}
                       onClick={() => this.handleSelect(2)}
                     >
                       Set assigned Strategies
@@ -348,20 +374,34 @@ class PatternDetail extends Component {
                       {strategyContent} <br />
                       <br />
                       {seeAdditionals ? (
-                        <Button
-                          className={"col-xs-12"}
-                          bsStyle="primary"
-                          onClick={() => this.handleSelect(3)}
-                        >
-                          Set additional Information
-                        </Button>
+                        <span>
+                          <Button
+                            className={"col-xs-6 dismiss-button"}
+                            onClick={this.handleEditing}
+                          >
+                            Dismiss Changes
+                          </Button>
+                          <Button
+                            className={"col-xs-6"}
+                            bsStyle="primary"
+                            onClick={() => this.handleSelect(3)}
+                          >
+                            Set additional Information
+                          </Button>
+                        </span>
                       ) : (
                         <span>
                           <div style={{ fontWeight: "bold", color: "red" }}>
                             At least one tactic must be chosen!
                           </div>
                           <Button
-                            className={"col-xs-12"}
+                            className={"col-xs-6 dismiss-button"}
+                            onClick={this.handleEditing}
+                          >
+                            Dismiss Changes
+                          </Button>
+                          <Button
+                            className={"col-xs-6"}
                             bsStyle="primary"
                             onClick={() => this.handleSelect(3)}
                             disabled
@@ -382,6 +422,7 @@ class PatternDetail extends Component {
                         value={this.state.pattern.consequences}
                         placeholder="Enter Consequences"
                         onChange={this.onChangePattern}
+                        className={"patternTextarea"}
                       />
                       <TextAreaField
                         label="Constraints"
@@ -389,6 +430,7 @@ class PatternDetail extends Component {
                         value={this.state.pattern.constraints}
                         placeholder="Enter Constraints"
                         onChange={this.onChangePattern}
+                        className={"patternTextarea"}
                       />
                       <TextAreaField
                         label="Benefits"
@@ -396,6 +438,7 @@ class PatternDetail extends Component {
                         value={this.state.pattern.benefits}
                         placeholder="Enter Benefits"
                         onChange={this.onChangePattern}
+                        className={"patternTextarea"}
                       />
                       <TextAreaField
                         label="Liabilities"
@@ -403,6 +446,7 @@ class PatternDetail extends Component {
                         value={this.state.pattern.liabilities}
                         placeholder="Enter Liabiliities"
                         onChange={this.onChangePattern}
+                        className={"patternTextarea"}
                       />
 
                       <TextAreaField
@@ -411,6 +455,7 @@ class PatternDetail extends Component {
                         value={this.state.pattern.examples}
                         placeholder="Enter Examples"
                         onChange={this.onChangePattern}
+                        className={"patternTextarea"}
                       />
                       <TextAreaField
                         label="Known Uses"
@@ -418,6 +463,7 @@ class PatternDetail extends Component {
                         value={this.state.pattern.knownUses}
                         placeholder="Enter known Uses"
                         onChange={this.onChangePattern}
+                        className={"patternTextarea"}
                       />
                       <TextAreaField
                         label="Related Patterns"
@@ -425,6 +471,7 @@ class PatternDetail extends Component {
                         value={this.state.pattern.relatedPatterns}
                         placeholder="Enter related Patterns"
                         onChange={this.onChangePattern}
+                        className={"patternTextarea"}
                       />
                       <TextAreaField
                         label="Sources"
@@ -432,20 +479,20 @@ class PatternDetail extends Component {
                         value={this.state.pattern.sources}
                         placeholder="Enter Sources"
                         onChange={this.onChangePattern}
+                        className={"patternTextarea"}
                       />
+                      <Button
+                        className={"col-xs-6 dismiss-button"}
+                        onClick={this.handleEditing}
+                      >
+                        Dismiss Changes
+                      </Button>
                       <Button
                         bsStyle="primary"
                         className={"col-xs-6"}
                         onClick={this.editPattern}
                       >
                         Save Changes
-                      </Button>
-                      <Button
-                        bsStyle="primary"
-                        className={"col-xs-6"}
-                        onClick={this.handleEditing}
-                      >
-                        Dismiss Changes
                       </Button>
                     </Tab>
                   ) : (
