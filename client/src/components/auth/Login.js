@@ -96,7 +96,10 @@ class Login extends Component {
                           onChange={this.onChange}
                         />
                         {errors.username && (
-                          <div className="invalid-feedback">
+                          <div
+                            className="invalid-feedback"
+                            style={{ color: "red" }}
+                          >
                             {errors.username}
                           </div>
                         )}
@@ -116,7 +119,10 @@ class Login extends Component {
                           onChange={this.onChange}
                         />
                         {errors.password && (
-                          <div className="invalid-feedback">
+                          <div
+                            className="invalid-feedback"
+                            style={{ color: "red" }}
+                          >
                             {errors.password}
                           </div>
                         )}

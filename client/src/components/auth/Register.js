@@ -68,12 +68,23 @@ class Register extends Component {
     this.props.registerUser(newUser, this.props.history);
   }
 
+  cancelRegister() {
+    this.setState({
+      name: "",
+      email: "",
+      username: "",
+      role: "Data Protection Officer",
+      password: "",
+      password2: "",
+      errors: {}
+    });
+    this.props.history.push("/login");
+  }
   render() {
     const { errors } = this.state;
 
     return (
       <Col xs={8} xsOffset={2}>
-        <div>{this.state.role}</div>
         <Panel>
           <Panel.Heading>
             <h4>Create your GDPR Recommender account</h4>
@@ -99,7 +110,12 @@ class Register extends Component {
                           onChange={this.onChange}
                         />
                         {errors.name && (
-                          <div className="invalid-feedback">{errors.name}</div>
+                          <div
+                            className="invalid-feedback"
+                            style={{ color: "red" }}
+                          >
+                            {errors.name}
+                          </div>
                         )}
                       </div>
                       <div className="form-group">
@@ -117,7 +133,12 @@ class Register extends Component {
                           onChange={this.onChange}
                         />
                         {errors.email && (
-                          <div className="invalid-feedback">{errors.email}</div>
+                          <div
+                            className="invalid-feedback"
+                            style={{ color: "red" }}
+                          >
+                            {errors.email}
+                          </div>
                         )}
                         {/*<small className="form-text text-muted">
                           This site uses Gravatar so if you want a profile
@@ -139,7 +160,10 @@ class Register extends Component {
                           onChange={this.onChange}
                         />
                         {errors.username && (
-                          <div className="invalid-feedback">
+                          <div
+                            className="invalid-feedback"
+                            style={{ color: "red" }}
+                          >
                             {errors.username}
                           </div>
                         )}
@@ -159,7 +183,10 @@ class Register extends Component {
                           onChange={this.onChange}
                         />
                         {errors.password && (
-                          <div className="invalid-feedback">
+                          <div
+                            className="invalid-feedback"
+                            style={{ color: "red" }}
+                          >
                             {errors.password}
                           </div>
                         )}
@@ -179,7 +206,10 @@ class Register extends Component {
                           onChange={this.onChange}
                         />
                         {errors.password2 && (
-                          <div className="invalid-feedback">
+                          <div
+                            className="invalid-feedback"
+                            style={{ color: "red" }}
+                          >
                             {errors.password2}
                           </div>
                         )}
@@ -241,16 +271,22 @@ class Register extends Component {
                   </FormGroup>*/}
                       <div className="rowC">
                         <Row>
-                          <Col xs={0} xsOffset={5}>
+                          <Col xs={12} xsOffset={0}>
                             <ButtonToolbar>
+                              <Button
+                                className={"dismissbutton col-xs-5"}
+                                onClick={() => this.cancelRegister()}
+                              >
+                                Cancel
+                              </Button>
                               <Button
                                 onClick={this.onSubmit}
                                 //href="/Overview"
                                 bsStyle="primary"
+                                className={"col-xs-5"}
                               >
                                 Register
                               </Button>
-                              <Button bsStyle="primary">Cancel</Button>
                             </ButtonToolbar>
                           </Col>
                         </Row>

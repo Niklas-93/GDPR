@@ -4,7 +4,7 @@ const passport = require("passport");
 const mongoose = require("mongoose");
 
 // Load Input Validation
-const validatePatternInput = require("../../validation/createPattern");
+const validatePatternInput = require("../../validation/Pattern");
 
 // Load Pattern model
 const Pattern = require("../../models/Pattern");
@@ -54,35 +54,16 @@ router.get("/", (req, res) =>
             tacticIndex
           ) {
             if (pattern.assignedTactics.includes(tactic._id.toString())) {
-              //console.log("true");
-              //console.log(assignedStrategy.assignedTactics[tacticIndex].name);
               NewAssignedTactics.push(
                 assignedStrategy.assignedTactics[tacticIndex]
               );
             } else {
-              //console.log("false");
-              //console.log(assignedStrategy.assignedTactics[tacticIndex].name);
-              //console.log(NewAssignedTactics);
             }
-
-            // }
           });
           assignedStrategy.assignedTactics = NewAssignedTactics;
-          //console.log(assignedStrategy);
-
-          //console.log(assignedStrategy);
         });
       });
 
-      //console.log(patterns[].assignedStrategiesWithAllTactics[]._id);
-      //console.log(patterns[].assignedTactics[]._id);
-      //console.log(patterns[].assignedTactics[]._id);
-      // patterns.forEach(function(pattern) {
-      // pattern.assignedTactics.forEach(function(tactic) {
-      //console.log(tactic._id);
-      //  });
-      //console.log(pattern.assignedTactics);
-      //  });
       if (!patterns)
         return res.status(404).json({
           error: "Not Found",
@@ -108,32 +89,6 @@ router.get("/old", (req, res) =>
         as: "assignedStrategies2"
       }
     }
-    /*{
-      $lookup: {
-        from: "tactics",
-        localField: "assignedTactics",
-        foreignField: "_id",
-        as: "assignedTactics"
-      }
-    },*/
-    /*
-    {
-      $lookup: {
-        from: "strategies",
-        localField: "assignedTactics",
-        foreignField: "assignedTactics",
-        as: "assignedStrategies"
-      }
-    }*/
-    /*,
-    {
-      $lookup: {
-        from: "patterns",
-        localField: "assignedStrategies.assignedTactics",
-        foreignField: "assignedTactics._id",
-        as: "assignedStrategiescomplete"
-      }
-    }*/
   ])
 
     .exec()
@@ -160,46 +115,50 @@ router.get("/old", (req, res) =>
     )
 );
 
-router.post("/createpattern", (req, res) => {
-  //const { errors, isValid } = validatePatternInput(req.body);
+// @route   POST api/patterns/createpattern
+// @desc    Create new Pattern
+// @access  Private
 
-  // Check Validation
-  /*if (!isValid) {
-    return res.status(400).json(errors);
-  }*/
-  console.log("newpattern");
-  console.log(req.body);
-  Pattern.findOne({ name: req.body.name }).then(pattern => {
-    if (pattern) {
-      const errors = {};
-      errors.patternAlreadyExists = "Pattern already exists";
-      console.log("errors");
-      console.log(errors);
+router.post(
+  "/createpattern",
+  // check authentication
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validatePatternInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
       return res.status(400).json(errors);
-    } else {
-      const newPattern = new Pattern({
-        name: req.body.name,
-        assignedTactics: req.body.assignedTactics,
-        context: req.body.context,
-        summary: req.body.summary,
-        problem: req.body.problem,
-        solution: req.body.solution,
-        consequences: req.body.consequences,
-        constraints: req.body.constraints,
-        benefits: req.body.benefits,
-        liabilities: req.body.liabilities,
-        examples: req.body.examples,
-        knownUses: req.body.knownUses,
-        relatedPatterns: req.body.relatedPatterns,
-        sources: req.body.sources
-      });
-      newPattern
-        .save()
-        .then(pattern => res.json(pattern))
-        .catch(err => console.log(err));
     }
-  });
-});
+    Pattern.findOne({ name: req.body.name }).then(pattern => {
+      if (pattern) {
+        errors.patternAlreadyExists = "Pattern already exists";
+        return res.status(400).json(errors);
+      } else {
+        const newPattern = new Pattern({
+          name: req.body.name,
+          assignedTactics: req.body.assignedTactics,
+          context: req.body.context,
+          summary: req.body.summary,
+          problem: req.body.problem,
+          solution: req.body.solution,
+          consequences: req.body.consequences,
+          constraints: req.body.constraints,
+          benefits: req.body.benefits,
+          liabilities: req.body.liabilities,
+          examples: req.body.examples,
+          knownUses: req.body.knownUses,
+          relatedPatterns: req.body.relatedPatterns,
+          sources: req.body.sources
+        });
+        newPattern
+          .save()
+          .then(pattern => res.json(pattern))
+          .catch(err => console.log(err));
+      }
+    });
+  }
+);
 
 router.get("/testing", (req, res) =>
   Pattern.aggregate([
@@ -426,21 +385,23 @@ router.delete(
   }
 );
 
-// @route   POST api/patterns
+// @route   POST api/patterns/editpattern
 // @desc    Edit pattern
 // @access  Private
 router.post(
   "/editpattern",
+  // check authentication
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    //const { errors, isValid } = validatePatternInput(req.body);
-
+    const { errors, isValid } = validatePatternInput(req.body);
+    console.log("errors");
+    console.log(errors);
     // Check Validation
-    /*
+
     if (!isValid) {
       // Return any errors with 400 status
       return res.status(400).json(errors);
-    }*/
+    }
 
     // Get fields
     const patternFields = {};

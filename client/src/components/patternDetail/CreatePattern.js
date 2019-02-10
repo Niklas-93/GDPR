@@ -54,12 +54,18 @@ class CreatePattern extends Component {
     // clear tactics if component is called for more than one time / more than one new pattern
     this.props.clearChosenTactics();
   }
-  // if server sends error because of duplicate name
+
+  // if server sends errors
   componentWillReceiveProps(nextProps) {
-    console.log("nextprops");
-    console.log(nextProps);
-    if (nextProps.errors.patternAlreadyExists) {
-      this.setState({ errors: nextProps.errors, showWarningModal: true });
+    if (Object.keys(nextProps.errors) != 0) {
+      this.setState({ errors: nextProps.errors });
+      if (nextProps.errors.patternAlreadyExists) {
+        this.setState({ showWarningModal: true });
+      } else if (nextProps.errors.assignedTactics) {
+        this.setState({ activeKey: 2 });
+      } else {
+        this.setState({ activeKey: 1 });
+      }
     }
   }
 
@@ -329,6 +335,7 @@ class CreatePattern extends Component {
                   placeholder="Enter Examples"
                   onChange={this.onChange}
                   className={"patternTextarea"}
+                  error={errors.examples}
                 />
                 <TextAreaField
                   label="Known Uses"

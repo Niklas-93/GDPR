@@ -41,6 +41,22 @@ class PatternDetail extends Component {
     this.props.setEditingToFalse();
   }
 
+  // if server sends errors
+  componentWillReceiveProps(nextProps) {
+    console.log("nextprops");
+    console.log(nextProps);
+    if (Object.keys(nextProps.errors) != 0) {
+      this.setState({ errors: nextProps.errors });
+      if (nextProps.errors.patternAlreadyExists) {
+        this.setState({ showWarningModal: true });
+      } else if (nextProps.errors.assignedTactics) {
+        this.setState({ activeKey: 2 });
+      } else {
+        this.setState({ activeKey: 1 });
+      }
+    }
+  }
+
   onChangePattern(e) {
     // handles changes of the input fields while editing
     this.setState({
@@ -113,7 +129,8 @@ class PatternDetail extends Component {
   // handle the edit mode of the pattern => active/passive
   handleEditing = () => {
     this.setState({
-      pattern: this.props.pattern.pattern
+      pattern: this.props.pattern.pattern,
+      activeKey: 1
     });
     this.props.handleEditing();
   };
