@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
+import TextAreaField from "../common/TextAreaField";
+import TextField from "../common/TextField";
 import {
   Button,
   Glyphicon,
@@ -18,6 +20,7 @@ class StrategyEditForm extends Component {
     super(props, context);
     // set initial state
     this.state = {
+      errors: {},
       name: this.props.strategy.name,
       description: this.props.strategy.description,
       assignedTactics: this.props.strategy.assignedTactics
@@ -27,9 +30,35 @@ class StrategyEditForm extends Component {
     this.onChangeAssignmentArray = this.onChangeAssignmentArray.bind(this);
   }
 
+  // if server sends errors
+  componentWillReceiveProps(nextProps) {
+    console.log("nextprops");
+    console.log(nextProps);
+    if (Object.keys(nextProps.errors) != 0) {
+      this.setState({ errors: nextProps.errors });
+      this.props.enableEditing();
+    }
+  }
+
   // handles change of input fields (name, description)
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
+
+    if (e.target.value == "") {
+      this.setState({
+        errors: {
+          ...this.state.errors,
+          [e.target.name]: e.target.name + " is required!"
+        }
+      });
+    } else {
+      this.setState({
+        errors: {
+          ...this.state.errors,
+          [e.target.name]: undefined
+        }
+      });
+    }
   }
 
   // if assigned tactic is changed
@@ -44,14 +73,30 @@ class StrategyEditForm extends Component {
   // on confirmation, change Strategy and assigned Tactics
   editStrategy = () => {
     // set data to be forwarded to server
-    const strategyData = {
-      name: this.state.name,
-      description: this.state.description,
-      assignedTactics: this.state.assignedTactics,
-      id: this.props.strategy._id
-    };
-    this.props.editStrategy(strategyData);
-    this.props.disableEditing();
+    if (this.state.name == "") {
+      this.setState({
+        errors: {
+          name: "Name is required"
+        }
+      });
+    }
+    if (this.state.description == "") {
+      this.setState({
+        errors: {
+          description: "Description is required"
+        }
+      });
+    }
+    if (this.state.name !== "" && this.state.description !== "") {
+      const strategyData = {
+        name: this.state.name,
+        description: this.state.description,
+        assignedTactics: this.state.assignedTactics,
+        id: this.props.strategy._id
+      };
+      this.props.editStrategy(strategyData);
+      this.props.disableEditing();
+    }
   };
 
   // disable edit mode
@@ -79,13 +124,14 @@ class StrategyEditForm extends Component {
   };
 
   render() {
+    const { errors } = this.state;
     return (
       <Col xs={3}>
         <Panel className={"minHeightStrategy"}>
           <form>
             <Panel.Heading>
               <Panel.Title>
-                <FormGroup>
+                {/*<FormGroup>
                   <FormControl
                     type="text"
                     name="name"
@@ -94,11 +140,30 @@ class StrategyEditForm extends Component {
                     onChange={this.onChange}
                   />
                   <FormControl.Feedback />
-                </FormGroup>
+                </FormGroup>*/}
+                <TextField
+                  label="Name*"
+                  name="name"
+                  value={this.state.name}
+                  placeholder="Enter Strategy Name"
+                  onChange={this.onChange}
+                  error={errors.name}
+                  onBlur={this.onChange}
+                  className={"patternName"}
+                />
               </Panel.Title>
             </Panel.Heading>
             <Panel.Body>
-              <FormGroup>
+              <TextAreaField
+                label="Strategy Description*"
+                name="description"
+                value={this.state.description}
+                placeholder="Enter Strategy Description"
+                onChange={this.onChange}
+                error={errors.description}
+                className={"patternTextarea"}
+              />
+              {/*<FormGroup>
                 <ControlLabel>Strategy Description</ControlLabel>
                 <FormControl
                   componentClass="textarea"
@@ -109,7 +174,7 @@ class StrategyEditForm extends Component {
                   onChange={this.onChange}
                 />
                 <FormControl.Feedback />
-              </FormGroup>
+              </FormGroup>*/}
               <FormGroup>
                 <Col xs={9}>
                   <ControlLabel>Assigned Tactics</ControlLabel>
@@ -172,7 +237,8 @@ StrategyEditForm.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  errors: state.errors
 });
 
 export default connect(

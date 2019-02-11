@@ -173,7 +173,9 @@ class Overview extends Component {
                 background: "white",
                 position: "fixed",
                 marginTop: "52px",
-                maxWidth: "200px"
+                maxWidth: "200px",
+                zIndex: "6",
+                marginBottom: "60px"
               }
             }}
           />
@@ -197,7 +199,9 @@ class Overview extends Component {
                 background: "white",
                 position: "fixed",
                 marginTop: "52px",
-                maxWidth: "35px"
+                maxWidth: "35px",
+                zIndex: "6",
+                marginBottom: "60px"
               }
             }}
           />
@@ -239,7 +243,7 @@ class Overview extends Component {
             {patternContent}
           </Tab>
           <Tab eventKey={2} title="Diagram View">
-            <SankeyDiagram patterns={visiblePatterns} />
+            {<SankeyDiagram patterns={visiblePatterns} />}
           </Tab>
         </Tabs>
       </div>

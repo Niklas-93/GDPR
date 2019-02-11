@@ -70,8 +70,8 @@ export const editStrategy = strategyData => dispatch => {
     )
     .catch(err =>
       dispatch({
-        type: GET_STRATEGIES,
-        payload: null
+        type: GET_ERRORS,
+        payload: err.response.data
       })
     );
 };

@@ -57,10 +57,6 @@ class StrategyItem extends Component {
       }
       // if any strategies are set as filters
       else {
-        console.log("visibilityFilters");
-        console.log(visibilityFilters);
-        console.log("strategy");
-        console.log(strategy);
         var filters = visibilityFilters.filter(
           visibilityFilter => visibilityFilter._id == strategy._id
         );

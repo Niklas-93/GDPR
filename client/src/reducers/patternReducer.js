@@ -4,8 +4,6 @@ import {
   GET_PATTERN,
   DELETE_PATTERN,
   UPDATE_PATTERN,
-  SET_ASSIGNED_TACTICS,
-  SET_ASSIGNED_STRATEGIES,
   SET_FILTER_FOR_PATTERNS,
   DESELECT_TACTIC_AS_FILTER,
   SET_STRATEGY_AS_FILTER,
@@ -17,9 +15,8 @@ import {
   LINK_TO_PATTERN_AFTER_SEARCH,
   SET_EDITING_TO_FALSE
 } from "../actions/types";
-import { getScaleFnFromScaleObject } from "react-vis/dist/utils/scales-utils";
-import TacticFilter from "../components/overview/TacticFilter";
-//import update from "react-addons-update";
+import { stat } from "fs";
+
 const initialState = {
   patterns: [],
   pattern: {},
@@ -100,31 +97,19 @@ export default function(state = initialState, action) {
         )
       };*/
     case SET_FILTER_FOR_PATTERNS:
-      const strategySafe = action.payload.strategyFilter;
-      const tacticSafe = action.payload.tacticFilter;
       console.log("filter");
       console.log(action.payload);
       console.log("state");
       console.log(state);
-      var strategyIsIncluded = state.visibilityFilters.filter(
+      var visFilters = state.visibilityFilters;
+      var visFilters = state.visibilityFilters.filter(
         strategyFilter =>
           strategyFilter._id == action.payload.strategyFilter._id
       );
-      //var strategyIsIncluded = [];
       // check if corresponding strategy is already set as filter
-      if (strategyIsIncluded.length == 0) {
-        console.log("vorher");
-        alert(action.payload.strategyFilter.name);
-        var strategyToInsert = strategySafe;
-        var tacticToInsert = tacticSafe;
-        strategyToInsert.assignedTactics = [tacticToInsert];
-        strategyToInsert.name = "test";
-        //action.payload.strategyFilter = strategySafe;
-        console.log("strategyToInsert");
-        console.log(strategyToInsert);
-        console.log("payload");
-        alert(action.payload.strategyFilter.name);
-        //action.payload.strategyFilter = strategySafe;
+      if (visFilters.length == 0) {
+        var strategyToInsert = action.payload.strategyFilter;
+        strategyToInsert.assignedTactics = [action.payload.tacticFilter];
         // if corresponding strategy is not set as filter and no other filters are already set
         if (state.visibilityFilters.length == 0) {
           console.log("empty filters");
@@ -132,8 +117,36 @@ export default function(state = initialState, action) {
             ...state,
             visibilityFilters: [strategyToInsert]
           };
+        } else {
+          //if corresponding strategy is not set as filter, but already others
+          console.log("not empty filters");
+          state.visibilityFilters.push(strategyToInsert);
+          return {
+            ...state,
+            visibilityFilters: state.visibilityFilters
+          };
         }
+        //if corresponding strategy is already set
+      } else {
+        // add tactic to strategy
+        visFilters[0].assignedTactics.push(action.payload.tacticFilter);
+        // convert strategy back to object
+        visFilters = visFilters[0];
+
+        // delete old strategy from filters
+        state.visibilityFilters = state.visibilityFilters.filter(
+          strategyFilter =>
+            strategyFilter._id != action.payload.strategyFilter._id
+        );
+        console.log("strategy already set");
+        // add new strategy to filters
+
+        return {
+          ...state,
+          visibilityFilters: [...state.visibilityFilters, visFilters]
+        };
       }
+
     case DESELECT_TACTIC_AS_FILTER:
       // Select corresponding strategy from filters
       var strategyInFilters = state.visibilityFilters.filter(
@@ -244,94 +257,6 @@ export default function(state = initialState, action) {
         ...state,
         editPattern: false,
         chosenTactics: []
-      };
-    case SET_ASSIGNED_STRATEGIES:
-      const addStrategy = str => {
-        //console.log([...str].concat(state.assignedStrategies));
-        // console.log(...[str].concat(state.assignedStrategies));
-        //console.log(state.assignedStrategies.concat(str));
-        //return "test";
-        if (str !== undefined) {
-          return state.assignedStrategies.concat(str);
-        } else {
-          return state.assignedStrategies;
-        }
-
-        /*[...str].concat(this.props.strategy)*/
-        /*[...str.concat(state.assignedStrategies)]*/
-      };
-
-      const remStrategy = str => {
-        var arr = state.assignedStrategies;
-        var index = arr.indexOf(str);
-        //console.log(index);
-        //console.log(str);
-
-        if (index !== -1) {
-          arr.splice(index, 1);
-          // console.log("remove" + arr);
-        }
-        return arr;
-      };
-
-      //console.log(state.assignedDevelopers);
-
-      //console.log(action.payload);
-      if (state.assignedStrategies.indexOf(action.payload) === -1) {
-        var newArray = addStrategy(action.payload);
-      } else {
-        var newArray = remStrategy(action.payload);
-      }
-
-      // console.log(newArray.indexOf(action.payload));
-
-      //console.log(newArray);
-      //console.log(action.payload[0]);
-      //console.log(state.assignedDevelopers.indexOf(action.payload[0]));
-      //console.log(state.nameDeveloper);
-      return {
-        ...state,
-        assignedStrategies: newArray,
-        loading: false
-      };
-    case SET_ASSIGNED_TACTICS:
-      const addTactic = tac => {
-        if (tac !== undefined) {
-          return state.assignedTactics.concat(tac);
-        } else {
-          return state.assignedTactics;
-        }
-      };
-
-      const remTactic = tac => {
-        var arr = state.assignedTactics;
-        var index = arr.indexOf(tac);
-        //console.log(index);
-        //console.log(tac);
-
-        if (index !== -1) {
-          arr.splice(index, 1);
-        }
-        return arr;
-      };
-
-      //console.log(action.payload);
-      if (state.assignedTactics.indexOf(action.payload) === -1) {
-        var newArray = addTactic(action.payload);
-      } else {
-        var newArray = remTactic(action.payload);
-      }
-
-      // console.log(newArray.indexOf(action.payload));
-
-      //console.log(newArray);
-      //console.log(action.payload[0]);
-      //console.log(state.assignedDevelopers.indexOf(action.payload[0]));
-      //console.log(state.nameDeveloper);
-      return {
-        ...state,
-        assignedTactics: newArray,
-        loading: false
       };
     case LINK_TO_PATTERN_AFTER_SEARCH:
       const patterns = state.patterns.filter(

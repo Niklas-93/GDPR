@@ -14,7 +14,7 @@ import EditToolbar from "../common/EditToolbar";
 import Spinner from "../common/Spinner";
 import PatternDetail_StrategiesWithTactics from "./PatternDetail_StrategiesWithTactics";
 import { Button, Col, Panel, Tabs, Tab } from "react-bootstrap";
-import StrategyFeed from "../overview/StrategyFeed";
+import StrategyFeed from "../patternOverview/StrategyFeed";
 import { getStrategies } from "../../actions/strategyActions";
 
 class PatternDetail extends Component {

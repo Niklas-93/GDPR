@@ -167,7 +167,9 @@ class SearchBox extends Component {
 
   handleSelectedSearchItem = searchItem => {
     // this.setState({ selected: searchItem }, alert(searchItem));
-
+    this.setState({
+      selected: undefined
+    });
     console.log("searchItem");
     // console.log(searchItem);
     console.log(this.props.history);
@@ -222,6 +224,8 @@ class SearchBox extends Component {
       searchBoxContent = (
         <AsyncTypeahead
           // {...this.state}
+
+          {...this.state}
           minLength={1}
           selected={this.state.selected}
           isLoading={isLoading}
@@ -231,6 +235,15 @@ class SearchBox extends Component {
           // onChange={this.search}
           onSearch={this.__handleSearch}
           placeholder="Search..."
+          renderMenu={(results, menuProps) => (
+            <Menu {...menuProps}>
+              {results.map((result, index) => (
+                <MenuItem option={result} position={index}>
+                  {result.name}
+                </MenuItem>
+              ))}
+            </Menu>
+          )}
         />
       );
     } else {
@@ -241,7 +254,7 @@ class SearchBox extends Component {
       // alert(option);
       searchBoxContent = (
         <AsyncTypeahead
-          // {...this.state}
+          {...this.state}
           minLength={1}
           selected={this.state.selected}
           isLoading={isLoading}
@@ -250,7 +263,15 @@ class SearchBox extends Component {
           onChange={selected => this.handleSelectedSearchItem(selected)}
           // onChange={this.search}
           onSearch={this.__handleSearch}
-          placeholder="Search..." /*}
+          placeholder="Search..."
+          renderMenuItemChildren={(result, menuProps, index) => (
+            <MenuItem option={result} position={index}>
+              {this.differBetweenSearchresults(result)}
+              {result.name}
+            </MenuItem>
+          )}
+
+          /*}
                 </MenuItem>
               ))}
             </Menu>

@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Panel, Col, Tabs, Tab, Button, Collapse } from "react-bootstrap";
 import {
   setFilterForPatterns,
   deselectTacticAsFilter
 } from "../../actions/patternActions";
+import { getStrategies } from "../../actions/strategyActions";
 
 class TacticFilter extends Component {
   constructor(props, context) {
@@ -15,11 +15,13 @@ class TacticFilter extends Component {
     // pass selected tactic and corresponding strategy to patternActions
 
     this.props.setFilterForPatterns(tactic, strategy);
+    this.props.getStrategies();
   };
 
   deselectTacticAsFilter = (tactic, strategy) => {
     // pass deselected tactic and corresponding strategy to patternActions
     this.props.deselectTacticAsFilter(tactic, strategy);
+    this.props.getStrategies();
   };
 
   includesVisibilityFilters = tactic => {
@@ -49,7 +51,6 @@ class TacticFilter extends Component {
           >
             {tactic.name}
           </div>
-          <div>{tactic.description}</div>
         </span>
       );
     }
@@ -70,7 +71,6 @@ class TacticFilter extends Component {
             >
               {tactic.name}
             </div>
-            <div>{tactic.description}</div>
           </span>
         );
       }
@@ -86,7 +86,6 @@ class TacticFilter extends Component {
             >
               {tactic.name}
             </div>
-            <div>{tactic.description}</div>
           </span>
         );
       }
@@ -112,5 +111,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { setFilterForPatterns, deselectTacticAsFilter }
+  { setFilterForPatterns, deselectTacticAsFilter, getStrategies }
 )(TacticFilter);

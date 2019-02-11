@@ -14,7 +14,7 @@ import TextAreaField from "../common/TextAreaField";
 import TextField from "../common/TextField";
 import { getStrategies } from "../../actions/strategyActions";
 import { Button, Panel, Tab, Tabs } from "react-bootstrap";
-import StrategyFeed from "../overview/StrategyFeed";
+import StrategyFeed from "../patternOverview/StrategyFeed";
 
 class CreatePattern extends Component {
   constructor() {

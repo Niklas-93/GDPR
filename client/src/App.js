@@ -14,8 +14,7 @@ import NavigationBar from "./components/layout/NavigationBar";
 import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
-import Overview from "./components/overview/Overview";
-import DPOoverview from "./components/overview/DPOoverview";
+import Overview from "./components/patternOverview/Overview";
 import CreatePattern from "./components/patternDetail/CreatePattern";
 import CreateProject from "./components/overview/CreateProject";
 import EditProject from "./components/overview/EditProject";
@@ -76,12 +75,6 @@ class App extends Component {
                 />
 
                 <PrivateRoute exact path="/PMoverview" component={PMoverview} />
-
-                <PrivateRoute
-                  exact
-                  path="/DPOoverview"
-                  component={DPOoverview}
-                />
                 <PrivateRoute
                   exact
                   path="/create-pattern"

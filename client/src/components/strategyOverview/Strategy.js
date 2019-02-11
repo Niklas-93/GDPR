@@ -59,6 +59,7 @@ class Strategy extends Component {
         {this.state.editing ? (
           <StrategyEditForm
             strategy={this.props.strategy}
+            enableEditing={() => this.enableEditing()}
             disableEditing={() => this.disableEditing()}
           />
         ) : (
