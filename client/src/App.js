@@ -16,12 +16,12 @@ import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Overview from "./components/patternOverview/Overview";
 import CreatePattern from "./components/patternDetail/CreatePattern";
-import CreateProject from "./components/overview/CreateProject";
-import EditProject from "./components/overview/EditProject";
-import DetailProject from "./components/overview/DetailProject";
+import CreateProject from "./components/projectOverview/CreateProject";
+import EditProject from "./components/projectOverview/EditProject";
+import DetailProject from "./components/projectDetail/DetailProject";
 import { Footer } from "./components/layout/Footer";
 import Search from "./components/layout/Search";
-import PMoverview from "./components/layout/PMoverview";
+import PMoverview from "./components/projectOverview/PMoverview";
 import StrategyOverview from "./components/strategyOverview/StrategyOverview";
 
 import "./App.css";
