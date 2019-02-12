@@ -313,29 +313,28 @@ class DetailProject extends Component {
                   </Panel>
                 </Col>
               </Row>
+              <Link to="/PMoverview">
+                <Button bsStyle="primary" className="projectButton">
+                  Back to Overview
+                </Button>
+              </Link>
+
+              {this.props.auth.user.role === "Project Manager" ? (
+                <span>
+                  <Link to={`/project/edit-project/${this.props.project._id}`}>
+                    <Button bsStyle="primary" className="projectButton">
+                      Edit Project
+                    </Button>
+                  </Link>
+                  <ModalProject
+                    onClick={this.onClickDelete}
+                    project={this.props.project}
+                  />{" "}
+                </span>
+              ) : (
+                ""
+              )}
             </Panel.Body>
-
-            <Link to="/PMoverview">
-              <Button bsStyle="primary" className="projectButton">
-                Back to Overview
-              </Button>
-            </Link>
-
-            {this.props.auth.user.role === "Project Manager" ? (
-              <span>
-                <Link to={`/project/edit-project/${this.props.project._id}`}>
-                  <Button bsStyle="primary" className="projectButton">
-                    Edit Project
-                  </Button>
-                </Link>
-                <ModalProject
-                  onClick={this.onClickDelete}
-                  project={this.props.project}
-                />{" "}
-              </span>
-            ) : (
-              ""
-            )}
           </Panel>
 
           <Panel>
