@@ -7,7 +7,6 @@ import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import "./Overview.css";
 import PatternFeed from "./PatternFeed";
 import { getPatterns, clearAllFilters } from "../../actions/patternActions";
-import { getTactics } from "../../actions/tacticActions";
 import StrategyFeed from "./StrategyFeed";
 import SankeyDiagram from "./SankeyDiagram";
 import { getStrategies } from "../../actions/strategyActions";
@@ -39,7 +38,6 @@ class Overview extends Component {
   componentDidMount() {
     // get initial props : patterns, strategies
     this.props.getPatterns();
-    this.props.getTactics();
     this.props.getStrategies();
   }
 
@@ -263,7 +261,6 @@ class Overview extends Component {
 Overview.propTypes = {
   getPatterns: PropTypes.func.isRequired,
   pattern: PropTypes.object.isRequired,
-  getTactics: PropTypes.func.isRequired,
   tactic: PropTypes.object.isRequired,
   getStrategies: PropTypes.func.isRequired,
   strategy: PropTypes.object.isRequired
@@ -278,5 +275,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getPatterns, getTactics, getStrategies, clearAllFilters }
+  { getPatterns, getStrategies, clearAllFilters }
 )(withRouter(Overview));

@@ -13,43 +13,21 @@ const Pattern = require("../../models/Pattern");
 router.get("/test", (req, res) => res.json({ msg: "General Works" }));
 
 // @route   GET api/general/search
-// @desc    serach Patterns and Strategies/Tactics
+// @desc    search Patterns and Strategies/Tactics
 // @access  Public
 router.post("/search", (req, res) => {
-  // var regex = "/.*" + req.body.searchString + ".*/";
+  //Convert searchString to Regular Expression
   var regex = ".*" + req.body.searchString + ".*";
   var insertRegex = new RegExp(regex, "i");
-  console.log(regex);
 
-  //mongoose.createIndex
-  //db.Pattern.createIndex({ name: "text" });
-  /*Pattern.find({ $text: { $search: req.body.searchString } })
-    .then(searchResults => {
-      console.log(searchResults);
-      res.json({ searchResults });
-    })
-    .catch(err => console.log(err));*/
-
-  /*Pattern.find({ name: insertRegex })
-    .then(searchResultsPatterns => {
-      Strategy.find({
-        name: insertRegex
-      }).then(searchResultsStrategies => {
-        var searchResults = {
-          Patterns: searchResultsPatterns,
-          Strategies: searchResultsStrategies
-        };
-        console.log(searchResults);
-        res.json({ searchResults });
-      });
-    })
-    .catch(err => console.log(err));*/
-
+  //find all Patterns that match searchString
   Pattern.find({ name: insertRegex })
     .then(searchResultsPatterns => {
+      //find all Strategies that match searchString
       Strategy.find({
         name: insertRegex
       }).then(searchResultsStrategies => {
+        //find all Tactics that match searchString
         Strategy.find({
           "assignedTactics.name": insertRegex
         }).then(searchResultsTactics => {
@@ -57,7 +35,7 @@ router.post("/search", (req, res) => {
           searchResultsTactics.forEach(function(strategy) {
             strategy.assignedTactics.forEach(function(tactic) {
               if (insertRegex.test(tactic)) {
-                console.log(tactic);
+                // reorder data structure --> tactic with assigned Strategy
                 tacticsWithStrategies.push({
                   name: tactic.name,
                   _id: tactic._id,
@@ -67,26 +45,17 @@ router.post("/search", (req, res) => {
               }
             });
           });
+          // combine Results to one Object
           var searchResults = {
             Patterns: searchResultsPatterns,
             Strategies: searchResultsStrategies,
             Tactics: tacticsWithStrategies
           };
-          // console.log(searchResults);
           res.json({ searchResults });
         });
       });
     })
     .catch(err => console.log(err));
-});
-
-router.get("/testindex", (req, res) => {
-  Pattern.getIndexes()
-    .then(searchResults => {
-      console.log(searchResults);
-      res.json({ searchResults });
-    })
-    .catch(err => console.log("Fehler"));
 });
 
 module.exports = router;
