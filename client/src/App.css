@@ -266,3 +266,26 @@ path:hover {
 .searchResultIndicator {
   color: grey;
 }
+.NoPatternMatchesFiter {
+  font-weight: bold;
+  text-align: center;
+  color: grey !important;
+}
+.TacticsBody {
+  background: #f5f5f5;
+  min-height: 100px;
+}
+.tacticDescription {
+  min-height: 100px;
+}
+
+.rbt-input-hint-container input {
+  min-width: 500px !important;
+}
+.rbt-menu {
+  min-width: 500px !important;
+}
+.dropdown-item li a:hover {
+  text-decoration: none !important;
+  color: #337ab7 !important;
+}

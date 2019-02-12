@@ -4,16 +4,11 @@ import Strategy from "./Strategy";
 import { connect } from "react-redux";
 import { getStrategies } from "../../actions/strategyActions";
 import Spinner from "../common/Spinner";
-import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import { Badge } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 class StrategyOverview extends Component {
   componentDidMount() {
-    this.props.getStrategies();
-  }
-
-  // refresh Overview after clicking on refresh button
-  refreshOverview() {
     this.props.getStrategies();
   }
 
@@ -28,13 +23,12 @@ class StrategyOverview extends Component {
         <div>
           <span className={"h4"}>
             Strategies <Badge>{strategies.length} </Badge>
+          </span>
+          <span>
+            <Link to="/overview" style={{ marginLeft: "800px" }}>
+              Back to Overview...
+            </Link>
           </span>{" "}
-          <BtnWithMouseOverPop
-            icon="fas fa-sync"
-            title="Update Overview"
-            link="#"
-            onClick={() => this.refreshOverview()}
-          />
           <br />
           <br />
           <br />

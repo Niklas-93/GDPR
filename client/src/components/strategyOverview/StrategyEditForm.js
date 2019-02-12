@@ -62,12 +62,20 @@ class StrategyEditForm extends Component {
   }
 
   // if assigned tactic is changed
+
   onChangeAssignmentArray(e) {
     var tacticArray = this.state.assignedTactics;
-    tacticArray[e.target.name].name = e.target.value;
-    this.setState({
-      assignedTactics: tacticArray
-    });
+    if (e.target.placeholder == "Tactic Name") {
+      tacticArray[e.target.name].name = e.target.value;
+      this.setState({
+        assignedTactics: tacticArray
+      });
+    } else {
+      tacticArray[e.target.name].description = e.target.value;
+      this.setState({
+        assignedTactics: tacticArray
+      });
+    }
   }
 
   // on confirmation, change Strategy and assigned Tactics
@@ -126,7 +134,7 @@ class StrategyEditForm extends Component {
   render() {
     const { errors } = this.state;
     return (
-      <Col xs={3}>
+      <Col xs={6}>
         <Panel className={"minHeightStrategy"}>
           <form>
             <Panel.Heading>
@@ -142,10 +150,10 @@ class StrategyEditForm extends Component {
                   <FormControl.Feedback />
                 </FormGroup>*/}
                 <TextField
-                  label="Name*"
+                  label=""
                   name="name"
                   value={this.state.name}
-                  placeholder="Enter Strategy Name"
+                  placeholder="Enter Strategy Name*"
                   onChange={this.onChange}
                   error={errors.name}
                   onBlur={this.onChange}
@@ -158,7 +166,7 @@ class StrategyEditForm extends Component {
                 label="Strategy Description*"
                 name="description"
                 value={this.state.description}
-                placeholder="Enter Strategy Description"
+                placeholder="Enter Strategy Description*"
                 onChange={this.onChange}
                 error={errors.description}
                 className={"patternTextarea"}
@@ -190,6 +198,7 @@ class StrategyEditForm extends Component {
                 <br />
                 <br />
                 <br />
+
                 {this.state.assignedTactics.map((tactic, index) => (
                   <div>
                     <Col xs={9}>
@@ -209,18 +218,34 @@ class StrategyEditForm extends Component {
                         onClick={() => this.removeTacticFromArray(index)}
                       />
                     </Col>
+                    <Col xs={9} style={{ paddingBottom: "15px" }}>
+                      <FormControl
+                        type="textarea"
+                        componentClass="textarea"
+                        className={"tacticDescription"}
+                        name={index}
+                        value={tactic.description}
+                        placeholder="Tactic Description"
+                        onChange={this.onChangeAssignmentArray}
+                      />
+                    </Col>
                   </div>
                 ))}
               </FormGroup>
             </Panel.Body>
-            <Panel.Footer>
+            <Panel.Footer style={{ minHeight: "50px" }}>
               <Button
+                className={"dismiss-button col-xs-6"}
+                onClick={() => this.disableEditing()}
+              >
+                Dismiss Changes
+              </Button>
+              <Button
+                className={"col-xs-6"}
+                bsStyle="primary"
                 onClick={() => this.editStrategy(this.props.strategy._id)}
               >
                 Confirm Changes
-              </Button>
-              <Button onClick={() => this.disableEditing()}>
-                Dismiss Changes
               </Button>
             </Panel.Footer>
           </form>

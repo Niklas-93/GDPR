@@ -1,3 +1,9 @@
 .rowC {
   flex-direction: row;
 }
+#LandingHeading {
+  color: black;
+  background: white;
+  text-align: center;
+  font-weight: bold;
+}
