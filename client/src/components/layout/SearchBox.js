@@ -11,8 +11,10 @@ import {
   setStrategyAsFilter,
   clearAllFilters,
   linkToPatternAfterSearch,
-  getPattern
+  getPattern,
+  setEditingToFalse
 } from "../../actions/patternActions";
+import "./SearchBox.css";
 
 class SearchBox extends Component {
   constructor(props) {
@@ -48,6 +50,7 @@ class SearchBox extends Component {
     if (searchItem.length != 0) {
       // is Pattern
       if (selectedItem.summary != undefined) {
+        this.props.setEditingToFalse();
         this.props.getPattern(selectedItem._id);
         this.props.history.push("/patterndetail/" + selectedItem._id);
       }
@@ -179,6 +182,7 @@ export default connect(
     setFilterForPatterns,
     clearAllFilters,
     linkToPatternAfterSearch,
-    getPattern
+    getPattern,
+    setEditingToFalse
   }
 )(withRouter(SearchBox));

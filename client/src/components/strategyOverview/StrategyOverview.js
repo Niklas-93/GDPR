@@ -6,6 +6,7 @@ import { getStrategies } from "../../actions/strategyActions";
 import Spinner from "../common/Spinner";
 import { Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import "./StrategyOverview.css";
 
 class StrategyOverview extends Component {
   componentDidMount() {

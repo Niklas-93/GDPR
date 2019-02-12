@@ -1,0 +1,13 @@
+.minHeightPatternPanelHeadingDetail {
+  min-height: 60px !important;
+}
+.TacticsBody {
+  background: #f5f5f5;
+  min-height: 100px;
+}
+.StrategyListInPatterns li {
+  display: inline;
+}
+.StrategyListInPatterns {
+  list-style-type: square;
+}

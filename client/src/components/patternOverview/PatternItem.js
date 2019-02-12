@@ -37,11 +37,12 @@ class PatternItem extends Component {
               </Link>
             </div>
           </Panel.Heading>
-          <Panel.Body className={"adjusted-PanelBody"}>
+          <Panel.Body>
             <ul className={"StrategyListInPatterns"}>
               {pattern.assignedStrategiesWithAllTactics.map(strategy => (
                 <li>
-                  <span class="dotForStrategy" /> {"  " + strategy.name + "  "}
+                  <span className={"dotForStrategy"} />{" "}
+                  {"  " + strategy.name + "  "}
                 </li>
               ))}
             </ul>

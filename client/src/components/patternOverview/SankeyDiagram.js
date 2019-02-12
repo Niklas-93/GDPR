@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
 import { Sankey, Hint } from "react-vis";
 import { withRouter } from "react-router-dom";
+import "./SankeyDiagram.css";
 
 class SankeyDiagram extends React.Component {
   // Define hovered Links and Nodes

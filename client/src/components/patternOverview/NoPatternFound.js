@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Col } from "react-bootstrap";
+import "./NoPatternFound.css";
 
 class NoPatternFound extends Component {
   render() {

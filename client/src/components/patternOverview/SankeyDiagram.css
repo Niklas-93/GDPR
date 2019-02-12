@@ -1,0 +1,26 @@
+.qb-value {
+  display: none !important;
+}
+
+.qb-link {
+  fill: #ddd;
+}
+.qb-node rect {
+  fill: #337ab7;
+}
+.qb-node {
+  fill: white;
+  font-weight: bold;
+}
+.crop {
+  overflow: hidden;
+}
+
+.crop svg {
+  margin: 0 0 0 -0px;
+}
+
+rect:hover {
+  fill: #23527c !important
+    ;
+}

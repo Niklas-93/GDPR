@@ -210,7 +210,6 @@ const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
   developers: state.user.developers,
-  tactics: state.tactic.tactics,
   strategies: state.strategy.strategies,
   assignedDevelopers: state.project.assignedDevelopers,
   assignedTactics: state.project.assignedTactics,

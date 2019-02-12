@@ -16,6 +16,7 @@ import PatternDetail_StrategiesWithTactics from "./PatternDetail_StrategiesWithT
 import { Button, Col, Panel, Tabs, Tab } from "react-bootstrap";
 import StrategyFeed from "../patternOverview/StrategyFeed";
 import { getStrategies } from "../../actions/strategyActions";
+import "./PatternDetail.css";
 
 class PatternDetail extends Component {
   constructor(props) {

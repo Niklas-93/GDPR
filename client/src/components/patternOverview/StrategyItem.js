@@ -63,11 +63,10 @@ class StrategyItem extends Component {
           <span>
             <Panel.Title
               toggle
-              className={"inline Abstract"}
-              id="Abstract"
+              className={"inline"}
               onClick={() => this.handleExpand()}
             >
-              <span class="h5">{strategy.name}</span>
+              <span class="h5">{strategy.name} </span>
             </Panel.Title>
             <Panel.Title className={"inline"}>
               <span
@@ -99,7 +98,7 @@ class StrategyItem extends Component {
                   className={"inline"}
                   onClick={() => this.handleExpand()}
                 >
-                  <span class="h5">{strategy.name}</span>
+                  <span class="h5">{strategy.name} </span>
                 </Panel.Title>
                 <Panel.Title className={"inline"}>
                   <span
@@ -119,7 +118,7 @@ class StrategyItem extends Component {
                   className={"inline"}
                   onClick={() => this.handleExpand()}
                 >
-                  <span class="h5">{strategy.name}</span>
+                  <span class="h5">{strategy.name} </span>
                 </Panel.Title>
                 <Panel.Title className={"inline"}>
                   <span
@@ -140,7 +139,7 @@ class StrategyItem extends Component {
                 className={"inline"}
                 onClick={() => this.handleExpand()}
               >
-                <span class="h5">{strategy.name}</span>
+                <span class="h5">{strategy.name} </span>
               </Panel.Title>
               <Panel.Title className={"inline"}>
                 <span

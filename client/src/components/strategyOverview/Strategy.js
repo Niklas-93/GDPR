@@ -95,7 +95,7 @@ class Strategy extends Component {
 
                           <Modal.Footer>
                             <Button
-                              class="btn-lg btn-info"
+                              className={"btn-lg btn-info"}
                               onClick={() =>
                                 this.deleteStrategy(this.props.strategy._id)
                               }

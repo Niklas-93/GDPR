@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Col, Tabs, Tab, Button, Glyphicon, Badge } from "react-bootstrap";
 import Spinner from "../common/Spinner";
 import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
-import "./Overview.css";
+import "./PatternOverview.css";
 import PatternFeed from "./PatternFeed";
 import { getPatterns, clearAllFilters } from "../../actions/patternActions";
 import StrategyFeed from "./StrategyFeed";
@@ -17,7 +17,7 @@ import NoPatternFound from "./NoPatternFound";
 // Define minwidth of screen for sidebar (filter)
 const mql = window.matchMedia(`(min-width: 800px)`);
 
-class Overview extends Component {
+class PatternOverview extends Component {
   constructor(props) {
     super(props);
     //set initial state: opened sidebar
@@ -258,7 +258,7 @@ class Overview extends Component {
 }
 
 // define required props
-Overview.propTypes = {
+PatternOverview.propTypes = {
   getPatterns: PropTypes.func.isRequired,
   pattern: PropTypes.object.isRequired,
   tactic: PropTypes.object.isRequired,
@@ -268,7 +268,6 @@ Overview.propTypes = {
 
 const mapStateToProps = state => ({
   pattern: state.pattern,
-  tactic: state.tactic,
   strategy: state.strategy,
   auth: state.auth
 });
@@ -276,4 +275,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { getPatterns, getStrategies, clearAllFilters }
-)(withRouter(Overview));
+)(withRouter(PatternOverview));

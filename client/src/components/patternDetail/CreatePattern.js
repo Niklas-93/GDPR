@@ -413,7 +413,6 @@ CreatePattern.propTypes = {
   errors: PropTypes.object.isRequired,
   setAssignedTactics: PropTypes.func.isRequired,
   setAssignedStrategies: PropTypes.func.isRequired,
-  getTactics: PropTypes.func.isRequired,
   getStrategies: PropTypes.func.isRequired
 };
 
@@ -423,7 +422,6 @@ const mapStateToProps = state => ({
   errors: state.errors,
   assignedTactics: state.pattern.assignedTactics,
   assignedStrategies: state.pattern.assignedStrategies,
-  tactics: state.tactic.tactics,
   strategies: state.strategy.strategies,
   pattern: state.pattern,
   strategy: state.strategy
