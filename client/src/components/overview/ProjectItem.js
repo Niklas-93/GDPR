@@ -13,45 +13,13 @@ class ProjectItem extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = {
-      open: false
-    };
+    this.state = {};
   }
-  extendMore = () => {
-    this.setState({ open: !this.state.open });
-  };
 
   render() {
-    var tactics = this.props.project.assignedStrategiesWithAllTactics;
-
-    function aggrTac() {
-      var arr = [];
-
-      tactics.map(strategies =>
-        strategies.assignedTactics.map(tactic => (arr = arr.concat(tactic)))
-      );
-
-      return arr;
-    }
-
     const { project, auth } = this.props;
-    const open = this.state.open;
-    let more;
-    let descriptionFirstPart = project.description.split(" ", 10).join(" ");
-    let descriptionSecondPart = project.description.substring(
-      descriptionFirstPart.length
-    );
-    if (open) {
-      more = <p>Less...</p>;
-    } else {
-      more = <p>More...</p>;
-    }
 
-    const panelHeight = classnames("", { PanelHeight: open == false });
-
-    // className={classnames('form-control form-control-lg', {
-    //  'is-invalid': error
-    //})}
+    let descriptionFirstPart = project.description.split(" ", 30).join(" ");
 
     var finished =
       project.assignedTactics.length === project.finishedTactics.length;
@@ -59,7 +27,7 @@ class ProjectItem extends Component {
     return (
       <Col xs={4}>
         <Panel
-          className={panelHeight}
+          className="PanelHeight"
           bsStyle={finished ? "success" : undefined}
         >
           <Panel.Heading>
@@ -68,14 +36,10 @@ class ProjectItem extends Component {
             </Link>
           </Panel.Heading>
           <Panel.Body className="shownText">
-            <h4>Description</h4>
             {descriptionFirstPart}
-
-            <Collapse in={this.state.open}>
-              <div>{descriptionSecondPart}</div>
-            </Collapse>
-            <div className="extendMore" onClick={this.extendMore}>
-              {more}
+            <span> ...</span>
+            <div className="moreInfo">
+              For more information click the heading
             </div>
           </Panel.Body>
         </Panel>
