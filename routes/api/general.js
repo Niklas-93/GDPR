@@ -29,25 +29,52 @@ router.post("/search", (req, res) => {
       res.json({ searchResults });
     })
     .catch(err => console.log(err));*/
-  Pattern.find({ name: insertRegex })
+
+  /*Pattern.find({ name: insertRegex })
     .then(searchResultsPatterns => {
       Strategy.find({
-        // $or: [
         name: insertRegex
-        /* {
-            _id: insertRegex //{ assignedTactics: { name: insertRegex }
-          }
-        ]*/
       }).then(searchResultsStrategies => {
-        //console.log(searchResultsPatterns);
-        //console.log("and Strategies");
-        //console.log(searchResultsStrategies);
         var searchResults = {
           Patterns: searchResultsPatterns,
           Strategies: searchResultsStrategies
         };
         console.log(searchResults);
         res.json({ searchResults });
+      });
+    })
+    .catch(err => console.log(err));*/
+
+  Pattern.find({ name: insertRegex })
+    .then(searchResultsPatterns => {
+      Strategy.find({
+        name: insertRegex
+      }).then(searchResultsStrategies => {
+        Strategy.find({
+          "assignedTactics.name": insertRegex
+        }).then(searchResultsTactics => {
+          var tacticsWithStrategies = [];
+          searchResultsTactics.forEach(function(strategy) {
+            strategy.assignedTactics.forEach(function(tactic) {
+              if (insertRegex.test(tactic)) {
+                console.log(tactic);
+                tacticsWithStrategies.push({
+                  name: tactic.name,
+                  _id: tactic._id,
+                  isTactic: true,
+                  assignedStrategy: strategy
+                });
+              }
+            });
+          });
+          var searchResults = {
+            Patterns: searchResultsPatterns,
+            Strategies: searchResultsStrategies,
+            Tactics: tacticsWithStrategies
+          };
+          // console.log(searchResults);
+          res.json({ searchResults });
+        });
       });
     })
     .catch(err => console.log(err));

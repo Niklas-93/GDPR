@@ -11,11 +11,22 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case SET_CURRENT_USER:
-      return {
-        ...state,
-        isAuthenticated: !isEmpty(action.payload),
-        user: action.payload
-      };
+      if (action.payload.role == "Data Protection Officer") {
+        return {
+          ...state,
+          isAuthenticated: !isEmpty(action.payload),
+          user: action.payload,
+          isDataProtectionOfficer: true
+        };
+      } else {
+        return {
+          ...state,
+          isAuthenticated: !isEmpty(action.payload),
+          user: action.payload,
+          isDataProtectionOfficer: false
+        };
+      }
+
     default:
       return state;
   }

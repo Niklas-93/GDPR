@@ -13,28 +13,26 @@ class SankeyDiagram extends React.Component {
 
   _renderHint() {
     const { activeNode } = this.state;
-    console.log("activeNode");
-    console.log(activeNode);
-    if (activeNode === null) {
+
+    if (activeNode === null || activeNode.isPattern == true) {
       return null;
     }
 
-    // calculate center x,y position of link for positioning of hint
-    const x = activeNode.x1 + (activeNode.x0 - activeNode.x1) / 2;
-    const y = activeNode.y0 - (activeNode.y0 - activeNode.y1) / 2;
-
+    // calculate x, y position of hint
+    var x;
+    var y;
+    if (activeNode.index < 9) {
+      x = activeNode.x1 - 50;
+      y = activeNode.y1 - 300;
+    } else {
+      x = activeNode.x1 - 31;
+      y = activeNode.y1 - 100;
+    }
     const hintValue = {};
     const label = `${activeNode.description}`;
     //  hintValue[label] = activeNode.value;
     hintValue["Description"] = label;
-    console.log(hintValue);
-    console.log(x);
-    console.log(y);
 
-    /* console.log("hintlabel");
-    console.log(hintValue);
-    let hintValue2;
-    hintValue2 = hintValue.slice(0, -3);*/
     return (
       <Hint
         x={x}
@@ -43,7 +41,8 @@ class SankeyDiagram extends React.Component {
         style={{
           background: "#337ab7",
           color: "white",
-          padding: "10px 10px 10px 10px"
+          padding: "10px 10px 10px 10px",
+          borderRadius: "10px"
         }}
       />
     );
@@ -53,18 +52,15 @@ class SankeyDiagram extends React.Component {
     let SankeyDiagramContent;
     const { loading } = this.props.pattern;
     const patterns = this.props.patterns;
-    if (patterns === null || loading || patterns.length === 0) {
-      //alert("waiting1");
+    if (patterns === null || loading) {
       SankeyDiagramContent = <Spinner />;
     } else {
       var strategies = this.props.strategy.strategies;
       if (this.props.pattern.visibilityFilters.length !== 0) {
-        //  loading = this.props.strategy;
         strategies = this.props.pattern.visibilityFilters;
       }
 
-      if (strategies === null || loading || strategies.length === 0) {
-        // alert("waiting2");
+      if (strategies === null || loading) {
         SankeyDiagramContent = <Spinner />;
       } else {
         var nodes = [];
@@ -78,16 +74,12 @@ class SankeyDiagram extends React.Component {
             name: pattern.name,
             color: "#337ab7",
             id: pattern._id,
-            key: pattern._id
+            key: pattern._id,
+            isPattern: true
           };
           tacticCounter++;
         });
         strategies.forEach(strategy => {
-          /* nodes[strategyCounter] = {
-              title: strategy.name,
-              value: 10,
-              id: strategyCounter.toString()
-            };*/
           nodes[strategyCounter] = {
             name: strategy.name,
             color: "#337ab7",
@@ -103,56 +95,33 @@ class SankeyDiagram extends React.Component {
               key: strategy._id,
               active: true
             });
-            /*nodes[tacticCounter] = {
-              title: tactic.name,
-              value: 5,
-              id: tacticCounter.toString()
-            };*/
+
             nodes[tacticCounter] = {
               name: tactic.name,
               color: "#337ab7",
               description: tactic.description
             };
-            //   console.log(nodes);
+
             var assignedPatterns = 0;
             var linksToPatterns = [];
-            //   console.log("start suche tactic in pattern");
-            //  console.log(nodes[tacticCounter].name);
+
             patterns.forEach(pattern => {
-              //    console.log(pattern.name);
-              //  nodes[tacticCounter + 1] = { name: pattern.name };
               pattern.assignedStrategiesWithAllTactics.forEach(
                 strategyInPattern => {
-                  //      console.log(strategyInPattern.name);
                   if (strategyInPattern.name == strategy.name) {
-                    //     console.log("Übereinstimmung der strategies");
-                    //    console.log(strategyInPattern.name);
                     strategyInPattern.assignedTactics.forEach(
                       tacticInPattern => {
-                        //        console.log(
-                        //        "durchsuchen aller tactics in der gefundenen strategie"
-                        //    );
-                        //      console.log(tacticInPattern.name);
                         if (tacticInPattern.name == tactic.name) {
-                          //       console.log("Übereinstiimung der tactics");
-                          //     console.log(tacticInPattern.name);
                           for (let index = 9; index < nodes.length; index++) {
-                            /*          console.log("Länge");
-                            console.log(nodes.length);
-                            console.log(index);
-                            console.log(nodes[index].name);*/
                             if (nodes[index].name == pattern.name) {
-                              //     console.log("gefunden in nodes");
                               linksToPatterns.push({
                                 source: tacticCounter,
                                 target: index,
                                 color: "#ddd",
                                 active: true
-                                // value: 10
                               });
                               index = nodes.length;
                             }
-                            // const element = array[index];
                           }
                         }
                       }
@@ -187,13 +156,6 @@ class SankeyDiagram extends React.Component {
 
           strategyCounter++;
         });
-        /*links.push({
-          source: 37,
-          target: 15,
-          value: 10
-        });*/
-        console.log(nodes);
-        console.log(links);
 
         var minHeight = strategies.length * 400;
         if (strategies.length > 5) {
@@ -209,7 +171,8 @@ class SankeyDiagram extends React.Component {
               ? 0.9
               : 0.3
         }));
-
+        let hintContent;
+        hintContent = this._renderHint();
         SankeyDiagramContent = (
           <Sankey
             layout={200}
@@ -232,13 +195,18 @@ class SankeyDiagram extends React.Component {
             onLinkMouseOver={node => this.setState({ activeLink: node })}
             onLinkMouseOut={() => this.setState({ activeLink: null })}
           >
-            {this._renderHint()}
+            {/*this._renderHint()*/}
+            {hintContent}
           </Sankey>
         );
       }
     }
 
-    return <div>{SankeyDiagramContent}</div>;
+    return (
+      <div style={{ zIndex: "5", position: "relative" }}>
+        {SankeyDiagramContent}
+      </div>
+    );
   }
 }
 const mapStateToProps = state => ({

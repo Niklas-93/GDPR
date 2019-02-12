@@ -3,17 +3,41 @@ import PropTypes from "prop-types";
 import Strategy from "./Strategy";
 import { connect } from "react-redux";
 import { getStrategies } from "../../actions/strategyActions";
+import Spinner from "../common/Spinner";
+import { Badge } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 class StrategyOverview extends Component {
   componentDidMount() {
     this.props.getStrategies();
   }
-  render() {
-    const { strategies } = this.props.strategy;
 
-    return strategies.map(strategy => (
-      <Strategy key={strategy._id} strategy={strategy} />
-    ));
+  render() {
+    const { strategies, loading } = this.props.strategy;
+    if (strategies === null || loading) {
+      // while strategies are loading, display spinner
+      return <Spinner />;
+    } else {
+      // if strategies are loaded, display them
+      return (
+        <div>
+          <span className={"h4"}>
+            Strategies <Badge>{strategies.length} </Badge>
+          </span>
+          <span>
+            <Link to="/overview" style={{ marginLeft: "800px" }}>
+              Back to Overview...
+            </Link>
+          </span>{" "}
+          <br />
+          <br />
+          <br />
+          {strategies.map(strategy => (
+            <Strategy key={strategy._id} strategy={strategy} />
+          ))}
+        </div>
+      );
+    }
   }
 }
 

@@ -4,7 +4,16 @@ class TacticListItem extends Component {
   render() {
     const { tactic } = this.props;
 
-    return <li>{tactic.name}</li>;
+    return (
+      <span>
+        <li>
+          {tactic.name}
+          <ul>
+            <li>{tactic.description}</li>
+          </ul>
+        </li>
+      </span>
+    );
   }
 }
 

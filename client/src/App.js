@@ -14,15 +14,13 @@ import NavigationBar from "./components/layout/NavigationBar";
 import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
-import Overview from "./components/overview/Overview";
-import DPOoverview from "./components/overview/DPOoverview";
+import Overview from "./components/patternOverview/Overview";
 import CreatePattern from "./components/patternDetail/CreatePattern";
-import CreateProject from "./components/overview/CreateProject";
-import EditProject from "./components/overview/EditProject";
-import DetailProject from "./components/overview/DetailProject";
+import CreateProject from "./components/projectOverview/CreateProject";
+import EditProject from "./components/projectOverview/EditProject";
+import DetailProject from "./components/projectDetail/DetailProject";
 import { Footer } from "./components/layout/Footer";
-import Search from "./components/layout/Search";
-import PMoverview from "./components/layout/PMoverview";
+import PMoverview from "./components/projectOverview/PMoverview";
 import StrategyOverview from "./components/strategyOverview/StrategyOverview";
 
 import "./App.css";
@@ -56,13 +54,12 @@ class App extends Component {
           <div className="App">
             <NavigationBar />
             <Route exact path="/" component={Landing} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
             <div
               className="container"
               style={{ marginBottom: "75px", marginTop: "75px" }}
             >
-              <Route exact path="/register" component={Register} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/search" component={Search} />
               <Route exact path="/overview" component={Overview} />
               <Route
                 path="/patterndetail/:_id?/:editing?"
@@ -76,12 +73,6 @@ class App extends Component {
                 />
 
                 <PrivateRoute exact path="/PMoverview" component={PMoverview} />
-
-                <PrivateRoute
-                  exact
-                  path="/DPOoverview"
-                  component={DPOoverview}
-                />
                 <PrivateRoute
                   exact
                   path="/create-pattern"

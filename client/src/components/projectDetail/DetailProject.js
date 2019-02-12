@@ -17,7 +17,7 @@ import store from "../../store";
 
 import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import Spinner from "../common/Spinner";
-import CommentBox from "../common/CommentBox";
+import CommentBox from "../projectDetail/CommentBox";
 
 import "./DetailProject.css";
 

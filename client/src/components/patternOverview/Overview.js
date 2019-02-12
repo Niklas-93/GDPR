@@ -3,15 +3,17 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Col, Tabs, Tab, Button, Glyphicon, Badge } from "react-bootstrap";
 import Spinner from "../common/Spinner";
+import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import "./Overview.css";
 import PatternFeed from "./PatternFeed";
-import { getPatterns } from "../../actions/patternActions";
+import { getPatterns, clearAllFilters } from "../../actions/patternActions";
 import { getTactics } from "../../actions/tacticActions";
 import StrategyFeed from "./StrategyFeed";
 import SankeyDiagram from "./SankeyDiagram";
 import { getStrategies } from "../../actions/strategyActions";
 import Sidebar from "react-sidebar";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
+import NoPatternFound from "./NoPatternFound";
 
 // Define minwidth of screen for sidebar (filter)
 const mql = window.matchMedia(`(min-width: 800px)`);
@@ -51,6 +53,14 @@ class Overview extends Component {
   mediaQueryChanged() {
     // dock sidebar if screensize is too small
     this.setState({ sidebarDocked: mql.matches, sidebarOpen: false });
+  }
+
+  //automatic refresh of site after 2 Minutes
+  refreshOverviewAfterTwoMinutes() {
+    setTimeout(() => {
+      this.props.getPatterns();
+      this.props.getStrategies();
+    }, 120000);
   }
 
   // filter patterns according to visibilityFilters from store
@@ -94,11 +104,11 @@ class Overview extends Component {
     return visiblePatterns;
   };
   render() {
+    //this.refreshOverviewAfterTwoMinutes();
     const { patterns, loading } = this.props.pattern;
-    const { isAuthenticated } = this.props.auth;
+    const { isDataProtectionOfficer } = this.props.auth;
     let patternContent;
     var visiblePatterns = [];
-
     if (patterns === null || loading) {
       // while patterns are loading, show spinner
       patternContent = <Spinner />;
@@ -108,7 +118,12 @@ class Overview extends Component {
         this.props.pattern.patterns,
         this.props.pattern.visibilityFilters
       );
-      patternContent = <PatternFeed patterns={visiblePatterns} />;
+      patternContent = (
+        <span>
+          <NoPatternFound patterns={visiblePatterns} />
+          <PatternFeed patterns={visiblePatterns} />{" "}
+        </span>
+      );
     }
 
     const { strategies, loading3 } = this.props.strategy;
@@ -132,9 +147,17 @@ class Overview extends Component {
             sidebar={
               <div>
                 <h4 style={{ textAlign: "center" }}>
-                  Filter{" "}
+                  <span style={{ float: "left" }}>
+                    <BtnWithMouseOverPop
+                      icon="glyphicon glyphicon-remove"
+                      title="Reset Filters"
+                      link="#"
+                      onClick={() => this.props.clearAllFilters()}
+                    />
+                  </span>
+                  <span>Filter </span>
                   <Button
-                    bsSize="small"
+                    bsSize="medium"
                     style={{ float: "right" }}
                     onClick={() => this.onSetSidebarOpen()}
                   >
@@ -157,8 +180,10 @@ class Overview extends Component {
               sidebar: {
                 background: "white",
                 position: "fixed",
-                marginTop: "52px",
-                maxWidth: "200px"
+                marginTop: "50px",
+                maxWidth: "200px",
+                zIndex: "6",
+                marginBottom: "60px"
               }
             }}
           />
@@ -168,7 +193,11 @@ class Overview extends Component {
             sidebar={
               <div>
                 <h4 />
-                <Button bsSize="small" onClick={() => this.onSetSidebarOpen()}>
+                <Button
+                  bsSize="medium"
+                  style={{ float: "right" }}
+                  onClick={() => this.onSetSidebarOpen()}
+                >
                   <Glyphicon glyph="resize-full" />
                 </Button>
               </div>
@@ -181,8 +210,10 @@ class Overview extends Component {
               sidebar: {
                 background: "white",
                 position: "fixed",
-                marginTop: "52px",
-                maxWidth: "35px"
+                marginTop: "50px",
+                maxWidth: "35px",
+                zIndex: "6",
+                marginBottom: "60px"
               }
             }}
           />
@@ -193,15 +224,17 @@ class Overview extends Component {
             <br />
             <Col xs={12}>
               <span className={"h4"}>
-                Patterns <Badge>{visiblePatterns.length}</Badge>
-              </span>
-              {isAuthenticated ? (
+                Patterns <Badge>{visiblePatterns.length} </Badge>
+              </span>{" "}
+              {isDataProtectionOfficer ? (
                 <span>
-                  <Link to="/create-pattern">
-                    <Button className={"glyphicon-button"}>
-                      <Glyphicon glyph="plus" />
-                    </Button>
-                  </Link>
+                  {" "}
+                  <BtnWithMouseOverPop
+                    icon="fas fa-plus"
+                    title="Create Pattern"
+                    link="#"
+                    onClick={() => this.props.history.push("/create-pattern")}
+                  />
                   <Link to="/strategyoverview" style={{ marginLeft: "450px" }}>
                     Manage Strategies and Tactics...
                   </Link>
@@ -216,7 +249,7 @@ class Overview extends Component {
             {patternContent}
           </Tab>
           <Tab eventKey={2} title="Diagram View">
-            <SankeyDiagram patterns={visiblePatterns} />
+            {<SankeyDiagram patterns={visiblePatterns} />}
           </Tab>
         </Tabs>
       </div>
@@ -243,5 +276,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getPatterns, getTactics, getStrategies }
-)(Overview);
+  { getPatterns, getTactics, getStrategies, clearAllFilters }
+)(withRouter(Overview));

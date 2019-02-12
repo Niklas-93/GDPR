@@ -1,15 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import {
-  ButtonToolbar,
-  ButtonGroup,
-  Button,
-  Glyphicon,
-  Modal,
-  Panel,
-  Col
-} from "react-bootstrap";
+import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
+import { ButtonToolbar, ButtonGroup, Panel, Col } from "react-bootstrap";
 
 import StrategyEditForm from "./StrategyEditForm";
 import TacticListItem from "./TacticListItem";
@@ -22,8 +15,8 @@ class Strategy extends Component {
       editing: false,
       showRemoveModal: false,
       name: this.props.strategy.name,
-      description: this.props.strategy.description,
-      assignedTactics: this.props.strategy.assignedTactics
+      description: this.props.strategy.description
+      //assignedTactics: this.props.strategy.assignedTactics
     };
   }
 
@@ -58,10 +51,11 @@ class Strategy extends Component {
         {this.state.editing ? (
           <StrategyEditForm
             strategy={this.props.strategy}
+            enableEditing={() => this.enableEditing()}
             disableEditing={() => this.disableEditing()}
           />
         ) : (
-          <Col xs={3}>
+          <Col xs={6}>
             <Panel className={"minHeightStrategyPanel"}>
               <Panel.Heading>
                 <Panel.Title
@@ -70,13 +64,24 @@ class Strategy extends Component {
                 >
                   <Col xs={6}>{strategy.name}</Col>
                   <Col xs={6}>
-                    <ButtonToolbar className={""} componentClass={"span"}>
+                    <ButtonToolbar
+                      className={""}
+                      componentClass={"span"}
+                      style={{ float: "right" }}
+                    >
                       <ButtonGroup>
-                        <Button onClick={() => this.enableEditing()}>
+                        {/* <Button onClick={() => this.enableEditing()}>
                           <Glyphicon glyph="pencil" />
-                        </Button>
+        </Button>*/}
+                        <BtnWithMouseOverPop
+                          icon="glyphicon glyphicon-pencil"
+                          title="Edit Strategy"
+                          link="#"
+                          onClick={() => this.enableEditing()}
+                        />
                       </ButtonGroup>
-                      {/* Strategies are not allowed to be deleted
+                      {/*
+                       Strategies are not allowed to be deleted
                         <Button onClick={this.handleShowRemoveModal}>
                           <Glyphicon glyph="remove" />
                         </Button>
@@ -113,7 +118,6 @@ class Strategy extends Component {
                 </Panel.Title>
               </Panel.Heading>
               <Panel.Body>
-                <h4>Description</h4>
                 <div>{strategy.description}</div>
                 <div>
                   <h4>Assigned Tactics</h4>
