@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Col } from "react-bootstrap";
+import { Col, Panel } from "react-bootstrap";
 
 class PatternDetail_StrategiesWithTactics extends Component {
   //displays the strategies and assigned Tactics in PatternDetail
@@ -11,18 +11,22 @@ class PatternDetail_StrategiesWithTactics extends Component {
     return (
       <Col xs={12}>
         {assignedStrategiesWithAllTactics.map(strategy => (
-          <Col xs={2}>
-            <h5>
-              <span class="dotForStrategy" /> {strategy.name}
-            </h5>
-            <ul className={"StrategyListInPatterns"}>
-              {strategy.assignedTactics.map(tactic => (
-                <li>
-                  <span class="dotForTactic" /> {tactic.name}
-                  <br />
-                </li>
-              ))}
-            </ul>
+          <Col xs={3}>
+            <Panel>
+              <Panel.Heading>
+                <span class="dotForStrategy" /> {strategy.name}
+              </Panel.Heading>
+              <Panel.Body className={"TacticsBody"}>
+                <ul className={"StrategyListInPatterns"}>
+                  {strategy.assignedTactics.map(tactic => (
+                    <li>
+                      <span class="dotForTactic" /> {tactic.name}
+                      <br />
+                    </li>
+                  ))}
+                </ul>
+              </Panel.Body>
+            </Panel>
           </Col>
         ))}
       </Col>

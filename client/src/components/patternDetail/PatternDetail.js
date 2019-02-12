@@ -302,7 +302,7 @@ class PatternDetail extends Component {
                     className={"col-xs-12 dismiss-button"}
                     onClick={() => this.props.history.push("/overview")}
                   >
-                    Go back to Overview
+                    Go back to Overview...
                   </Button>
                 </Col>
               </Panel.Body>

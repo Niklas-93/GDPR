@@ -54,12 +54,18 @@ class Navigationbar extends Component {
       </MenuItem>
     );
     const guestLinkRegister = (
-      <MenuItem eventKey={3.5}>
+      <MenuItem
+        eventKey={3.5}
+        onClick={() => this.props.history.push("/register")}
+      >
         <Link to="/register">Sign Up</Link>
       </MenuItem>
     );
     const guestLinkLogin = (
-      <MenuItem eventKey={3.6}>
+      <MenuItem
+        eventKey={3.6}
+        onClick={() => this.props.history.push("/login")}
+      >
         <Link to="/login">Login</Link>
       </MenuItem>
     );

@@ -63,7 +63,7 @@ class Strategy extends Component {
             disableEditing={() => this.disableEditing()}
           />
         ) : (
-          <Col xs={3}>
+          <Col xs={6}>
             <Panel className={"minHeightStrategyPanel"}>
               <Panel.Heading>
                 <Panel.Title
@@ -126,7 +126,6 @@ class Strategy extends Component {
                 </Panel.Title>
               </Panel.Heading>
               <Panel.Body>
-                <h4>Description</h4>
                 <div>{strategy.description}</div>
                 <div>
                   <h4>Assigned Tactics</h4>

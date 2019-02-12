@@ -6,13 +6,14 @@ import Spinner from "../common/Spinner";
 import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import "./Overview.css";
 import PatternFeed from "./PatternFeed";
-import { getPatterns } from "../../actions/patternActions";
+import { getPatterns, clearAllFilters } from "../../actions/patternActions";
 import { getTactics } from "../../actions/tacticActions";
 import StrategyFeed from "./StrategyFeed";
 import SankeyDiagram from "./SankeyDiagram";
 import { getStrategies } from "../../actions/strategyActions";
 import Sidebar from "react-sidebar";
 import { Link, withRouter } from "react-router-dom";
+import NoPatternFound from "./NoPatternFound";
 
 // Define minwidth of screen for sidebar (filter)
 const mql = window.matchMedia(`(min-width: 800px)`);
@@ -52,12 +53,6 @@ class Overview extends Component {
   mediaQueryChanged() {
     // dock sidebar if screensize is too small
     this.setState({ sidebarDocked: mql.matches, sidebarOpen: false });
-  }
-
-  // refresh Overview after clicking on refresh button
-  refreshOverview() {
-    this.props.getPatterns();
-    this.props.getStrategies();
   }
 
   //automatic refresh of site after 2 Minutes
@@ -123,7 +118,12 @@ class Overview extends Component {
         this.props.pattern.patterns,
         this.props.pattern.visibilityFilters
       );
-      patternContent = <PatternFeed patterns={visiblePatterns} />;
+      patternContent = (
+        <span>
+          <NoPatternFound patterns={visiblePatterns} />
+          <PatternFeed patterns={visiblePatterns} />{" "}
+        </span>
+      );
     }
 
     const { strategies, loading3 } = this.props.strategy;
@@ -147,9 +147,17 @@ class Overview extends Component {
             sidebar={
               <div>
                 <h4 style={{ textAlign: "center" }}>
-                  Filter{" "}
+                  <span style={{ float: "left" }}>
+                    <BtnWithMouseOverPop
+                      icon="glyphicon glyphicon-remove"
+                      title="Reset Filters"
+                      link="#"
+                      onClick={() => this.props.clearAllFilters()}
+                    />
+                  </span>
+                  <span>Filter </span>
                   <Button
-                    bsSize="small"
+                    bsSize="medium"
                     style={{ float: "right" }}
                     onClick={() => this.onSetSidebarOpen()}
                   >
@@ -172,7 +180,7 @@ class Overview extends Component {
               sidebar: {
                 background: "white",
                 position: "fixed",
-                marginTop: "52px",
+                marginTop: "50px",
                 maxWidth: "200px",
                 zIndex: "6",
                 marginBottom: "60px"
@@ -185,7 +193,11 @@ class Overview extends Component {
             sidebar={
               <div>
                 <h4 />
-                <Button bsSize="small" onClick={() => this.onSetSidebarOpen()}>
+                <Button
+                  bsSize="medium"
+                  style={{ float: "right" }}
+                  onClick={() => this.onSetSidebarOpen()}
+                >
                   <Glyphicon glyph="resize-full" />
                 </Button>
               </div>
@@ -198,7 +210,7 @@ class Overview extends Component {
               sidebar: {
                 background: "white",
                 position: "fixed",
-                marginTop: "52px",
+                marginTop: "50px",
                 maxWidth: "35px",
                 zIndex: "6",
                 marginBottom: "60px"
@@ -214,12 +226,6 @@ class Overview extends Component {
               <span className={"h4"}>
                 Patterns <Badge>{visiblePatterns.length} </Badge>
               </span>{" "}
-              <BtnWithMouseOverPop
-                icon="fas fa-sync"
-                title="Update Overview"
-                link="#"
-                onClick={() => this.refreshOverview()}
-              />
               {isDataProtectionOfficer ? (
                 <span>
                   {" "}
@@ -270,5 +276,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getPatterns, getTactics, getStrategies }
+  { getPatterns, getTactics, getStrategies, clearAllFilters }
 )(withRouter(Overview));

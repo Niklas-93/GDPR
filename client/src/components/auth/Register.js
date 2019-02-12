@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import classnames from "classnames";
 import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
@@ -84,156 +84,161 @@ class Register extends Component {
     const { errors } = this.state;
 
     return (
-      <Col xs={8} xsOffset={2}>
-        <Panel>
-          <Panel.Heading>
-            <h4>Create your GDPR Recommender account</h4>
-          </Panel.Heading>
-          <Panel.Body>
-            <div className="register">
-              <div className="container">
-                <div className="row">
-                  <div className="col-md-6 m-auto">
-                    <form noValidate onSubmit={this.onSubmit}>
-                      <div className="form-group">
-                        <input
-                          type="text"
-                          className={classnames(
-                            "form-control form-control-lg",
-                            {
-                              "is-invalid": errors.name
-                            }
+      <div className={"landing"}>
+        <Col xs={8} xsOffset={2}>
+          <Panel style={{ marginBottom: "75px", marginTop: "75px" }}>
+            <Panel.Heading>
+              <span className={"h4"}>Create your GDPR Recommender account</span>
+
+              <Link to="login" style={{ float: "right" }}>
+                Login...
+              </Link>
+            </Panel.Heading>
+            <Panel.Body>
+              <div className="register">
+                <div className="container">
+                  <div className="row">
+                    <div className="col-md-6 m-auto">
+                      <form noValidate onSubmit={this.onSubmit}>
+                        <div className="form-group">
+                          <input
+                            type="text"
+                            className={classnames(
+                              "form-control form-control-lg",
+                              {
+                                "is-invalid": errors.name
+                              }
+                            )}
+                            placeholder="Name"
+                            name="name"
+                            value={this.state.name}
+                            onChange={this.onChange}
+                          />
+                          {errors.name && (
+                            <div
+                              className="invalid-feedback"
+                              style={{ color: "red" }}
+                            >
+                              {errors.name}
+                            </div>
                           )}
-                          placeholder="Name"
-                          name="name"
-                          value={this.state.name}
-                          onChange={this.onChange}
-                        />
-                        {errors.name && (
-                          <div
-                            className="invalid-feedback"
-                            style={{ color: "red" }}
-                          >
-                            {errors.name}
-                          </div>
-                        )}
-                      </div>
-                      <div className="form-group">
-                        <input
-                          type="email"
-                          className={classnames(
-                            "form-control form-control-lg",
-                            {
-                              "is-invalid": errors.email
-                            }
+                        </div>
+                        <div className="form-group">
+                          <input
+                            type="email"
+                            className={classnames(
+                              "form-control form-control-lg",
+                              {
+                                "is-invalid": errors.email
+                              }
+                            )}
+                            placeholder="Email Address"
+                            name="email"
+                            value={this.state.email}
+                            onChange={this.onChange}
+                          />
+                          {errors.email && (
+                            <div
+                              className="invalid-feedback"
+                              style={{ color: "red" }}
+                            >
+                              {errors.email}
+                            </div>
                           )}
-                          placeholder="Email Address"
-                          name="email"
-                          value={this.state.email}
-                          onChange={this.onChange}
-                        />
-                        {errors.email && (
-                          <div
-                            className="invalid-feedback"
-                            style={{ color: "red" }}
-                          >
-                            {errors.email}
-                          </div>
-                        )}
-                        {/*<small className="form-text text-muted">
+                          {/*<small className="form-text text-muted">
                           This site uses Gravatar so if you want a profile
                           image, use a Gravatar email
                         </small>*/}
-                      </div>
-                      <div className="form-group">
-                        <input
-                          type="text"
-                          className={classnames(
-                            "form-control form-control-lg",
-                            {
-                              "is-invalid": errors.username
-                            }
+                        </div>
+                        <div className="form-group">
+                          <input
+                            type="text"
+                            className={classnames(
+                              "form-control form-control-lg",
+                              {
+                                "is-invalid": errors.username
+                              }
+                            )}
+                            placeholder="User Name"
+                            name="username"
+                            value={this.state.username}
+                            onChange={this.onChange}
+                          />
+                          {errors.username && (
+                            <div
+                              className="invalid-feedback"
+                              style={{ color: "red" }}
+                            >
+                              {errors.username}
+                            </div>
                           )}
-                          placeholder="User Name"
-                          name="username"
-                          value={this.state.username}
-                          onChange={this.onChange}
-                        />
-                        {errors.username && (
-                          <div
-                            className="invalid-feedback"
-                            style={{ color: "red" }}
-                          >
-                            {errors.username}
-                          </div>
-                        )}
-                      </div>
-                      <div className="form-group">
-                        <input
-                          type="password"
-                          className={classnames(
-                            "form-control form-control-lg",
-                            {
-                              "is-invalid": errors.password
-                            }
+                        </div>
+                        <div className="form-group">
+                          <input
+                            type="password"
+                            className={classnames(
+                              "form-control form-control-lg",
+                              {
+                                "is-invalid": errors.password
+                              }
+                            )}
+                            placeholder="Password"
+                            name="password"
+                            value={this.state.password}
+                            onChange={this.onChange}
+                          />
+                          {errors.password && (
+                            <div
+                              className="invalid-feedback"
+                              style={{ color: "red" }}
+                            >
+                              {errors.password}
+                            </div>
                           )}
-                          placeholder="Password"
-                          name="password"
-                          value={this.state.password}
-                          onChange={this.onChange}
-                        />
-                        {errors.password && (
-                          <div
-                            className="invalid-feedback"
-                            style={{ color: "red" }}
-                          >
-                            {errors.password}
-                          </div>
-                        )}
-                      </div>
-                      <div className="form-group">
-                        <input
-                          type="password"
-                          className={classnames(
-                            "form-control form-control-lg",
-                            {
-                              "is-invalid": errors.password2
-                            }
+                        </div>
+                        <div className="form-group">
+                          <input
+                            type="password"
+                            className={classnames(
+                              "form-control form-control-lg",
+                              {
+                                "is-invalid": errors.password2
+                              }
+                            )}
+                            placeholder="Confirm Password"
+                            name="password2"
+                            value={this.state.password2}
+                            onChange={this.onChange}
+                          />
+                          {errors.password2 && (
+                            <div
+                              className="invalid-feedback"
+                              style={{ color: "red" }}
+                            >
+                              {errors.password2}
+                            </div>
                           )}
-                          placeholder="Confirm Password"
-                          name="password2"
-                          value={this.state.password2}
-                          onChange={this.onChange}
-                        />
-                        {errors.password2 && (
-                          <div
-                            className="invalid-feedback"
-                            style={{ color: "red" }}
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleFormControlSelect">
+                            Choose Role
+                          </label>
+                          <select
+                            class="form-control"
+                            id="exampleFormControlSelect"
+                            onChange={this.onChange}
+                            name="role"
                           >
-                            {errors.password2}
-                          </div>
-                        )}
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleFormControlSelect">
-                          Choose Role
-                        </label>
-                        <select
-                          class="form-control"
-                          id="exampleFormControlSelect"
-                          onChange={this.onChange}
-                          name="role"
-                        >
-                          <option value="Data Protection Officer">
-                            Data Protection Officer
-                          </option>
-                          <option value="Project Manager">
-                            Project Manager
-                          </option>
-                          <option value="Developer">Developer</option>
-                        </select>
-                      </div>
-                      {/*<div className="form-group">
+                            <option value="Data Protection Officer">
+                              Data Protection Officer
+                            </option>
+                            <option value="Project Manager">
+                              Project Manager
+                            </option>
+                            <option value="Developer">Developer</option>
+                          </select>
+                        </div>
+                        {/*<div className="form-group">
                         <input
                           type="role"
                           className={classnames(
@@ -251,7 +256,7 @@ class Register extends Component {
                           <div className="invalid-feedback">{errors.role}</div>
                         )}
                         </div>*/}
-                      {/*<FormGroup controlId="formControlsSelect">
+                        {/*<FormGroup controlId="formControlsSelect">
                   <ControlLabel>Choose Role</ControlLabel>
                   <FormControl
                     componentClass="select"
@@ -269,36 +274,37 @@ class Register extends Component {
                
                   </FormControl>
                   </FormGroup>*/}
-                      <div className="rowC">
-                        <Row>
-                          <Col xs={12} xsOffset={0}>
-                            <ButtonToolbar>
-                              <Button
-                                className={"dismissbutton col-xs-5"}
-                                onClick={() => this.cancelRegister()}
-                              >
-                                Cancel
-                              </Button>
-                              <Button
-                                onClick={this.onSubmit}
-                                //href="/Overview"
-                                bsStyle="primary"
-                                className={"col-xs-5"}
-                              >
-                                Register
-                              </Button>
-                            </ButtonToolbar>
-                          </Col>
-                        </Row>
-                      </div>
-                    </form>
+                        <div className="rowC">
+                          <Row>
+                            <Col xs={12} xsOffset={0}>
+                              <ButtonToolbar>
+                                <Button
+                                  className={"dismissbutton col-xs-5"}
+                                  onClick={() => this.cancelRegister()}
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  onClick={this.onSubmit}
+                                  //href="/Overview"
+                                  bsStyle="primary"
+                                  className={"col-xs-5"}
+                                >
+                                  Register
+                                </Button>
+                              </ButtonToolbar>
+                            </Col>
+                          </Row>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </Panel.Body>
-        </Panel>
-      </Col>
+            </Panel.Body>
+          </Panel>
+        </Col>
+      </div>
     );
   }
 }
