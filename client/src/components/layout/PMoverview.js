@@ -106,8 +106,12 @@ class PMoverview extends Component {
     return (
       <div>
         <PageHeader>
-          Project Overview <Badge>{projects.length} </Badge>
-          {" ä"}
+          Project Overview{" "}
+          <Badge>
+            {this.props.auth.user.role === "Project Manager"
+              ? projects.length
+              : devProjects.length}{" "}
+          </Badge>{" "}
           {this.props.auth.user.role === "Project Manager" ? (
             <BtnWithMouseOverPop
               icon="fas fa-plus"

@@ -42,7 +42,11 @@ class Login extends Component {
       } else if (nextProps.auth.user.role == "Project Manager") {
         this.props.history.push("/PMoverview");
       } else {
-        this.props.history.push("/overview");
+        if (nextProps.auth.user.role == "Developer") {
+          this.props.history.push("/PMoverview");
+        } else {
+          this.props.history.push("/overview");
+        }
       }
     }
 
