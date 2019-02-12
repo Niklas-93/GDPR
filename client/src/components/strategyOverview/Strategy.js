@@ -2,19 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
-<<<<<<< HEAD
-import {
-  ButtonToolbar,
-  ButtonGroup,
-  Button,
-  Glyphicon,
-  Modal,
-  Panel,
-  Col
-} from "react-bootstrap";
-=======
 import { ButtonToolbar, ButtonGroup, Panel, Col } from "react-bootstrap";
->>>>>>> origin/master
 
 import StrategyEditForm from "./StrategyEditForm";
 import TacticListItem from "./TacticListItem";
