@@ -95,7 +95,9 @@ class PMoverview extends Component {
           <Badge>
             {this.props.auth.user.role === "Project Manager"
               ? projects.length
-              : devProjects.length}{" "}
+              : devProjects
+              ? devProjects.length
+              : ""}{" "}
           </Badge>{" "}
           {this.props.auth.user.role === "Project Manager" ? (
             <BtnWithMouseOverPop

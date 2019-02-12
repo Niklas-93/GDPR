@@ -3,16 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { setComment } from "../../actions/projectActions";
-import {
-  Panel,
-  Button,
-  FormGroup,
-  InputGroup,
-  FormControl,
-  OverlayTrigger,
-  Popover
-} from "react-bootstrap";
-import store from "../../store";
+import { Button, OverlayTrigger, Popover } from "react-bootstrap";
 
 class BtnWithMouseOverPop extends Component {
   constructor() {
