@@ -157,7 +157,11 @@ class SankeyDiagram extends React.Component {
           strategyCounter++;
         });
 
+<<<<<<< HEAD:client/src/components/patternOverview/SankeyDiagram.js
         var minHeight = strategies.length * 500;
+=======
+        var minHeight = strategies.length * 400;
+>>>>>>> origin/master:client/src/components/patternOverview/SankeyDiagram.js
         if (strategies.length > 5) {
           minHeight = strategies.length * 400;
         }

@@ -6,20 +6,7 @@ import { logoutUser } from "../../actions/authActions";
 import SearchBox from "./SearchBox";
 import { withRouter } from "react-router-dom";
 
-import store from "../../store";
-import {
-  Navbar,
-  Breadcrumb,
-  Nav,
-  NavItem,
-  NavDropdown,
-  MenuItem,
-  FormGroup,
-  FormControl,
-  Button,
-  Thumbnail,
-  Image
-} from "react-bootstrap";
+import { Navbar, Nav, NavDropdown, MenuItem, Image } from "react-bootstrap";
 import "./NavigationBar.css";
 class Navigationbar extends Component {
   constructor() {

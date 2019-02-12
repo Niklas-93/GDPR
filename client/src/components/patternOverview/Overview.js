@@ -61,6 +61,14 @@ class Overview extends Component {
     this.setState({ sidebarDocked: mql.matches, sidebarOpen: false });
   }
 
+  //automatic refresh of site after 2 Minutes
+  refreshOverviewAfterTwoMinutes() {
+    setTimeout(() => {
+      this.props.getPatterns();
+      this.props.getStrategies();
+    }, 120000);
+  }
+
   // filter patterns according to visibilityFilters from store
   getVisiblePatterns = (patterns, filters) => {
     if (filters.length == 0) {
@@ -102,6 +110,7 @@ class Overview extends Component {
     return visiblePatterns;
   };
   render() {
+    //this.refreshOverviewAfterTwoMinutes();
     const { patterns, loading } = this.props.pattern;
     const { isDataProtectionOfficer } = this.props.auth;
     let patternContent;

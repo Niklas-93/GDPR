@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withRouter, Link } from "react-router-dom";
-import classnames from "classnames";
 import { connect } from "react-redux";
 
 import Spinner from "../common/Spinner";
@@ -20,17 +19,7 @@ import TextField from "../common/TextField";
 import DevListGroupField from "../common/DevListGroupField";
 import TacListGroupField from "../common/TacListGroupField";
 import StrListGroupField from "../common/StrListGroupField";
-import {
-  Button,
-  ButtonGroup,
-  ListGroup,
-  ListGroupItem,
-  Row,
-  Col,
-  ToggleButton,
-  ToggleButtonGroup,
-  ButtonToolbar
-} from "react-bootstrap";
+import { Button, Row, Col } from "react-bootstrap";
 import { getDevelopers } from "../../actions/userActions";
 import { getTactics } from "../../actions/tacticActions";
 import { getStrategies } from "../../actions/strategyActions";

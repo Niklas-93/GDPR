@@ -6,6 +6,7 @@ import {
   ButtonGroup,
   Button,
   Col,
+<<<<<<< HEAD
   Glyphicon,
   Modal,
   FormGroup,
@@ -17,6 +18,13 @@ import {
 import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import { Link, withRouter } from "react-router-dom";
 import { deletePattern, editPattern } from "../../actions/patternActions";
+=======
+  Modal
+} from "react-bootstrap";
+import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
+import { withRouter } from "react-router-dom";
+import { deletePattern } from "../../actions/patternActions";
+>>>>>>> origin/master
 
 class EditToolbar extends Component {
   constructor(props, context) {
@@ -98,9 +106,9 @@ class EditToolbar extends Component {
   };
 
   render() {
-    const { pattern } = this.props;
     return (
       <ButtonToolbar className={"glyphicon-button"} style={{ float: "right" }}>
+<<<<<<< HEAD
         {/*<ButtonGroup>
           <Button onClick={this.handleShowEditModal}>
             <Glyphicon glyph="pencil" />
@@ -109,6 +117,8 @@ class EditToolbar extends Component {
             <Glyphicon glyph="remove" />
           </Button>
         </ButtonGroup>*/}
+=======
+>>>>>>> origin/master
         <ButtonGroup>
           <BtnWithMouseOverPop
             icon="glyphicon glyphicon-pencil"

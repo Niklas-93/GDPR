@@ -2,31 +2,16 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import "./PMoverview.css";
-import { Link } from "react-router-dom";
 import Spinner from "../common/Spinner";
 import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
-import ProjectFeed from "../overview/ProjectFeed";
+import ProjectFeed from "../projectOverview/ProjectFeed";
 import {
   getProjects,
   getProject,
   resetAssignedStrategies
 } from "../../actions/projectActions";
 import { getDevelopers } from "../../actions/userActions";
-import {
-  Popover,
-  Badge,
-  OverlayTrigger,
-  Col,
-  Thumbnail,
-  Grid,
-  Row,
-  PageHeader,
-  Panel,
-  ButtonToolbar,
-  Button,
-  Image
-} from "react-bootstrap";
-import authReducer from "../../reducers/authReducer";
+import { Badge, Grid, PageHeader } from "react-bootstrap";
 
 class PMoverview extends Component {
   componentDidMount() {
@@ -106,8 +91,12 @@ class PMoverview extends Component {
     return (
       <div>
         <PageHeader>
-          Project Overview <Badge>{projects.length} </Badge>
-          {" ä"}
+          Project Overview{" "}
+          <Badge>
+            {this.props.auth.user.role === "Project Manager"
+              ? projects.length
+              : devProjects.length}{" "}
+          </Badge>{" "}
           {this.props.auth.user.role === "Project Manager" ? (
             <BtnWithMouseOverPop
               icon="fas fa-plus"

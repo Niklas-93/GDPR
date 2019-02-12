@@ -12,7 +12,6 @@ import {
   Collapse,
   ListGroupItem
 } from "react-bootstrap";
-import EditToolbarTactics from "./EditToolbarTactics";
 import store from "../../store";
 
 class DevListItem extends Component {

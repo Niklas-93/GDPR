@@ -6,7 +6,6 @@ import TextAreaField from "../common/TextAreaField";
 import TextField from "../common/TextField";
 import {
   Button,
-  Glyphicon,
   FormGroup,
   ControlLabel,
   FormControl,

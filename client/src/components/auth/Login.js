@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
 import { loginUser } from "../../actions/authActions";
-import { Panel, Col, Tabs, Tab, Button, Collapse } from "react-bootstrap";
+import { Panel, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 class Login extends Component {
@@ -43,7 +43,11 @@ class Login extends Component {
       } else if (nextProps.auth.user.role == "Project Manager") {
         this.props.history.push("/PMoverview");
       } else {
-        this.props.history.push("/overview");
+        if (nextProps.auth.user.role == "Developer") {
+          this.props.history.push("/PMoverview");
+        } else {
+          this.props.history.push("/overview");
+        }
       }
     }
 
@@ -74,7 +78,7 @@ class Login extends Component {
       <div className={"landing"}>
         <div>
           <Col xs={8} xsOffset={2}>
-            <Panel style={{ marginBottom: "75px", marginTop: "75px" }}>
+            <Panel style={{ marginBottom: "150px", marginTop: "150px" }}>
               <Panel.Heading>
                 <span className={"h4"}>Sign in to your Account</span>
                 <Link to="register" style={{ float: "right" }}>

@@ -3,14 +3,7 @@ import { Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 
-import {
-  PageHeader,
-  ButtonToolbar,
-  Button,
-  Col,
-  Panel,
-  Row
-} from "react-bootstrap";
+import { ButtonToolbar, Col, Panel } from "react-bootstrap";
 
 import "./Landing.css";
 class Landing extends Component {
@@ -24,7 +17,7 @@ class Landing extends Component {
     return (
       <div className="landing">
         <Col xs={8} xsOffset={2}>
-          <Panel style={{ marginTop: "70px" }}>
+          <Panel style={{ marginTop: "150px" }}>
             <Panel.Heading id="LandingHeading">
               <Panel.Title>GDPR Recommender</Panel.Title>
             </Panel.Heading>
