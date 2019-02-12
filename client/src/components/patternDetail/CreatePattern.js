@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
+import { Col, Modal } from "react-bootstrap";
 import {
   setAssignedTactics,
   setAssignedStrategies,
@@ -13,7 +14,7 @@ import TextAreaField from "../common/TextAreaField";
 import TextField from "../common/TextField";
 import { getStrategies } from "../../actions/strategyActions";
 import { Button, Panel, Tab, Tabs } from "react-bootstrap";
-import StrategyFeed from "../overview/StrategyFeed";
+import StrategyFeed from "../patternOverview/StrategyFeed";
 
 class CreatePattern extends Component {
   constructor() {
@@ -39,7 +40,8 @@ class CreatePattern extends Component {
       assignedTactics: [],
       assignedStrategies: [],
       errors: {},
-      activeKey: 1
+      activeKey: 1,
+      showWarningModal: false
     };
     // bind functions
     this.onChange = this.onChange.bind(this);
@@ -51,6 +53,20 @@ class CreatePattern extends Component {
     this.props.getStrategies();
     // clear tactics if component is called for more than one time / more than one new pattern
     this.props.clearChosenTactics();
+  }
+
+  // if server sends errors
+  componentWillReceiveProps(nextProps) {
+    if (Object.keys(nextProps.errors) != 0) {
+      this.setState({ errors: nextProps.errors });
+      if (nextProps.errors.patternAlreadyExists) {
+        this.setState({ showWarningModal: true });
+      } else if (nextProps.errors.assignedTactics) {
+        this.setState({ activeKey: 2 });
+      } else {
+        this.setState({ activeKey: 1 });
+      }
+    }
   }
 
   //handles change of input fields
@@ -163,53 +179,67 @@ class CreatePattern extends Component {
           >
             <Tab eventKey={1} title="1. Basic Information">
               <TextField
-                label="Name of pattern"
+                label="Name of pattern*"
                 name="name"
                 value={this.state.name}
                 placeholder="Enter the name of the pattern"
                 onChange={this.onChange}
                 error={errors.name}
                 onBlur={this.onChange}
+                className={"patternName"}
               />
               <TextAreaField
-                label="Summary"
+                label="Summary*"
                 name="summary"
                 value={this.state.summary}
                 placeholder="Enter Summary"
                 onChange={this.onChange}
                 error={errors.summary}
                 onBlur={this.onChange}
+                className={"patternTextarea"}
               />
               <TextAreaField
-                label="Context"
+                label="Context*"
                 name="context"
                 value={this.state.context}
                 placeholder="Enter Context"
                 onChange={this.onChange}
                 error={errors.context}
                 onBlur={this.onChange}
+                className={"patternTextarea"}
               />
               <TextAreaField
-                label="Problem"
+                label="Problem*"
                 name="problem"
                 value={this.state.problem}
                 placeholder="Enter Problem"
                 onChange={this.onChange}
                 error={errors.problem}
                 onBlur={this.onChange}
+                className={"patternTextarea"}
               />
               <TextAreaField
-                label="Solution"
+                label="Solution*"
                 name="solution"
                 value={this.state.solution}
                 placeholder="Enter Solution"
                 onChange={this.onChange}
                 error={errors.solution}
                 onBlur={this.onChange}
+                className={"patternTextarea"}
               />{" "}
+              <Col xs={12}>
+                <span style={{ color: "#a9a9a9" }}>* fields are required</span>
+              </Col>
+              <Button
+                className={"col-xs-6 dismiss-button"}
+                onClick={() => this.props.history.push("/overview")}
+              >
+                Cancel
+              </Button>
               <Button
                 bsStyle="primary"
-                className={"col-xs-12"}
+                className={"col-xs-6"}
                 onClick={() => this.handleSelect(2)}
               >
                 Set assigned Strategies
@@ -223,20 +253,34 @@ class CreatePattern extends Component {
                 {strategyContent} <br />
                 <br />
                 {seeAdditionals ? (
-                  <Button
-                    className={"col-xs-12"}
-                    bsStyle="primary"
-                    onClick={() => this.handleSelect(3)}
-                  >
-                    Set additional Information
-                  </Button>
+                  <span>
+                    <Button
+                      className={"col-xs-6 dismiss-button"}
+                      onClick={() => this.props.history.push("/overview")}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      className={"col-xs-6"}
+                      bsStyle="primary"
+                      onClick={() => this.handleSelect(3)}
+                    >
+                      Set additional Information
+                    </Button>
+                  </span>
                 ) : (
                   <span>
                     <div style={{ fontWeight: "bold", color: "red" }}>
                       At least one tactic must be chosen!
                     </div>
                     <Button
-                      className={"col-xs-12"}
+                      className={"col-xs-6 dismiss-button"}
+                      onClick={() => this.props.history.push("/overview")}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      className={"col-xs-6"}
                       bsStyle="primary"
                       onClick={() => this.handleSelect(3)}
                       disabled
@@ -257,6 +301,7 @@ class CreatePattern extends Component {
                   value={this.state.consequences}
                   placeholder="Enter Consequences"
                   onChange={this.onChange}
+                  className={"patternTextarea"}
                 />
                 <TextAreaField
                   label="Constraints"
@@ -264,6 +309,7 @@ class CreatePattern extends Component {
                   value={this.state.constraints}
                   placeholder="Enter Constraints"
                   onChange={this.onChange}
+                  className={"patternTextarea"}
                 />
                 <TextAreaField
                   label="Benefits"
@@ -271,6 +317,7 @@ class CreatePattern extends Component {
                   value={this.state.benefits}
                   placeholder="Enter Benefits"
                   onChange={this.onChange}
+                  className={"patternTextarea"}
                 />
                 <TextAreaField
                   label="Liabilities"
@@ -278,6 +325,7 @@ class CreatePattern extends Component {
                   value={this.state.liabilities}
                   placeholder="Enter Liabilities"
                   onChange={this.onChange}
+                  className={"patternTextarea"}
                 />
 
                 <TextAreaField
@@ -286,6 +334,8 @@ class CreatePattern extends Component {
                   value={this.state.examples}
                   placeholder="Enter Examples"
                   onChange={this.onChange}
+                  className={"patternTextarea"}
+                  error={errors.examples}
                 />
                 <TextAreaField
                   label="Known Uses"
@@ -293,6 +343,7 @@ class CreatePattern extends Component {
                   value={this.state.knownUses}
                   placeholder="Enter known Uses"
                   onChange={this.onChange}
+                  className={"patternTextarea"}
                 />
                 <TextAreaField
                   label="Related Patterns"
@@ -300,6 +351,7 @@ class CreatePattern extends Component {
                   value={this.state.relatedPatterns}
                   placeholder="Enter related Patterns"
                   onChange={this.onChange}
+                  className={"patternTextarea"}
                 />
                 <TextAreaField
                   label="Sources"
@@ -307,10 +359,17 @@ class CreatePattern extends Component {
                   value={this.state.sources}
                   placeholder="Enter Sources"
                   onChange={this.onChange}
+                  className={"patternTextarea"}
                 />
                 <Button
+                  className={"col-xs-6 dismiss-button"}
+                  onClick={() => this.props.history.push("/overview")}
+                >
+                  Cancel
+                </Button>
+                <Button
                   bsStyle="primary"
-                  className={"col-xs-12"}
+                  className={"col-xs-6"}
                   onClick={this.createPattern}
                 >
                   Create Pattern
@@ -321,6 +380,27 @@ class CreatePattern extends Component {
             )}
           </Tabs>
         </Panel>
+        <div className="static-modal">
+          <Modal show={this.state.showWarningModal}>
+            <Modal.Header>
+              <Modal.Title>Error</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>{this.state.errors.patternAlreadyExists}</Modal.Body>
+            <Modal.Footer>
+              <Col xs={12}>
+                <Button
+                  bsStyle="danger"
+                  className={"col-xs-12"}
+                  onClick={() =>
+                    this.setState({ showWarningModal: false, activeKey: 1 })
+                  }
+                >
+                  Confirm <i className={"glyphicon glyphicon-ok"} />
+                </Button>
+              </Col>
+            </Modal.Footer>
+          </Modal>
+        </div>
       </form>
     );
   }

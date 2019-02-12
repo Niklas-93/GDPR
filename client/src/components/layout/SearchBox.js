@@ -7,17 +7,19 @@ import {
   Dropdown,
   CustomMenu,
   CustomToggle,
-  MenuItem
+  MenuItem,
+  Col
 } from "react-bootstrap";
 import "./NavigationBar.css";
 import { searchInBackend } from "../../actions/generalActions";
 import Spinner from "../common/Spinner";
-import ResultList from "./ResultList";
+
 import {
   AsyncTypeahead,
   GithubMenuItem,
   makeAndHandleRequest,
-  PER_PAGE
+  PER_PAGE,
+  Menu
 } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import {
@@ -131,13 +133,15 @@ class SearchBox extends Component {
     });*/
   }
 
-  handleSelectedSearchItem = searchItem => {
+  handleSelectedSearchItem2 = searchItem => {
     // this.setState({ selected: searchItem }, alert(searchItem));
 
     console.log("searchItem");
     console.log(searchItem);
     console.log(this.props.history);
     const selectedItem = searchItem[0];
+    console.log("sel");
+    console.log(selectedItem);
     if (searchItem.length != 0) {
       // is Pattern
       if (selectedItem.summary != undefined) {
@@ -147,12 +151,14 @@ class SearchBox extends Component {
       }
       // is Strategy
       else if (selectedItem.assignedTactics != undefined) {
+        alert("2");
         this.props.clearAllFilters();
         this.props.setStrategyAsFilter(selectedItem);
         this.props.history.push("/overview");
       }
       // is Tactic
       else {
+        alert("3");
         this.props.clearAllFilters();
         this.props.setFilterForPatterns(selectedItem.name);
         this.props.history.push("/overview");
@@ -160,8 +166,64 @@ class SearchBox extends Component {
     }
   };
 
+  handleSelectedSearchItem = searchItem => {
+    // this.setState({ selected: searchItem }, alert(searchItem));
+    this.setState({
+      selected: undefined
+    });
+    console.log("searchItem");
+    // console.log(searchItem);
+    console.log(this.props.history);
+    //const selectedItem = searchItem[0];
+    console.log("sel");
+    console.log(selectedItem);
+    var selectedItem = searchItem[0];
+    if (searchItem.length != 0) {
+      // is Pattern
+      if (selectedItem.summary != undefined) {
+        //this.props.linkToPatternAfterSearch(selectedItem);
+        this.props.getPattern(selectedItem._id);
+        this.props.history.push("/patterndetail/" + selectedItem._id);
+      }
+      // is Strategy
+      else if (selectedItem.assignedTactics != undefined) {
+        // alert("2");
+        this.props.clearAllFilters();
+        this.props.setStrategyAsFilter(selectedItem);
+        this.props.history.push("/overview");
+      }
+      // is Tactic
+      else {
+        // alert("3");
+        this.props.clearAllFilters();
+        this.props.setFilterForPatterns(
+          { name: selectedItem.name, _id: selectedItem._id },
+          selectedItem.assignedStrategy
+        );
+        this.props.history.push("/overview/");
+        /*setTimeout(() => {
+          $("#" + selectedItem.assignedStrategy.name).collapse();
+        }, 1000);*/
+      }
+    }
+  };
+
+  differBetweenSearchresults(searchItem) {
+    if (searchItem.summary !== undefined) {
+      return <span className={"searchResultIndicator"}>Pattern: </span>;
+    } else if (searchItem.assignedStrategy !== undefined) {
+      return (
+        <span className={"searchResultIndicator"}>Filter for Tactic: </span>
+      );
+    } else {
+      return (
+        <span className={"searchResultIndicator"}>Filter for Strategy: </span>
+      );
+    }
+  }
   render() {
     const { loading, searchResults } = this.props.general;
+    let searchContentBeforeTactics;
     let searchContent;
     let isLoading;
     let searchBoxContent;
@@ -171,47 +233,100 @@ class SearchBox extends Component {
       Object.keys(searchResults).length === 0
     ) {
       //  searchContent = <Spinner />;
+
       searchContent = [];
       isLoading = false;
       searchBoxContent = (
-        <AsyncTypeahead
-          // {...this.state}
-          minLength={1}
-          selected={this.state.selected}
-          isLoading={isLoading}
-          options={searchContent}
-          labelKey="name"
-          onChange={selected => this.setState({ selected })}
-          // onChange={this.search}
-          onSearch={this.__handleSearch}
-          placeholder="Search for Patterns..."
-        />
+        <Col xs={8} xsOffset={2}>
+          <AsyncTypeahead
+            // {...this.state}
+            delay={200}
+            {...this.state}
+            minLength={2}
+            selectHintOnEnter={true}
+            emptyLabel="No Results found!"
+            clearButton={true}
+            selected={this.state.selected}
+            // isLoading={isLoading}
+            options={searchContent}
+            labelKey="name"
+            onChange={selected => this.setState({ selected })}
+            // onChange={this.search}
+            onSearch={this.__handleSearch}
+            placeholder="Search..."
+            renderMenu={(results, menuProps) => (
+              <Menu {...menuProps}>
+                {results.map((result, index) => (
+                  <MenuItem option={result} position={index}>
+                    {result.name}
+                  </MenuItem>
+                ))}
+              </Menu>
+            )}
+          />
+        </Col>
       );
     } else {
-      searchContent = searchResults.Patterns.concat(searchResults.Strategies);
+      searchContentBeforeTactics = searchResults.Patterns.concat(
+        searchResults.Strategies
+      );
+      searchContent = searchContentBeforeTactics.concat(searchResults.Tactics);
+      console.log(searchResults);
       //searchContent = [{ id: 1, name: "John" }, { id: 2, name: "Miles" }];
       isLoading = false;
       // alert("gefunden");
       // alert(option);
       searchBoxContent = (
-        <AsyncTypeahead
-          // {...this.state}
-          minLength={1}
-          selected={this.state.selected}
-          isLoading={isLoading}
-          options={searchContent}
-          labelKey="name"
-          onChange={selected => this.handleSelectedSearchItem(selected)}
-          // onChange={this.search}
-          onSearch={this.__handleSearch}
-          placeholder="Search for Patterns..."
+        <Col xs={8} xsOffset={2}>
+          <AsyncTypeahead
+            {...this.state}
+            delay={200}
+            clearButton={true}
+            selectHintOnEnter={true}
+            emptyLabel="No Results found!"
+            clearButton={true}
+            minLength={2}
+            selected={this.state.selected}
+            //isLoading={isLoading}
+            options={searchContent}
+            labelKey="name"
+            onChange={selected => this.handleSelectedSearchItem(selected)}
+            // onChange={this.search}
+            onSearch={this.__handleSearch}
+            placeholder="Search..."
+            renderMenuItemChildren={(result, menuProps, index) => (
+              <MenuItem option={result} position={index}>
+                {this.differBetweenSearchresults(result)}
+                {result.name}
+              </MenuItem>
+            )}
 
-          //  results={searchContent} <MenuItem>{option.name}</MenuItem>
-          /* renderMenuItemChildren={(option, props) => (
-            // <MenuItem>{option.name}</MenuItem>
-            
+            /*}
+                </MenuItem>
+              ))}
+            </Menu>
           )}*/
-        />
+            /*  renderMenuItemChildren={(result, menuProps, index) => (
+            <MenuItem option={result} position={index}>
+              {this.differBetweenSearchresults(result)}
+              {result.name}
+            </MenuItem>
+          )}*/
+            /*
+           renderMenu={(results, menuProps) => (
+            <Menu {...menuProps}>
+              {results.map((result, index) => (
+                <MenuItem option={result} position={index}>
+                  {this.differBetweenSearchresults(result)}
+                  <span onClick={() => this.handleSelectedSearchItem(result)}>
+                    {result.name}
+                  </span>
+                  </MenuItem>
+              ))}
+              </Menu>)}
+*/
+          />
+        </Col>
       );
       //  searchContent = <ResultList searchResults={searchResults} />;
       // searchContent = searchResults;

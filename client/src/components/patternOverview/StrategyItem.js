@@ -9,10 +9,14 @@ import {
 } from "../../actions/patternActions";
 import TacticFilter from "./TacticFilter";
 import ChooseTactic from "../patternDetail/ChooseTactic";
+import { throws } from "assert";
 
 class StrategyItem extends Component {
   constructor(props, context) {
     super(props, context);
+    this.state = {
+      expanded: false
+    };
   }
   setStrategyAsFilter = strategy => {
     //e.preventDefault();
@@ -34,6 +38,7 @@ class StrategyItem extends Component {
     const visibilityFilters = pattern.visibilityFilters;
     let strategyHeading;
     let cssClassesofStrategyPanel;
+
     // check if strategy is in sidebar as potential filter or not
     if (isFilter) {
       // if strategy is in sidebar
@@ -57,10 +62,6 @@ class StrategyItem extends Component {
       }
       // if any strategies are set as filters
       else {
-        console.log("visibilityFilters");
-        console.log(visibilityFilters);
-        console.log("strategy");
-        console.log(strategy);
         var filters = visibilityFilters.filter(
           visibilityFilter => visibilityFilter._id == strategy._id
         );
@@ -138,6 +139,7 @@ class StrategyItem extends Component {
           <Panel id={strategy.name} className={cssClassesofStrategyPanel}>
             <Panel.Heading>
               {strategyHeading}
+
               {/*<Panel.Title toggle>
                 <span class="h5">{strategy.name}</span>
                 <span

@@ -3,14 +3,7 @@ import { Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 
-import {
-  PageHeader,
-  ButtonToolbar,
-  Button,
-  Col,
-  Panel,
-  Row
-} from "react-bootstrap";
+import { ButtonToolbar, Col, Panel } from "react-bootstrap";
 
 import "./Landing.css";
 class Landing extends Component {
@@ -23,11 +16,11 @@ class Landing extends Component {
   render() {
     return (
       <div className="landing">
-        <Col xs={8} xsOffset={1}>
-          <Col xsOffset={3}>
-            <PageHeader>GDPR Recommender</PageHeader>
-          </Col>
-          <Panel>
+        <Col xs={8} xsOffset={2}>
+          <Panel style={{ marginTop: "70px" }}>
+            <Panel.Heading id="LandingHeading">
+              <Panel.Title>GDPR Recommender</Panel.Title>
+            </Panel.Heading>
             <Panel.Body>
               <span>
                 Privacy patterns are design solutions to common privacy problems
@@ -38,6 +31,9 @@ class Landing extends Component {
                 their own patterns.
               </span>
               <br />
+              <br />
+              <br />
+
               <Col xsOffset={4}>
                 <ButtonToolbar>
                   <Link to="/login" className="btn btn-lg btn-primary">
