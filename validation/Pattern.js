@@ -12,9 +12,9 @@ module.exports = function validatePatternInput(data) {
   //data.consequences = !isEmpty(data.consequences) ? data.consequences : "";
   //data.examples = !isEmpty(data.examples) ? data.examples : "";
 
-  if (!Validator.isLength(data.name, { min: 2, max: 150 })) {
+  /*if (!Validator.isLength(data.name, { min: 2, max: 150 })) {
     errors.name = "Name of the pattern must be between 2 and 150 characters";
-  }
+  }*/
 
   if (Validator.isEmpty(data.name)) {
     errors.name = "Name field is required";

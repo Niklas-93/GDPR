@@ -416,6 +416,7 @@ CreatePattern.propTypes = {
   getTactics: PropTypes.func.isRequired,
   getStrategies: PropTypes.func.isRequired
 };
+
 //Definition of needed props in Component
 const mapStateToProps = state => ({
   auth: state.auth,
@@ -427,6 +428,7 @@ const mapStateToProps = state => ({
   pattern: state.pattern,
   strategy: state.strategy
 });
+
 //Definition of used functions/states in Component, that interact with Store
 export default connect(
   mapStateToProps,

@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Panel, Col, Tabs, Tab, Button, Collapse } from "react-bootstrap";
+import { Panel, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import EditToolbar from "../common/EditToolbar";
 
 class PatternItem extends Component {
   constructor(props, context) {

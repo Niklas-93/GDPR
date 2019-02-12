@@ -9,8 +9,10 @@ class PatternFeed extends Component {
     const { patterns } = this.props;
     var patternFeedSize;
     if (this.props.patternSize === 4) {
+      // sidebar is expanded --> reduce size of patternfeed
       patternFeedSize = 9;
     } else {
+      // sidebar is reduced --> expand size of patternfeed
       patternFeedSize = 12;
     }
     return (

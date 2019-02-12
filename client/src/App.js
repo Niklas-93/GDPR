@@ -25,7 +25,6 @@ import StrategyOverview from "./components/strategyOverview/StrategyOverview";
 
 import "./App.css";
 import PatternDetail from "./components/patternDetail/PatternDetail";
-
 // Check for token
 if (localStorage.jwtToken) {
   // Set auth token header auth

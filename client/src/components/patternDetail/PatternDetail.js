@@ -10,7 +10,7 @@ import {
 } from "../../actions/patternActions";
 import TextAreaField from "../common/TextAreaField";
 import TextField from "../common/TextField";
-import EditToolbar from "../common/EditToolbar";
+import EditToolbar from "./EditToolbar";
 import Spinner from "../common/Spinner";
 import PatternDetail_StrategiesWithTactics from "./PatternDetail_StrategiesWithTactics";
 import { Button, Col, Panel, Tabs, Tab } from "react-bootstrap";
@@ -31,7 +31,6 @@ class PatternDetail extends Component {
     };
     // bind functions
     this.handleSelect = this.handleSelect.bind(this);
-    this.onChange = this.onChange.bind(this);
     this.onChangePattern = this.onChangePattern.bind(this);
   }
   componentDidMount() {
@@ -41,10 +40,8 @@ class PatternDetail extends Component {
     this.props.setEditingToFalse();
   }
 
-  // if server sends errors
   componentWillReceiveProps(nextProps) {
-    console.log("nextprops");
-    console.log(nextProps);
+    // if server sends errors
     if (Object.keys(nextProps.errors) != 0) {
       this.setState({ errors: nextProps.errors });
       if (nextProps.errors.patternAlreadyExists) {
@@ -66,6 +63,7 @@ class PatternDetail extends Component {
       }
     });
   }
+
   handleSelect = activeKey => {
     // check if fields are empty, set corresponding errors
     setTimeout(() => {
@@ -105,6 +103,7 @@ class PatternDetail extends Component {
       });
     }
   };
+
   // Delete element from pattern
   removeElement = element => {
     this.setState({
@@ -115,9 +114,6 @@ class PatternDetail extends Component {
     });
   };
 
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
-  }
   // on confirmation of changes of pattern
   editPattern = () => {
     const editedPattern = this.state.pattern;

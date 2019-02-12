@@ -16,6 +16,7 @@ class ChooseTactic extends Component {
     const assignedTactics = this.props.pattern.chosenTactics;
     const tactic = this.props.tactic;
     let tacticContent;
+
     // display selected tactics with blue background, others normal
     if (assignedTactics.includes(tactic._id)) {
       tacticContent = (

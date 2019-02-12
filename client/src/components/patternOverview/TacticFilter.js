@@ -34,12 +34,9 @@ class TacticFilter extends Component {
     var visibilityFilters = pattern.visibilityFilters;
     var activeFilter = false;
     let tacticItem;
-    //alert(visibilityFilters);
     var strategyIsFilter = visibilityFilters.filter(
       visibilityFilter => visibilityFilter._id == strategyAsFilter._id
     );
-    // console.log(strategyName);
-    // console.log(strategyIsFilter);
 
     // if no tactic of actual strategy is set as filter
     if (strategyIsFilter.length == 0) {
@@ -90,19 +87,13 @@ class TacticFilter extends Component {
         );
       }
     }
-    //alert(visibilityFilters);
-    //console.log(tactic);
-    //console.log("true");
-
-    // alert("false");
 
     return <span>{tacticItem}</span>;
   }
 }
 
 TacticFilter.propTypes = {
-  strategy: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  strategy: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
