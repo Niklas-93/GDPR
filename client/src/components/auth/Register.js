@@ -4,21 +4,7 @@ import { withRouter, Link } from "react-router-dom";
 import classnames from "classnames";
 import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
-import {
-  Panel,
-  Form,
-  FormGroup,
-  Col,
-  FormControl,
-  ControlLabel,
-  Row,
-  Button,
-  ButtonToolbar,
-  DropdownButton,
-  MenuItem,
-  Grid,
-  Thumbnail
-} from "react-bootstrap";
+import { Panel, Col, Row, Button, ButtonToolbar } from "react-bootstrap";
 
 class Register extends Component {
   constructor() {

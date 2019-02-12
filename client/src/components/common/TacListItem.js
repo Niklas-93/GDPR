@@ -15,7 +15,6 @@ import {
   Tooltip,
   OverlayTrigger
 } from "react-bootstrap";
-import EditToolbarTactics from "./EditToolbarTactics";
 import store from "../../store";
 
 import "./TacListItem.css";

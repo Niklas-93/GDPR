@@ -3,14 +3,7 @@ import { Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 
-import {
-  PageHeader,
-  ButtonToolbar,
-  Button,
-  Col,
-  Panel,
-  Row
-} from "react-bootstrap";
+import { ButtonToolbar, Col, Panel } from "react-bootstrap";
 
 import "./Landing.css";
 class Landing extends Component {

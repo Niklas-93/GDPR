@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classnames from "classnames";
 import { loginUser } from "../../actions/authActions";
-import { Panel, Col, Tabs, Tab, Button, Collapse } from "react-bootstrap";
+import { Panel, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 class Login extends Component {
