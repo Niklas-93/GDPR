@@ -21,7 +21,7 @@ class PatternItem extends Component {
     }
 
     return (
-      <Col xs={4}>
+      <Col xs={this.props.patternSize}>
         <Panel className={"minHeightPatternPanel"}>
           <Panel.Heading
             style={{ textAlign: "center" }}

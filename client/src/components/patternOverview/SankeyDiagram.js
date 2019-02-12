@@ -157,9 +157,9 @@ class SankeyDiagram extends React.Component {
           strategyCounter++;
         });
 
-        var minHeight = strategies.length * 400;
+        var minHeight = strategies.length * 500;
         if (strategies.length > 5) {
-          minHeight = strategies.length * 300;
+          minHeight = strategies.length * 400;
         }
         const { activeLink } = this.state;
 
@@ -179,7 +179,7 @@ class SankeyDiagram extends React.Component {
             style={{ zIndex: 0 }}
             nodes={nodes}
             links={links}
-            width={900}
+            width={1000}
             height={minHeight}
             nodeWidth={20}
             onValueClick={(datapoint, event) => {

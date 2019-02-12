@@ -13,7 +13,6 @@ import {
 import "./NavigationBar.css";
 import { searchInBackend } from "../../actions/generalActions";
 import Spinner from "../common/Spinner";
-import ResultList from "./ResultList";
 import {
   AsyncTypeahead,
   GithubMenuItem,

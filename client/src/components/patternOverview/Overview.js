@@ -24,7 +24,8 @@ class Overview extends Component {
     //set initial state: opened sidebar
     this.state = {
       sidebarOpen: true,
-      sidebarDocked: mql.matches
+      sidebarDocked: mql.matches,
+      patternSize: 4
     };
     //bind functions
     this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
@@ -46,21 +47,18 @@ class Overview extends Component {
     mql.removeListener(this.mediaQueryChanged);
   }
 
-  onSetSidebarOpen = () => {
+  onSetSidebarOpen = open => {
     this.setState({ sidebarOpen: !this.state.sidebarOpen });
+    if (open == true) {
+      this.setState({ patternSize: 4 });
+    } else {
+      this.setState({ patternSize: 3 });
+    }
   };
 
   mediaQueryChanged() {
     // dock sidebar if screensize is too small
     this.setState({ sidebarDocked: mql.matches, sidebarOpen: false });
-  }
-
-  //automatic refresh of site after 2 Minutes
-  refreshOverviewAfterTwoMinutes() {
-    setTimeout(() => {
-      this.props.getPatterns();
-      this.props.getStrategies();
-    }, 120000);
   }
 
   // filter patterns according to visibilityFilters from store
@@ -104,7 +102,6 @@ class Overview extends Component {
     return visiblePatterns;
   };
   render() {
-    //this.refreshOverviewAfterTwoMinutes();
     const { patterns, loading } = this.props.pattern;
     const { isDataProtectionOfficer } = this.props.auth;
     let patternContent;
@@ -121,7 +118,10 @@ class Overview extends Component {
       patternContent = (
         <span>
           <NoPatternFound patterns={visiblePatterns} />
-          <PatternFeed patterns={visiblePatterns} />{" "}
+          <PatternFeed
+            patterns={visiblePatterns}
+            patternSize={this.state.patternSize}
+          />{" "}
         </span>
       );
     }
@@ -159,7 +159,7 @@ class Overview extends Component {
                   <Button
                     bsSize="medium"
                     style={{ float: "right" }}
-                    onClick={() => this.onSetSidebarOpen()}
+                    onClick={() => this.onSetSidebarOpen(false)}
                   >
                     <Glyphicon glyph="resize-small" />
                   </Button>
@@ -196,7 +196,7 @@ class Overview extends Component {
                 <Button
                   bsSize="medium"
                   style={{ float: "right" }}
-                  onClick={() => this.onSetSidebarOpen()}
+                  onClick={() => this.onSetSidebarOpen(true)}
                 >
                   <Glyphicon glyph="resize-full" />
                 </Button>
