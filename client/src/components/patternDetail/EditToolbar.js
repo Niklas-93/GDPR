@@ -11,10 +11,7 @@ import {
 import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import { withRouter } from "react-router-dom";
 import { deletePattern } from "../../actions/patternActions";
-<<<<<<< HEAD:client/src/components/common/EditToolbar.js
-=======
 import { getStrategies } from "../../actions/strategyActions";
->>>>>>> niklas-dev:client/src/components/patternDetail/EditToolbar.js
 
 class EditToolbar extends Component {
   constructor(props, context) {
