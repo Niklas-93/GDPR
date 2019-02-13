@@ -358,7 +358,7 @@ class DetailProject extends Component {
               <Panel.Title componentClass="h4">
                 {/* heading from the progress bar changes regarding to progress */}
                 {progress === 0
-                  ? "Project haven't started yet"
+                  ? "Project hasn't started yet"
                   : progress < 100
                   ? "Project is ongoing"
                   : "Project is completed"}

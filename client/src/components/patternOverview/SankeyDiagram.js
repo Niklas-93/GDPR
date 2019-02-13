@@ -150,7 +150,8 @@ class SankeyDiagram extends React.Component {
               // if tactic has no link to any pattern --> insert fake link to hidden fake pattern
               nodes[tacticCounter] = {
                 name: "",
-                opacity: 0.0
+                opacity: 0.0,
+                isPattern: true
               };
               links.push({
                 source: tacticCounter - 1,

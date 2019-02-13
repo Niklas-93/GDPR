@@ -21,7 +21,10 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    if (this.props.auth.isAuthenticated) {
+    if (
+      this.props.auth.isAuthenticated &&
+      this.props.auth.user.role != undefined
+    ) {
       if (this.props.auth.user.role == "Data Protection Officer") {
         //logged in as dpo --> forward to patternoverview
         this.props.history.push("/overview");
@@ -29,8 +32,12 @@ class Login extends Component {
         //logged in as Projectmanager --> forward to projectsoverview
         this.props.history.push("/PMoverview");
       } else {
-        //not logged in --> forward to patternoverview (no rights for changing/editing etc.)
-        this.props.history.push("/overview");
+        if (this.props.auth.user.role == "Developer") {
+          //logged in as Developer --> forward to projectsoverview for Developer
+          this.props.history.push("/PMoverview");
+        } else {
+          this.props.history.push("/overview");
+        }
       }
     }
   }

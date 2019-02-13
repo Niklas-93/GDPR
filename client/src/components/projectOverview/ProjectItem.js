@@ -38,9 +38,6 @@ class ProjectItem extends Component {
           <Panel.Body className="shownText">
             {descriptionFirstPart}
             <span> ...</span>
-            <div className="moreInfo">
-              For more information click the heading
-            </div>
           </Panel.Body>
         </Panel>
       </Col>

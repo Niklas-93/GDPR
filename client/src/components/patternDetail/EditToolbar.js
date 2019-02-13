@@ -10,7 +10,7 @@ import {
 } from "react-bootstrap";
 import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import { withRouter } from "react-router-dom";
-import { deletePattern } from "../../actions/patternActions";
+import { deletePattern, getPatterns } from "../../actions/patternActions";
 import { getStrategies } from "../../actions/strategyActions";
 
 class EditToolbar extends Component {
@@ -37,6 +37,7 @@ class EditToolbar extends Component {
   deletePattern = id => {
     this.props.deletePattern(id, this.props.history);
     this.props.getStrategies();
+    this.props.getPatterns();
   };
 
   render() {
@@ -105,5 +106,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { deletePattern, getStrategies }
+  { deletePattern, getStrategies, getPatterns }
 )(withRouter(EditToolbar));
