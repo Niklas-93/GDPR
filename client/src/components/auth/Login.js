@@ -5,6 +5,7 @@ import classnames from "classnames";
 import { loginUser } from "../../actions/authActions";
 import { Panel, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { clearAllFilters } from "../../actions/patternActions";
 
 class Login extends Component {
   constructor() {
@@ -76,7 +77,7 @@ class Login extends Component {
       username: this.state.username,
       password: this.state.password
     };
-
+    this.props.clearAllFilters();
     this.props.loginUser(userData);
   }
 
@@ -182,5 +183,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { loginUser }
+  { loginUser, clearAllFilters }
 )(Login);
