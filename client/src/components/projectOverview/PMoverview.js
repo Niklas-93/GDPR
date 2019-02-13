@@ -8,30 +8,28 @@ import ProjectFeed from "../projectOverview/ProjectFeed";
 import {
   getProjects,
   getProject,
-  resetAssignedStrategies
+  resetProject
 } from "../../actions/projectActions";
 import { getDevelopers } from "../../actions/userActions";
 import { Badge, Grid, PageHeader } from "react-bootstrap";
 
 class PMoverview extends Component {
   componentDidMount() {
+    // A credential check, DPO can't visit project overview
     if (this.props.auth.user.role === "Data Protection Officer") {
       this.props.history.push("/Overview");
       alert("You don't have the permission to see projects!");
     }
     this.props.getProjects();
-    this.props.getDevelopers();
 
-    if (this.props.project.project._id !== undefined) {
-      this.props.getProject(this.props.project.project._id);
-    }
-
-    this.props.resetAssignedStrategies();
+    // this resets all temporary redux variables
+    this.props.resetProject();
   }
 
   render() {
     const { projects, loading } = this.props.project;
 
+    // sort the projects alphabetically
     projects.sort(function(a, b) {
       var nameA = a.name.toUpperCase(); // ignore upper and lowercase
       var nameB = b.name.toUpperCase(); // ignore upper and lowercase
@@ -42,47 +40,32 @@ class PMoverview extends Component {
         return 1;
       }
 
-      // namen müssen gleich sein
-      return 0;
-    });
-
-    projects.sort(function(a, b) {
-      var nameA = (
-        a.assignedTactics.length - a.finishedTactics.length
-      ).toString(); //
-      var nameB = (
-        b.assignedTactics.length - b.finishedTactics.length
-      ).toString();
-
-      if (nameA < nameB) {
-        return 1;
-      }
-      if (nameA > nameB) {
-        return -1;
-      }
-
       return 0;
     });
 
     let projectContent;
 
     if (projects === null || loading) {
-      projectContent = <Spinner />;
+      projectContent = <Spinner />; // show spinner until projects are loaded
     } else {
       if (this.props.auth.user.role !== "Developer") {
-        projectContent = <ProjectFeed projects={projects} />;
+        projectContent = <ProjectFeed projects={projects} />; // if role is not Developer show all projects
       } else {
         var devProjects = [];
         projects.map(project => {
           var projDev = [];
+
+          //temporary array for id check
           for (var i = 0; i < project.assignedDevelopers.length; i++) {
             projDev.push(project.assignedDevelopers[i]._id);
           }
 
+          //check wheather logged in user is part of assigned developer, if yes, push to array
           if (projDev.indexOf(this.props.auth.user.id) !== -1) {
             devProjects.push(project);
           }
 
+          // if Developer, show only assigned projects
           projectContent = <ProjectFeed projects={devProjects} />;
         });
       }
@@ -93,10 +76,14 @@ class PMoverview extends Component {
         <PageHeader>
           Project Overview{" "}
           <Badge>
+            {/* Badge shows according to role the counted projects */}
             {this.props.auth.user.role === "Project Manager"
               ? projects.length
-              : devProjects.length}{" "}
+              : devProjects
+              ? devProjects.length
+              : ""}{" "}
           </Badge>{" "}
+          {/* Only the Project Manager can create projects */}
           {this.props.auth.user.role === "Project Manager" ? (
             <BtnWithMouseOverPop
               icon="fas fa-plus"
@@ -106,6 +93,7 @@ class PMoverview extends Component {
           ) : (
             ""
           )}
+          {/* everyone can update the projects */}
           <BtnWithMouseOverPop
             className="updateButton"
             icon="fas fa-sync"
@@ -114,6 +102,8 @@ class PMoverview extends Component {
             onClick={() => this.props.getProjects()}
           />
         </PageHeader>
+
+        {/* Here will be shown the defined projectContent from above */}
         <Grid>{projectContent}</Grid>
       </div>
     );
@@ -124,7 +114,7 @@ PMoverview.propTypes = {
   getProjects: PropTypes.func.isRequired,
   project: PropTypes.object.isRequired,
   getDevelopers: PropTypes.func.isRequired,
-  resetAssignedStrategies: PropTypes.func.isRequired,
+  resetProject: PropTypes.func.isRequired,
   developer: PropTypes.object.isRequired
 };
 
@@ -136,5 +126,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getProjects, getDevelopers, resetAssignedStrategies, getProject }
+  { getProjects, getDevelopers, resetProject, getProject }
 )(PMoverview);

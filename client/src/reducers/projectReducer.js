@@ -5,9 +5,8 @@ import {
   DELETE_PROJECT,
   SET_ASSIGNED_DEVELOPER,
   SET_ASSIGNED_TACTICS,
-  RESET_ASSIGNED_STRATEGIES,
+  RESET_PROJECT,
   SET_ASSIGNED_STRATEGIES,
-  SWITCH_ATTR_FOR_EDIT_PROJECT,
   SET_COMMENT,
   SET_FINISHED_TACTIC,
   REMOVE_PROJECT_FROM_USER,
@@ -41,23 +40,24 @@ export default function(state = initialState, action) {
       };
 
     case SET_COMMENT:
-      //console.log(action.payload);
       return {
         ...state,
         comment: action.payload,
         loading: false
       };
     case SET_FINISHED_TACTIC:
-      //console.log(...state);
       return {
         ...state,
         finishedTactics: action.payload.finishedTactics,
         loading: false
       };
 
+    // this case loads the project into the redux store and put some values into a temp value
+    // for further workflow
     case GET_PROJECT:
       var tempArr = [];
 
+      // all assigned tactics will be pushed into a tempArr to send it into the redux store
       if (action.payload.assignedStrategiesWithAllTactics) {
         for (
           var i = 0;
@@ -90,14 +90,8 @@ export default function(state = initialState, action) {
         commentAttendees: action.payload.commentAttendees,
         loading: false
       };
-    /*
-    case GET_PROJECT:
-      return {
-        ...state,
-        project: action.payload,
-        loading: false
-      };
-*/
+
+    //this case set in the store a array with all selected developers
     case SET_ASSIGNED_DEVELOPER:
       const addDeveloper = dev => {
         if (dev !== undefined) {
@@ -111,24 +105,19 @@ export default function(state = initialState, action) {
         var arr = state.assignedDevelopers;
         var tempArr = [];
 
+        // a temporary array where only the ids of the developers are in there
         for (var i = 0; i < arr.length; i++) {
           tempArr.push(arr[i]._id);
         }
 
-        //console.log(tempArr);
-
         var index = tempArr.indexOf(dev._id);
-        //console.log(index);
-        //console.log(dev);
 
+        // if id is matching then the object with this id will be removed from the array
         if (index !== -1) {
           arr.splice(index, 1);
-          // console.log("remove" + arr);
         }
         return arr;
       };
-
-      //console.log(state.assignedDevelopers);
 
       var tempArr = [];
 
@@ -136,6 +125,7 @@ export default function(state = initialState, action) {
         tempArr.push(state.assignedDevelopers[i]._id);
       }
 
+      // if the id is included in the array it will be removed, if not it will be inserted
       if (tempArr.indexOf(action.payload._id) === -1) {
         var newArray = addDeveloper(action.payload);
       } else {
@@ -146,6 +136,8 @@ export default function(state = initialState, action) {
         assignedDevelopers: newArray,
         loading: false
       };
+
+    // comments are the same like in SET_ASSIGNED_DEVELOPERS
     case SET_ASSIGNED_TACTICS:
       const addTactic = tac => {
         if (tac !== undefined) {
@@ -164,16 +156,12 @@ export default function(state = initialState, action) {
         }
 
         var index = tempArr.indexOf(tac._id);
-        //console.log(index);
-        //console.log(tac);
 
         if (index !== -1) {
           arr.splice(index, 1);
         }
         return arr;
       };
-
-      //console.log(action.payload);
 
       var tempArr = [];
 
@@ -186,20 +174,13 @@ export default function(state = initialState, action) {
       } else {
         var newArray = remTactic(action.payload);
       }
-
-      // console.log(newArray.indexOf(action.payload));
-
-      //console.log(newArray);
-      //console.log(action.payload[0]);
-      //console.log(state.assignedDevelopers.indexOf(action.payload[0]));
-      //console.log(state.nameDeveloper);
       return {
         ...state,
         assignedTactics: newArray,
         loading: false
       };
-
-    case RESET_ASSIGNED_STRATEGIES:
+    // RESET_PROJECT is to clean all temporary variables in the redux store for further workflow
+    case RESET_PROJECT:
       return {
         ...state,
         assignedTactics: [],
@@ -210,6 +191,7 @@ export default function(state = initialState, action) {
         commentAttendees: [],
         loading: false
       };
+    // comments are the same like in SET_ASSIGNED_DEVELOPERS
     case SET_ASSIGNED_STRATEGIES:
       const addStrategy = str => {
         if (str !== undefined) {
@@ -236,8 +218,6 @@ export default function(state = initialState, action) {
       };
 
       var tempArr = [];
-      var remTac = [];
-
       for (var i = 0; i < state.assignedStrategies.length; i++) {
         tempArr.push(state.assignedStrategies[i]._id);
       }
@@ -245,9 +225,6 @@ export default function(state = initialState, action) {
       if (tempArr.indexOf(action.payload._id) === -1) {
         var newArray = addStrategy(action.payload);
       } else {
-        //console.log(action.payload);
-        //console.log(state.assignedTactics);
-
         var tempArrAssTac = [];
         var tempArrAssStrTac = [];
         var finalTacArr = state.assignedTactics;
@@ -259,19 +236,10 @@ export default function(state = initialState, action) {
         for (i = 0; i < action.payload.assignedTactics.length; i++) {
           tempArrAssStrTac.push(action.payload.assignedTactics[i]._id);
         }
-
-        //console.log(action.payload.assignedTactics);
-        //console.log(tempArrAssStrTac);
-
-        //console.log(state.assignedTactics);
-        //console.log(tempArrAssTac);
-
+        // this part is to remove also the already selected tactics after deselecting the strategy
         var intersection = tempArrAssStrTac.filter(
           tac => -1 !== tempArrAssTac.indexOf(tac)
         );
-        //console.log(intersection);
-
-        //var revIntersection = intersection.reverse();
 
         for (i = 0; i < intersection.length; i++) {
           var newTempArr = [];
@@ -282,41 +250,13 @@ export default function(state = initialState, action) {
 
           var tacIndex = newTempArr.indexOf(intersection[i]);
 
-          //console.log(tacIndex);
-
           if (tacIndex !== -1) {
             finalTacArr.splice(tacIndex, 1);
           }
         }
 
-        /*         var arr2 = state.assignedTactics;
-
-        var tempArr2 = [];
-
-        for (var i = 0; i < arr2.length; i++) {
-          tempArr2.push(arr2[i]._id);
-        }
-
-        console.log(tempArr2);
-        console.log(state);
-
-        for (var i = 0; i < action.payload.assignedTactics.length; i++) {
-          var index2 = tempArr2.indexOf(action.payload.assignedTactics[i]._id);
-          console.log(index2);
-
-          //Work around: he is skipping always the odd values, this way i get all items
-
-          if (index2 !== -1) {
-            arr2.splice(index2, 1);
-          }
-
-          //console.log(arr2);
-        } */
-
         var newArray = remStrategy(action.payload);
       }
-
-      //    console.log(arr2);
 
       if (finalTacArr === undefined) {
         return {

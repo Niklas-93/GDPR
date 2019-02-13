@@ -10,7 +10,7 @@ import {
   CLEAR_ERRORS,
   SET_ASSIGNED_DEVELOPER,
   SET_ASSIGNED_TACTICS,
-  RESET_ASSIGNED_STRATEGIES,
+  RESET_PROJECT,
   SET_ASSIGNED_STRATEGIES,
   MATCH_USER,
   SWITCH_ATTR_FOR_EDIT_PROJECT,
@@ -188,18 +188,10 @@ export const resetErrors = error => {
 };
 
 // Reset assignedTactics
-export const resetAssignedStrategies = strategy => {
+export const resetProject = strategy => {
   return {
-    type: RESET_ASSIGNED_STRATEGIES,
+    type: RESET_PROJECT,
     payload: strategy
-  };
-};
-
-// switch Attributes to edit project
-export const switchAttrForEditProject = attr => {
-  return {
-    type: SWITCH_ATTR_FOR_EDIT_PROJECT,
-    payload: attr
   };
 };
 

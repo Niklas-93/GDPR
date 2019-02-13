@@ -30,6 +30,7 @@ class DevListItem extends Component {
   componentDidMount() {
     var arr = this.state.assignedDevelopersForProject;
 
+    // regarding on the pathname the elements are already selected or not
     if (
       arr !== undefined &&
       this.props.location.pathname !== "/create-project"
@@ -50,15 +51,14 @@ class DevListItem extends Component {
     this.setState(() => {
       this.props.setAssignedDevelopers(this.props.developer);
       return {
-        assignedDevelopers: this.props.developer,
+        //assignedDevelopers: this.props.developer,
         bsStyle: !this.state.bsStyle ? "info" : undefined
-        //nameDeveloper: newArray[0]
       };
     });
   }
 
   render() {
-    const { developer, auth } = this.props;
+    const { developer } = this.props;
 
     return (
       <ListGroupItem
