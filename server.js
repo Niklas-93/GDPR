@@ -6,7 +6,6 @@ const path = require("path");
 
 const users = require("./routes/api/users");
 const patterns = require("./routes/api/patterns");
-const tactics = require("./routes/api/tactics");
 const strategies = require("./routes/api/strategies");
 const projects = require("./routes/api/projects");
 const general = require("./routes/api/general");
@@ -22,10 +21,7 @@ const db = require("./config/keys").mongoURI;
 
 // Connect to MongoDB
 mongoose
-  .connect(
-    db,
-    { useNewUrlParser: true }
-  )
+  .connect(db, { useNewUrlParser: true })
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
 
@@ -38,7 +34,6 @@ require("./config/passport")(passport);
 // Use Routes
 app.use("/api/users", users);
 app.use("/api/patterns", patterns);
-app.use("/api/tactics", tactics);
 app.use("/api/strategies", strategies);
 app.use("/api/projects", projects);
 app.use("/api/general", general);

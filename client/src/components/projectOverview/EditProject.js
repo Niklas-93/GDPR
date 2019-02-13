@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withRouter, Link } from "react-router-dom";
-import classnames from "classnames";
 import { connect } from "react-redux";
 
 import Spinner from "../common/Spinner";
@@ -20,19 +19,8 @@ import TextField from "../common/TextField";
 import DevListGroupField from "../common/DevListGroupField";
 import TacListGroupField from "../common/TacListGroupField";
 import StrListGroupField from "../common/StrListGroupField";
-import {
-  Button,
-  ButtonGroup,
-  ListGroup,
-  ListGroupItem,
-  Row,
-  Col,
-  ToggleButton,
-  ToggleButtonGroup,
-  ButtonToolbar
-} from "react-bootstrap";
+import { Button, Row, Col } from "react-bootstrap";
 import { getDevelopers } from "../../actions/userActions";
-import { getTactics } from "../../actions/tacticActions";
 import { getStrategies } from "../../actions/strategyActions";
 import store from "../../store";
 
@@ -210,7 +198,6 @@ EditProject.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   getDevelopers: PropTypes.func.isRequired,
-  getTactics: PropTypes.func.isRequired,
   getStrategies: PropTypes.func.isRequired,
   setAssignedDevelopers: PropTypes.func.isRequired,
   setAssignedTactics: PropTypes.func.isRequired,
@@ -223,7 +210,6 @@ const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
   developers: state.user.developers,
-  tactics: state.tactic.tactics,
   strategies: state.strategy.strategies,
   assignedDevelopers: state.project.assignedDevelopers,
   assignedTactics: state.project.assignedTactics,
@@ -235,7 +221,6 @@ export default connect(
   {
     editProject,
     getDevelopers,
-    getTactics,
     getStrategies,
     setAssignedDevelopers,
     setAssignedTactics,

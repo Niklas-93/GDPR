@@ -1,0 +1,10 @@
+.minHeightStrategyPanel {
+  min-height: 450px !important;
+}
+.minHeightStrategyPanel-Heading {
+  color: #337ab7;
+  min-height: 35px !important;
+}
+.tacticDescription {
+  min-height: 100px;
+}

@@ -22,6 +22,45 @@ router.get("/", (req, res) =>
   })
 );
 
+// @route   POST api/tactic
+// @desc    Edit tactic
+// @access  Private
+router.post(
+  "/editstrategy",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateStrategyInput(req.body);
+    // Check Validation
+
+    if (!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    } else {
+      // Get fields
+      const strategyFields = {};
+      strategyFields.id = req.body.id;
+
+      if (req.body.name) strategyFields.name = req.body.name;
+
+      if (req.body.description)
+        strategyFields.description = req.body.description;
+
+      if (req.body.assignedTactics)
+        strategyFields.assignedTactics = req.body.assignedTactics;
+      // Update Strategy
+      Strategy.findOneAndUpdate(
+        { _id: req.body.id },
+        { $set: strategyFields },
+        { new: true }
+      ).then(strategy => {
+        Strategy.find({}).then(strategies => {
+          res.json(strategies);
+        });
+      });
+    }
+  }
+);
+
 // @route   GET api/strategies/createstrategy
 // @desc    Create Strategy
 // @access  Private
@@ -64,51 +103,5 @@ router.delete(
       );
   }
 );*/
-
-// @route   POST api/tactic
-// @desc    Edit tactic
-// @access  Private
-router.post(
-  "/editstrategy",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    //console.log(req.body);
-    console.log("strategyedit vor validation");
-    const { errors, isValid } = validateStrategyInput(req.body);
-    console.log("strategyedit nach validation");
-    console.log(isValid);
-    console.log(errors);
-    // Check Validation
-
-    if (!isValid) {
-      // Return any errors with 400 status
-      console.log("strategyedit nach validation vor abschicken");
-      return res.status(400).json(errors);
-    } else {
-      console.log("strategyedit validation success");
-      // Get fields
-      const strategyFields = {};
-      strategyFields.id = req.body.id;
-
-      if (req.body.name) strategyFields.name = req.body.name;
-
-      if (req.body.description)
-        strategyFields.description = req.body.description;
-
-      if (req.body.assignedTactics)
-        strategyFields.assignedTactics = req.body.assignedTactics;
-
-      Strategy.findOneAndUpdate(
-        { _id: req.body.id },
-        { $set: strategyFields },
-        { new: true }
-      ).then(strategy => {
-        Strategy.find({}).then(strategies => {
-          res.json(strategies);
-        });
-      });
-    }
-  }
-);
 
 module.exports = router;

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Panel, Col, Tabs, Tab, Button, Collapse } from "react-bootstrap";
-import "./Overview.css";
+import "./PatternOverview.css";
 
 class Overview extends Component {
   constructor(props, context) {

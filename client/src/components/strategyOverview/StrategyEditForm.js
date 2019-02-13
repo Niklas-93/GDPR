@@ -29,10 +29,8 @@ class StrategyEditForm extends Component {
     this.onChangeAssignmentArray = this.onChangeAssignmentArray.bind(this);
   }
 
-  // if server sends errors
   componentWillReceiveProps(nextProps) {
-    console.log("nextprops");
-    console.log(nextProps);
+    // if server sends errors
     if (Object.keys(nextProps.errors) != 0) {
       this.setState({ errors: nextProps.errors });
       this.props.enableEditing();
@@ -138,16 +136,6 @@ class StrategyEditForm extends Component {
           <form>
             <Panel.Heading>
               <Panel.Title>
-                {/*<FormGroup>
-                  <FormControl
-                    type="text"
-                    name="name"
-                    value={this.state.name}
-                    placeholder="Strategy Name"
-                    onChange={this.onChange}
-                  />
-                  <FormControl.Feedback />
-                </FormGroup>*/}
                 <TextField
                   label=""
                   name="name"
@@ -170,18 +158,6 @@ class StrategyEditForm extends Component {
                 error={errors.description}
                 className={"patternTextarea"}
               />
-              {/*<FormGroup>
-                <ControlLabel>Strategy Description</ControlLabel>
-                <FormControl
-                  componentClass="textarea"
-                  type="text"
-                  name="description"
-                  value={this.state.description}
-                  placeholder="Strategy Description"
-                  onChange={this.onChange}
-                />
-                <FormControl.Feedback />
-              </FormGroup>*/}
               <FormGroup>
                 <Col xs={9}>
                   <ControlLabel>Assigned Tactics</ControlLabel>

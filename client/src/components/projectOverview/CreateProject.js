@@ -21,7 +21,6 @@ import TacListGroupField from "../common/TacListGroupField";
 import StrListGroupField from "../common/StrListGroupField";
 import { Button, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
 import { getDevelopers } from "../../actions/userActions";
-import { getTactics } from "../../actions/tacticActions";
 import { getStrategies } from "../../actions/strategyActions";
 import store from "../../store";
 
@@ -206,7 +205,6 @@ CreateProject.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   getDevelopers: PropTypes.func.isRequired,
-  getTactics: PropTypes.func.isRequired,
   getStrategies: PropTypes.func.isRequired,
   setAssignedDevelopers: PropTypes.func.isRequired,
   setAssignedTactics: PropTypes.func.isRequired,
@@ -219,7 +217,6 @@ const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
   developers: state.user.developers,
-  tactics: state.tactic.tactics,
   strategies: state.strategy.strategies,
   assignedDevelopers: state.project.assignedDevelopers,
   assignedTactics: state.project.assignedTactics,
@@ -231,7 +228,6 @@ export default connect(
   {
     createProject,
     getDevelopers,
-    getTactics,
     getStrategies,
     setAssignedDevelopers,
     setAssignedTactics,

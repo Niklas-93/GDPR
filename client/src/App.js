@@ -14,7 +14,7 @@ import NavigationBar from "./components/layout/NavigationBar";
 import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
-import Overview from "./components/patternOverview/Overview";
+import PatternOverview from "./components/patternOverview/PatternOverview";
 import CreatePattern from "./components/patternDetail/CreatePattern";
 import CreateProject from "./components/projectOverview/CreateProject";
 import EditProject from "./components/projectOverview/EditProject";
@@ -25,7 +25,6 @@ import StrategyOverview from "./components/strategyOverview/StrategyOverview";
 
 import "./App.css";
 import PatternDetail from "./components/patternDetail/PatternDetail";
-
 // Check for token
 if (localStorage.jwtToken) {
   // Set auth token header auth
@@ -60,7 +59,7 @@ class App extends Component {
               className="container"
               style={{ marginBottom: "75px", marginTop: "75px" }}
             >
-              <Route exact path="/overview" component={Overview} />
+              <Route exact path="/overview" component={PatternOverview} />
               <Route
                 path="/patterndetail/:_id?/:editing?"
                 component={PatternDetail}

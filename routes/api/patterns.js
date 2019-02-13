@@ -11,7 +11,6 @@ const Pattern = require("../../models/Pattern");
 
 // Load Strategy model
 const Strategy = require("../../models/Strategy");
-const Tactic = require("../../models/Tactic");
 
 // @route   GET api/patterns/test
 // @desc    Tests patterns route
@@ -36,6 +35,7 @@ router.get("/", (req, res) =>
 
     .exec()
     .then(patterns => {
+      // reorder data structure --> append assigned strategies and tactics to each pattern
       patterns.forEach(function(pattern) {
         pattern.assignedTactics.forEach(function(
           assignedTactic,
@@ -143,7 +143,7 @@ router.get("/:id", (req, res) =>
 
     .exec()
     .then(patterns => {
-      //maybe first forEach not necessary
+      // reorder data structure --> append assigned strategies and tactics to found pattern
       patterns.forEach(function(pattern) {
         pattern.assignedTactics.forEach(function(
           assignedTactic,
@@ -162,21 +162,13 @@ router.get("/:id", (req, res) =>
             tacticIndex
           ) {
             if (pattern.assignedTactics.includes(tactic._id.toString())) {
-              console.log("true");
-              console.log(assignedStrategy.assignedTactics[tacticIndex].name);
               NewAssignedTactics.push(
                 assignedStrategy.assignedTactics[tacticIndex]
               );
             } else {
-              console.log("false");
-              console.log(assignedStrategy.assignedTactics[tacticIndex].name);
-
-              console.log(NewAssignedTactics);
             }
           });
           assignedStrategy.assignedTactics = NewAssignedTactics;
-
-          console.log(assignedStrategy);
         });
       });
 
@@ -276,7 +268,7 @@ router.post(
 
           .exec()
           .then(patterns => {
-            //maybe first forEach not necessary
+            // reorder data structure --> append assigned strategies and tactics to pattern
             patterns.forEach(function(pattern) {
               pattern.assignedTactics.forEach(function(
                 assignedTactic,
@@ -302,7 +294,6 @@ router.post(
                   }
                 });
                 assignedStrategy.assignedTactics = NewAssignedTactics;
-                console.log(assignedStrategy);
               });
             });
             if (!patterns)

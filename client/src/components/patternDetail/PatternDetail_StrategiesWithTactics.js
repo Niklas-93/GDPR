@@ -14,13 +14,13 @@ class PatternDetail_StrategiesWithTactics extends Component {
           <Col xs={3}>
             <Panel>
               <Panel.Heading>
-                <span class="dotForStrategy" /> {strategy.name}
+                <span className={"dotForStrategy"} /> {strategy.name}
               </Panel.Heading>
               <Panel.Body className={"TacticsBody"}>
                 <ul className={"StrategyListInPatterns"}>
                   {strategy.assignedTactics.map(tactic => (
                     <li>
-                      <span class="dotForTactic" /> {tactic.name}
+                      <span className={"dotForTactic"} /> {tactic.name}
                       <br />
                     </li>
                   ))}

@@ -13,6 +13,7 @@ class Register extends Component {
       name: "",
       email: "",
       username: "",
+      //initially: set dpo as role in selection
       role: "Data Protection Officer",
       password: "",
       password2: "",
@@ -39,6 +40,7 @@ class Register extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  // if user clicks on register
   onSubmit(e) {
     e.preventDefault();
 
@@ -54,6 +56,7 @@ class Register extends Component {
     this.props.registerUser(newUser, this.props.history);
   }
 
+  // if user cancels registration, forward to login
   cancelRegister() {
     this.setState({
       name: "",
@@ -72,7 +75,7 @@ class Register extends Component {
     return (
       <div className={"landing"}>
         <Col xs={8} xsOffset={2}>
-          <Panel style={{ marginBottom: "75px", marginTop: "75px" }}>
+          <Panel style={{ marginBottom: "150px", marginTop: "150px" }}>
             <Panel.Heading>
               <span className={"h4"}>Create your GDPR Recommender account</span>
 
@@ -131,10 +134,6 @@ class Register extends Component {
                               {errors.email}
                             </div>
                           )}
-                          {/*<small className="form-text text-muted">
-                          This site uses Gravatar so if you want a profile
-                          image, use a Gravatar email
-                        </small>*/}
                         </div>
                         <div className="form-group">
                           <input
@@ -224,42 +223,6 @@ class Register extends Component {
                             <option value="Developer">Developer</option>
                           </select>
                         </div>
-                        {/*<div className="form-group">
-                        <input
-                          type="role"
-                          className={classnames(
-                            "form-control form-control-lg",
-                            {
-                              "is-invalid": errors.role
-                            }
-                          )}
-                          placeholder="Choose role"
-                          name="role"
-                          value={this.state.role}
-                          onChange={this.onChange}
-                        />
-                        {errors.role && (
-                          <div className="invalid-feedback">{errors.role}</div>
-                        )}
-                        </div>*/}
-                        {/*<FormGroup controlId="formControlsSelect">
-                  <ControlLabel>Choose Role</ControlLabel>
-                  <FormControl
-                    componentClass="select"
-                    placeholder="select"
-                    onChange={this.onChange}
-                  >
-                   
-                      <option value="Developer" onChange={this.onChange}>
-                        Developer
-                      </option>
-                      <option value="Project Manager">Project Manager</option>
-                      <option value="Data Protection Officer">
-                        Data Protection Officer
-                      </option>
-               
-                  </FormControl>
-                  </FormGroup>*/}
                         <div className="rowC">
                           <Row>
                             <Col xs={12} xsOffset={0}>

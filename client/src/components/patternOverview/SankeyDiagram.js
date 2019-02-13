@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import Spinner from "../common/Spinner";
 import { Sankey, Hint } from "react-vis";
 import { withRouter } from "react-router-dom";
+import "./SankeyDiagram.css";
 
 class SankeyDiagram extends React.Component {
   // Define hovered Links and Nodes
@@ -11,6 +12,7 @@ class SankeyDiagram extends React.Component {
     activeLink: null
   };
 
+  // Set Tooltip (Hint) if strategy/tactic is hovered
   _renderHint() {
     const { activeNode } = this.state;
 
@@ -30,7 +32,6 @@ class SankeyDiagram extends React.Component {
     }
     const hintValue = {};
     const label = `${activeNode.description}`;
-    //  hintValue[label] = activeNode.value;
     hintValue["Description"] = label;
 
     return (
@@ -53,22 +54,29 @@ class SankeyDiagram extends React.Component {
     const { loading } = this.props.pattern;
     const patterns = this.props.patterns;
     if (patterns === null || loading) {
+      //if patterns are loading, show spinner
       SankeyDiagramContent = <Spinner />;
     } else {
+      // if patterns are loaded
       var strategies = this.props.strategy.strategies;
       if (this.props.pattern.visibilityFilters.length !== 0) {
         strategies = this.props.pattern.visibilityFilters;
       }
 
       if (strategies === null || loading) {
+        //if strategies are loading, show spinner
         SankeyDiagramContent = <Spinner />;
       } else {
+        // if strategies are loaded
+
+        //Define initial nodes and links
         var nodes = [];
         var links = [];
 
         var strategyCounter = 1;
         var tacticCounter = 9;
         nodes[0] = { name: "", opacity: 0.0 };
+        // insert all filtered patterns in nodes
         patterns.forEach(pattern => {
           nodes[tacticCounter] = {
             name: pattern.name,
@@ -79,6 +87,7 @@ class SankeyDiagram extends React.Component {
           };
           tacticCounter++;
         });
+        // watch for each strategy if assigned tactics match inserted patterns
         strategies.forEach(strategy => {
           nodes[strategyCounter] = {
             name: strategy.name,
@@ -101,10 +110,10 @@ class SankeyDiagram extends React.Component {
               color: "#337ab7",
               description: tactic.description
             };
-
-            var assignedPatterns = 0;
+            // variable for links to Patterns
             var linksToPatterns = [];
 
+            // check assigned patterns for tactic
             patterns.forEach(pattern => {
               pattern.assignedStrategiesWithAllTactics.forEach(
                 strategyInPattern => {
@@ -131,12 +140,14 @@ class SankeyDiagram extends React.Component {
               );
             });
             if (linksToPatterns.length !== 0) {
+              // if tactic has assigned patterns
               linksToPatterns.forEach(link => {
                 link.value = 10 / linksToPatterns.length;
                 links.push(link);
               });
             } else {
               tacticCounter++;
+              // if tactic has no link to any pattern --> insert fake link to hidden fake pattern
               nodes[tacticCounter] = {
                 name: "",
                 opacity: 0.0
@@ -156,10 +167,10 @@ class SankeyDiagram extends React.Component {
 
           strategyCounter++;
         });
-
-        var minHeight = strategies.length * 400;
+        // Define minHeight of Sankey
+        var minHeight = strategies.length * 500;
         if (strategies.length > 5) {
-          minHeight = strategies.length * 300;
+          minHeight = strategies.length * 500;
         }
         const { activeLink } = this.state;
 
@@ -179,7 +190,7 @@ class SankeyDiagram extends React.Component {
             style={{ zIndex: 0 }}
             nodes={nodes}
             links={links}
-            width={900}
+            width={1000}
             height={minHeight}
             nodeWidth={20}
             onValueClick={(datapoint, event) => {
@@ -195,7 +206,6 @@ class SankeyDiagram extends React.Component {
             onLinkMouseOver={node => this.setState({ activeLink: node })}
             onLinkMouseOut={() => this.setState({ activeLink: null })}
           >
-            {/*this._renderHint()*/}
             {hintContent}
           </Sankey>
         );

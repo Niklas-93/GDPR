@@ -23,13 +23,15 @@ class Login extends Component {
   componentDidMount() {
     if (this.props.auth.isAuthenticated) {
       if (this.props.auth.user.role == "Data Protection Officer") {
+        //logged in as dpo --> forward to patternoverview
         this.props.history.push("/overview");
       } else if (this.props.auth.user.role == "Project Manager") {
+        //logged in as Projectmanager --> forward to projectsoverview
         this.props.history.push("/PMoverview");
       } else {
+        //not logged in --> forward to patternoverview (no rights for changing/editing etc.)
         this.props.history.push("/overview");
       }
-      //this.props.history.push("/overview");
     }
   }
 
@@ -39,11 +41,14 @@ class Login extends Component {
       nextProps.auth.user.role != undefined
     ) {
       if (nextProps.auth.user.role == "Data Protection Officer") {
+        //logged in as dpo --> forward to patternoverview
         this.props.history.push("/overview");
       } else if (nextProps.auth.user.role == "Project Manager") {
+        //logged in as Projectmanager --> forward to projectsoverview
         this.props.history.push("/PMoverview");
       } else {
         if (nextProps.auth.user.role == "Developer") {
+          //logged in as Developer --> forward to projectsoverview for Developer
           this.props.history.push("/PMoverview");
         } else {
           this.props.history.push("/overview");
@@ -56,6 +61,7 @@ class Login extends Component {
     }
   }
 
+  // if user wants to login
   onSubmit(e) {
     e.preventDefault();
 
@@ -78,18 +84,12 @@ class Login extends Component {
       <div className={"landing"}>
         <div>
           <Col xs={8} xsOffset={2}>
-            <Panel style={{ marginBottom: "75px", marginTop: "75px" }}>
+            <Panel style={{ marginBottom: "150px", marginTop: "150px" }}>
               <Panel.Heading>
                 <span className={"h4"}>Sign in to your Account</span>
                 <Link to="register" style={{ float: "right" }}>
                   Register...
                 </Link>
-
-                {/*<span
-                  onClick={() => this.props.history.push("/register")}
-                  style={{ float: "right" }}
-                  className={"link"}
-                >Register...</span> */}
               </Panel.Heading>
               <Panel.Body>
                 <div className="login">

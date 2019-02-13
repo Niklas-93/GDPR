@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import { ButtonToolbar, ButtonGroup, Panel, Col } from "react-bootstrap";
-
+import { getStrategies } from "../../actions/strategyActions";
 import StrategyEditForm from "./StrategyEditForm";
 import TacticListItem from "./TacticListItem";
 
@@ -16,7 +15,6 @@ class Strategy extends Component {
       showRemoveModal: false,
       name: this.props.strategy.name,
       description: this.props.strategy.description
-      //assignedTactics: this.props.strategy.assignedTactics
     };
   }
 
@@ -29,6 +27,7 @@ class Strategy extends Component {
 
   //disables editmode
   disableEditing = () => {
+    this.props.getStrategies();
     this.setState({
       editing: false
     });
@@ -70,9 +69,6 @@ class Strategy extends Component {
                       style={{ float: "right" }}
                     >
                       <ButtonGroup>
-                        {/* <Button onClick={() => this.enableEditing()}>
-                          <Glyphicon glyph="pencil" />
-        </Button>*/}
                         <BtnWithMouseOverPop
                           icon="glyphicon glyphicon-pencil"
                           title="Edit Strategy"
@@ -99,7 +95,7 @@ class Strategy extends Component {
 
                           <Modal.Footer>
                             <Button
-                              class="btn-lg btn-info"
+                              className={"btn-lg btn-info"}
                               onClick={() =>
                                 this.deleteStrategy(this.props.strategy._id)
                               }
@@ -137,16 +133,9 @@ class Strategy extends Component {
   }
 }
 
-// defines required props
-Strategy.propTypes = {
-  auth: PropTypes.object.isRequired
-};
-
-const mapStateToProps = state => ({
-  auth: state.auth
-});
+const mapStateToProps = state => ({});
 
 export default connect(
   mapStateToProps,
-  {}
+  { getStrategies }
 )(Strategy);

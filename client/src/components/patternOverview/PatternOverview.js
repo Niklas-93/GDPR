@@ -4,10 +4,9 @@ import { connect } from "react-redux";
 import { Col, Tabs, Tab, Button, Glyphicon, Badge } from "react-bootstrap";
 import Spinner from "../common/Spinner";
 import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
-import "./Overview.css";
+import "./PatternOverview.css";
 import PatternFeed from "./PatternFeed";
 import { getPatterns, clearAllFilters } from "../../actions/patternActions";
-import { getTactics } from "../../actions/tacticActions";
 import StrategyFeed from "./StrategyFeed";
 import SankeyDiagram from "./SankeyDiagram";
 import { getStrategies } from "../../actions/strategyActions";
@@ -18,13 +17,14 @@ import NoPatternFound from "./NoPatternFound";
 // Define minwidth of screen for sidebar (filter)
 const mql = window.matchMedia(`(min-width: 800px)`);
 
-class Overview extends Component {
+class PatternOverview extends Component {
   constructor(props) {
     super(props);
     //set initial state: opened sidebar
     this.state = {
       sidebarOpen: true,
-      sidebarDocked: mql.matches
+      sidebarDocked: mql.matches,
+      patternSize: 4
     };
     //bind functions
     this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
@@ -38,7 +38,6 @@ class Overview extends Component {
   componentDidMount() {
     // get initial props : patterns, strategies
     this.props.getPatterns();
-    this.props.getTactics();
     this.props.getStrategies();
   }
 
@@ -46,21 +45,20 @@ class Overview extends Component {
     mql.removeListener(this.mediaQueryChanged);
   }
 
-  onSetSidebarOpen = () => {
+  onSetSidebarOpen = open => {
     this.setState({ sidebarOpen: !this.state.sidebarOpen });
+    if (open == true) {
+      //if sidebar was docked and is expanded --> only three patterns in row
+      this.setState({ patternSize: 4 });
+    } else {
+      //if sidebar was undocked and will be docked --> four patterns in row
+      this.setState({ patternSize: 3 });
+    }
   };
 
   mediaQueryChanged() {
     // dock sidebar if screensize is too small
     this.setState({ sidebarDocked: mql.matches, sidebarOpen: false });
-  }
-
-  //automatic refresh of site after 2 Minutes
-  refreshOverviewAfterTwoMinutes() {
-    setTimeout(() => {
-      this.props.getPatterns();
-      this.props.getStrategies();
-    }, 120000);
   }
 
   // filter patterns according to visibilityFilters from store
@@ -104,7 +102,6 @@ class Overview extends Component {
     return visiblePatterns;
   };
   render() {
-    //this.refreshOverviewAfterTwoMinutes();
     const { patterns, loading } = this.props.pattern;
     const { isDataProtectionOfficer } = this.props.auth;
     let patternContent;
@@ -121,7 +118,10 @@ class Overview extends Component {
       patternContent = (
         <span>
           <NoPatternFound patterns={visiblePatterns} />
-          <PatternFeed patterns={visiblePatterns} />{" "}
+          <PatternFeed
+            patterns={visiblePatterns}
+            patternSize={this.state.patternSize}
+          />{" "}
         </span>
       );
     }
@@ -159,7 +159,7 @@ class Overview extends Component {
                   <Button
                     bsSize="medium"
                     style={{ float: "right" }}
-                    onClick={() => this.onSetSidebarOpen()}
+                    onClick={() => this.onSetSidebarOpen(false)}
                   >
                     <Glyphicon glyph="resize-small" />
                   </Button>
@@ -196,7 +196,7 @@ class Overview extends Component {
                 <Button
                   bsSize="medium"
                   style={{ float: "right" }}
-                  onClick={() => this.onSetSidebarOpen()}
+                  onClick={() => this.onSetSidebarOpen(true)}
                 >
                   <Glyphicon glyph="resize-full" />
                 </Button>
@@ -258,10 +258,9 @@ class Overview extends Component {
 }
 
 // define required props
-Overview.propTypes = {
+PatternOverview.propTypes = {
   getPatterns: PropTypes.func.isRequired,
   pattern: PropTypes.object.isRequired,
-  getTactics: PropTypes.func.isRequired,
   tactic: PropTypes.object.isRequired,
   getStrategies: PropTypes.func.isRequired,
   strategy: PropTypes.object.isRequired
@@ -269,12 +268,11 @@ Overview.propTypes = {
 
 const mapStateToProps = state => ({
   pattern: state.pattern,
-  tactic: state.tactic,
   strategy: state.strategy,
   auth: state.auth
 });
 
 export default connect(
   mapStateToProps,
-  { getPatterns, getTactics, getStrategies, clearAllFilters }
-)(withRouter(Overview));
+  { getPatterns, getStrategies, clearAllFilters }
+)(withRouter(PatternOverview));
