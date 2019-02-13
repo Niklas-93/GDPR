@@ -72,12 +72,12 @@ class Login extends Component {
   // if user wants to login
   onSubmit(e) {
     e.preventDefault();
-
+    this.props.clearAllFilters();
     const userData = {
       username: this.state.username,
       password: this.state.password
     };
-    this.props.clearAllFilters();
+
     this.props.loginUser(userData);
   }
 
