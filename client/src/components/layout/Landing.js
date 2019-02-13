@@ -16,7 +16,7 @@ class Landing extends Component {
   render() {
     return (
       <div className="landing">
-        <Col xs={8} xsOffset={2}>
+        <Col xs={6} xsOffset={3}>
           <Panel style={{ marginTop: "150px" }}>
             <Panel.Heading id="LandingHeading">
               <Panel.Title>GDPR Recommender</Panel.Title>

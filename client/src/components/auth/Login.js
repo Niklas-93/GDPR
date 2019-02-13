@@ -90,7 +90,7 @@ class Login extends Component {
     return (
       <div className={"landing"}>
         <div>
-          <Col xs={8} xsOffset={2}>
+          <Col xs={6} xsOffset={3}>
             <Panel style={{ marginBottom: "150px", marginTop: "150px" }}>
               <Panel.Heading>
                 <span className={"h4"}>Sign in to your Account</span>

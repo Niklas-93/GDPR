@@ -74,7 +74,7 @@ class Register extends Component {
 
     return (
       <div className={"landing"}>
-        <Col xs={8} xsOffset={2}>
+        <Col xs={6} xsOffset={3}>
           <Panel style={{ marginBottom: "150px", marginTop: "150px" }}>
             <Panel.Heading>
               <span className={"h4"}>Create your GDPR Recommender account</span>
