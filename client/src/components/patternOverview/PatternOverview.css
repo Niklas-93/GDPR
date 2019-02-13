@@ -1,0 +1,57 @@
+.Overview {
+}
+.extendMore {
+  color: #337ab7;
+}
+.extendMore:hover {
+  text-decoration: underline;
+}
+.glyphicon-button {
+  margin-left: 10px;
+}
+.minHeightPatternPanel {
+  min-height: 310px !important;
+  max-height: 310px !important;
+}
+
+.minHeightPatternPanelHeading {
+  min-height: 80px !important;
+}
+
+.dotForActiveStrategyFilter {
+  height: 25px;
+  width: 25px;
+  background-color: #337ab7;
+  border-radius: 50%;
+  display: inline-block;
+  float: right;
+}
+
+.dotForActiveStrategyFilter:hover {
+  cursor: pointer;
+  background-color: #ccc;
+}
+
+.dotForStrategyFilter {
+  height: 25px;
+  width: 25px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  float: right;
+}
+
+.dotForStrategyFilter:hover {
+  cursor: pointer;
+  background-color: #ccc;
+}
+
+.activeStrategyPanel {
+  border-color: #337ab7;
+  border-width: 2px;
+}
+
+.passiveStrategyPanel {
+  border-color: #ddd;
+  border-width: 1px;
+}

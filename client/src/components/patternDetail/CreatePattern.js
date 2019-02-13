@@ -413,20 +413,20 @@ CreatePattern.propTypes = {
   errors: PropTypes.object.isRequired,
   setAssignedTactics: PropTypes.func.isRequired,
   setAssignedStrategies: PropTypes.func.isRequired,
-  getTactics: PropTypes.func.isRequired,
   getStrategies: PropTypes.func.isRequired
 };
+
 //Definition of needed props in Component
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
   assignedTactics: state.pattern.assignedTactics,
   assignedStrategies: state.pattern.assignedStrategies,
-  tactics: state.tactic.tactics,
   strategies: state.strategy.strategies,
   pattern: state.pattern,
   strategy: state.strategy
 });
+
 //Definition of used functions/states in Component, that interact with Store
 export default connect(
   mapStateToProps,

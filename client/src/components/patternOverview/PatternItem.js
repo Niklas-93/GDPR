@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Panel, Col, Tabs, Tab, Button, Collapse } from "react-bootstrap";
+import { Panel, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import EditToolbar from "../common/EditToolbar";
 
 class PatternItem extends Component {
   constructor(props, context) {
@@ -21,7 +20,7 @@ class PatternItem extends Component {
     }
 
     return (
-      <Col xs={4}>
+      <Col xs={this.props.patternSize}>
         <Panel className={"minHeightPatternPanel"}>
           <Panel.Heading
             style={{ textAlign: "center" }}
@@ -38,11 +37,12 @@ class PatternItem extends Component {
               </Link>
             </div>
           </Panel.Heading>
-          <Panel.Body className={"adjusted-PanelBody"}>
+          <Panel.Body>
             <ul className={"StrategyListInPatterns"}>
               {pattern.assignedStrategiesWithAllTactics.map(strategy => (
                 <li>
-                  <span class="dotForStrategy" /> {"  " + strategy.name + "  "}
+                  <span className={"dotForStrategy"} />{" "}
+                  {"  " + strategy.name + "  "}
                 </li>
               ))}
             </ul>

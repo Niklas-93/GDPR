@@ -9,8 +9,7 @@ import {
   setAssignedDevelopers,
   setAssignedTactics,
   setAssignedStrategies,
-  resetAssignedStrategies,
-  switchAttrForEditProject,
+  resetProject,
   getProject,
   resetErrors
 } from "../../actions/projectActions";
@@ -21,7 +20,6 @@ import TacListGroupField from "../common/TacListGroupField";
 import StrListGroupField from "../common/StrListGroupField";
 import { Button, Row, Col } from "react-bootstrap";
 import { getDevelopers } from "../../actions/userActions";
-import { getTactics } from "../../actions/tacticActions";
 import { getStrategies } from "../../actions/strategyActions";
 import store from "../../store";
 
@@ -31,6 +29,7 @@ class EditProject extends Component {
   constructor() {
     super();
     this.state = {
+      // get all data from the store from the current project which will be edited
       description: store.getState().project.project.description,
       name: store.getState().project.project.name,
       assignedStrategies: [],
@@ -58,10 +57,9 @@ class EditProject extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  // here the data will be send and updated in the database
   onSubmit(e) {
     e.preventDefault();
-
-    //const { projectId } = this.props;
 
     const editedProject = {
       id: this.props.match.params.id,
@@ -70,13 +68,11 @@ class EditProject extends Component {
       assignedTactics: store.getState().project.assignedTactics,
       assignedStrategies: store.getState().project.assignedStrategies,
       assignedDevelopers: store.getState().project.assignedDevelopers,
-      //nameDeveloper: store.getState().project.nameDeveloper,
       finished: this.state.finished,
       allDevelopers: store.getState().user.developers,
       finishedTactic: this.state.finishedTactic
     };
 
-    //console.log(editedProject);
     this.props.editProject(editedProject, this.props.history);
   }
 
@@ -93,6 +89,7 @@ class EditProject extends Component {
       developerContent = <Spinner />;
     } else {
       developerContent = (
+        // the select developer field will be created
         <DevListGroupField
           developers={this.props.developers}
           location={this.props.location}
@@ -104,6 +101,7 @@ class EditProject extends Component {
       tacticContent = <Spinner />;
     } else {
       tacticContent = (
+        // the select tactic field will be created
         <TacListGroupField
           tactics={this.props.assignedStrategies}
           location={this.props.location}
@@ -115,6 +113,7 @@ class EditProject extends Component {
       strategyContent = <Spinner />;
     } else {
       strategyContent = (
+        // the select strategy field will be created
         <StrListGroupField
           strategies={this.props.strategies}
           location={this.props.location}
@@ -122,7 +121,6 @@ class EditProject extends Component {
       );
     }
 
-    const { errors } = this.state;
     return (
       <form onSubmit={this.onSubmit}>
         <span>
@@ -199,20 +197,17 @@ EditProject.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   getDevelopers: PropTypes.func.isRequired,
-  getTactics: PropTypes.func.isRequired,
   getStrategies: PropTypes.func.isRequired,
   setAssignedDevelopers: PropTypes.func.isRequired,
   setAssignedTactics: PropTypes.func.isRequired,
   setAssignedStrategies: PropTypes.func.isRequired,
-  resetAssignedStrategies: PropTypes.func.isRequired,
-  switchAttrForEditProject: PropTypes.func.isRequired
+  resetProject: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
   developers: state.user.developers,
-  tactics: state.tactic.tactics,
   strategies: state.strategy.strategies,
   assignedDevelopers: state.project.assignedDevelopers,
   assignedTactics: state.project.assignedTactics,
@@ -224,13 +219,11 @@ export default connect(
   {
     editProject,
     getDevelopers,
-    getTactics,
     getStrategies,
     setAssignedDevelopers,
     setAssignedTactics,
     setAssignedStrategies,
-    resetAssignedStrategies,
-    switchAttrForEditProject,
+    resetProject,
     getProject,
     resetErrors
   }

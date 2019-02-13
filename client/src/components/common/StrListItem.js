@@ -32,6 +32,7 @@ class StrListItem extends Component {
   componentDidMount() {
     var arr = this.state.assignedStrategiesForProject;
 
+    // regarding on the pathname the elements are already selected or not
     if (
       arr !== undefined &&
       this.props.location.pathname !== "/create-project"
@@ -58,62 +59,25 @@ class StrListItem extends Component {
       function createNameArray(array) {
         var tempArr = [];
 
-        //console.log(array.assignedTactics);
-
+        // a temporary array with all names of the assigned tactics
         for (var i = 0; i < array.assignedTactics.length; i++) {
           tempArr.push(array.assignedTactics[i].name);
         }
         return tempArr;
       }
-      /*
-      while (
-        createNameArray(this.props.strategy).indexOf(
-          this.props.finishedTactics[i] === -1
-        )
-      ) {
-        if (
-          createNameArray(this.props.strategy).indexOf(
-            this.props.finishedTactics[i]
-          ) !== -1
-        ) {
-          alert("You can't deselect the Strategy with finished tactics");
-        } else {
-          this.props.setAssignedStrategies(this.props.strategy);
-          this.setState(() => {
-            return {
-              assignedStrategies: this.props.strategy,
-              bsStyle: !this.state.bsStyle ? "info" : undefined
-            };
-          });
-
-          this.setState({
-            assignedStrategies: this.props.assignedStrategies
-          });
-        }
-      }
-      */
 
       var indArr = [];
 
       for (var i = 0; i < this.props.finishedTactics.length; i++) {
-        //console.log(
-        //  createNameArray(this.props.strategy).indexOf(
-        //    this.props.finishedTactics[i]
-        //  )
-        //);
-        //console.log(createNameArray(this.props.strategy));
-
-        //console.log(this.props.finishedTactics[i]);
-
         var ind = createNameArray(this.props.strategy).indexOf(
           this.props.finishedTactics[i]
         );
-
+        // pushes all indexes of the finishedTactics into the indArr array
         indArr.push(ind);
       }
 
-      //console.log(Math.max(...indArr));
-
+      // if there is a tactic out of the strategy is already finished
+      // you can't deselect the strategy
       if (Math.max(...indArr) >= 0) {
         alert("You can't deselect the Strategy with finished tactics");
       } else {
@@ -133,7 +97,7 @@ class StrListItem extends Component {
       this.props.setAssignedStrategies(this.props.strategy);
       this.setState(() => {
         return {
-          assignedStrategies: this.props.strategy,
+          //assignedStrategies: this.props.strategy,
           bsStyle: !this.state.bsStyle ? "info" : undefined
         };
       });
@@ -143,12 +107,7 @@ class StrListItem extends Component {
   }
 
   render() {
-    // if (this.props.assignedStrategies != undefined) {
-    //console.log(this.props.strategy);
-
-    //}
-
-    const { strategy, auth } = this.props;
+    const { strategy } = this.props;
 
     return (
       <Row>
@@ -177,7 +136,6 @@ const mapStateToProps = state => ({
   auth: state.auth,
   assignedStrategies: state.assignedStrategies,
   finishedTactics: state.project.finishedTactics
-  //nameDeveloper: state.nameDeveloper
 });
 
 export default connect(

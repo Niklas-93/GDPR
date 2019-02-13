@@ -10,7 +10,7 @@ import {
   setAssignedDevelopers,
   setAssignedTactics,
   setAssignedStrategies,
-  resetAssignedStrategies,
+  resetProject,
   addAssignedProjects,
   resetErrors
 } from "../../actions/projectActions";
@@ -19,9 +19,8 @@ import TextField from "../common/TextField";
 import DevListGroupField from "../common/DevListGroupField";
 import TacListGroupField from "../common/TacListGroupField";
 import StrListGroupField from "../common/StrListGroupField";
-import { Button, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
+import { Button, Row, Col } from "react-bootstrap";
 import { getDevelopers } from "../../actions/userActions";
-import { getTactics } from "../../actions/tacticActions";
 import { getStrategies } from "../../actions/strategyActions";
 import store from "../../store";
 
@@ -45,13 +44,12 @@ class CreateProject extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.onChangeStrategy = this.onChangeStrategy.bind(this);
   }
 
   componentDidMount() {
     this.props.getDevelopers();
     this.props.getStrategies();
-    this.props.resetAssignedStrategies();
+    this.props.resetProject();
     this.props.resetErrors();
   }
 
@@ -59,15 +57,9 @@ class CreateProject extends Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  onChangeStrategy(e) {
-    console.log("click");
-    this.setState({ assignedStrategies: this.props.assignedStrategies });
-  }
-
+  // onSubmit send the data to the database and set also the project to the developers
   onSubmit(e) {
     e.preventDefault();
-
-    //const { projectId } = this.props;
 
     const newProject = {
       name: this.state.name,
@@ -75,12 +67,14 @@ class CreateProject extends Component {
       assignedTactics: store.getState().project.assignedTactics,
       assignedStrategies: store.getState().project.assignedStrategies,
       assignedDevelopers: store.getState().project.assignedDevelopers,
-      //nameDeveloper: store.getState().project.nameDeveloper,
       finished: this.state.finished
     };
-
+    // send project data to database
     this.props.createProject(newProject, this.props.history);
 
+    /*  timeout is because of time of creating the project, after creating the project
+        the function will get the latest project from the database and send this to
+        the backend, where the assigend projects from the developers will be updated */
     setTimeout(() => {
       this.props.addAssignedProjects(
         store.getState().project.projects[
@@ -103,6 +97,7 @@ class CreateProject extends Component {
       developerContent = <Spinner />;
     } else {
       developerContent = (
+        // the select developer field will be created
         <DevListGroupField
           developers={this.props.developers}
           location={this.props.location}
@@ -114,6 +109,7 @@ class CreateProject extends Component {
       tacticContent = <Spinner />;
     } else {
       tacticContent = (
+        // the select tactic field will be created
         <TacListGroupField
           tactics={this.props.assignedStrategies}
           location={this.props.location}
@@ -125,6 +121,7 @@ class CreateProject extends Component {
       strategyContent = <Spinner />;
     } else {
       strategyContent = (
+        // the select tactic field will be created
         <StrListGroupField
           strategies={this.props.strategies}
           location={this.props.location}
@@ -132,7 +129,6 @@ class CreateProject extends Component {
       );
     }
 
-    const { errors } = this.state;
     return (
       <form onSubmit={this.onSubmit}>
         <TextField
@@ -157,6 +153,7 @@ class CreateProject extends Component {
           <Col md={3}>
             <h4>Choose your strategies</h4>
             {strategyContent}
+            {/* If there are errors which comes from the backend, show them */}
             {this.props.errors.assignedStrategy
               ? this.props.errors.assignedStrategy
               : ""}
@@ -165,6 +162,7 @@ class CreateProject extends Component {
             {" "}
             <h4>and the according tactics</h4>
             {tacticContent}
+            {/* If there are errors which comes from the backend, show them */}
             {this.props.errors.assignedTactic &&
             !this.props.errors.assignedStrategy
               ? this.props.errors.assignedTactic
@@ -174,6 +172,7 @@ class CreateProject extends Component {
           <Col md={6}>
             <h4>Choose your developer</h4>
             {developerContent}
+            {/* If there are errors which comes from the backend, show them */}
             {this.props.errors.assignedDevelopers
               ? this.props.errors.assignedDevelopers
               : ""}
@@ -191,7 +190,7 @@ class CreateProject extends Component {
           <Button
             className="projectButton"
             bsStyle="info"
-            onClick={this.props.resetAssignedStrategies}
+            onClick={this.props.resetProject}
           >
             Abort
           </Button>
@@ -206,12 +205,11 @@ CreateProject.propTypes = {
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   getDevelopers: PropTypes.func.isRequired,
-  getTactics: PropTypes.func.isRequired,
   getStrategies: PropTypes.func.isRequired,
   setAssignedDevelopers: PropTypes.func.isRequired,
   setAssignedTactics: PropTypes.func.isRequired,
   setAssignedStrategies: PropTypes.func.isRequired,
-  resetAssignedStrategies: PropTypes.func.isRequired,
+  resetProject: PropTypes.func.isRequired,
   addAssignedProjects: PropTypes.func.isRequired
 };
 
@@ -219,7 +217,6 @@ const mapStateToProps = state => ({
   auth: state.auth,
   errors: state.errors,
   developers: state.user.developers,
-  tactics: state.tactic.tactics,
   strategies: state.strategy.strategies,
   assignedDevelopers: state.project.assignedDevelopers,
   assignedTactics: state.project.assignedTactics,
@@ -231,12 +228,11 @@ export default connect(
   {
     createProject,
     getDevelopers,
-    getTactics,
     getStrategies,
     setAssignedDevelopers,
     setAssignedTactics,
     setAssignedStrategies,
-    resetAssignedStrategies,
+    resetProject,
     addAssignedProjects,
     resetErrors
   }

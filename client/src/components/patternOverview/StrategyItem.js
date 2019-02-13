@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Panel, Col, Tabs, Tab, Button, Collapse } from "react-bootstrap";
+import { Panel, Col } from "react-bootstrap";
 import {
   setFilterForPatterns,
   setStrategyAsFilter,
@@ -9,7 +9,6 @@ import {
 } from "../../actions/patternActions";
 import TacticFilter from "./TacticFilter";
 import ChooseTactic from "../patternDetail/ChooseTactic";
-import { throws } from "assert";
 
 class StrategyItem extends Component {
   constructor(props, context) {
@@ -18,20 +17,35 @@ class StrategyItem extends Component {
       expanded: false
     };
   }
+
+  // checks expanded status of strategy
+  componentWillReceiveProps(nextProps) {
+    const vizFilters = nextProps.pattern.visibilityFilters;
+    if (vizFilters.length == 0) {
+    } else {
+      var filters = vizFilters.filter(
+        visibilityFilter => visibilityFilter._id == nextProps.strategy._id
+      );
+      if (filters.length !== 0) {
+        this.setState({
+          expanded: true
+        });
+      }
+    }
+  }
+
   setStrategyAsFilter = strategy => {
-    //e.preventDefault();
     this.props.setStrategyAsFilter(strategy);
-    /*  var strategyPanelStyle = document.getElementById(strategy.name).style;
-    strategyPanelStyle.borderColor = "#337ab7";
-    strategyPanelStyle.borderWidth = "3px";*/
   };
 
   deselectStrategyAsFilter = strategy => {
     this.props.deselectStrategyAsFilter(strategy);
-    /* var strategyPanelStyle = document.getElementById(strategy.name).style;
-    strategyPanelStyle.borderColor = "#ddd";
-    strategyPanelStyle.borderWidth = "1px";*/
   };
+
+  // expands and collapses strategypanel on click
+  handleExpand() {
+    this.setState({ expanded: !this.state.expanded });
+  }
 
   render() {
     const { strategy, auth, pattern, isFilter } = this.props;
@@ -47,8 +61,12 @@ class StrategyItem extends Component {
       if (visibilityFilters.length == 0) {
         strategyHeading = (
           <span>
-            <Panel.Title toggle className={"inline"}>
-              <span class="h5">{strategy.name}</span>
+            <Panel.Title
+              toggle
+              className={"inline"}
+              onClick={() => this.handleExpand()}
+            >
+              <span class="h5">{strategy.name} </span>
             </Panel.Title>
             <Panel.Title className={"inline"}>
               <span
@@ -75,8 +93,12 @@ class StrategyItem extends Component {
             //if all tactics are set as filters
             strategyHeading = (
               <span>
-                <Panel.Title toggle className={"inline"}>
-                  <span class="h5">{strategy.name}</span>
+                <Panel.Title
+                  toggle
+                  className={"inline"}
+                  onClick={() => this.handleExpand()}
+                >
+                  <span class="h5">{strategy.name} </span>
                 </Panel.Title>
                 <Panel.Title className={"inline"}>
                   <span
@@ -87,13 +109,16 @@ class StrategyItem extends Component {
               </span>
             );
             cssClassesofStrategyPanel = "activeStrategyPanel";
-          }
-          // if not all tactis are set as filters
-          else {
+          } else {
+            // if not all tactis are set as filters
             strategyHeading = (
               <span>
-                <Panel.Title toggle className={"inline"}>
-                  <span class="h5">{strategy.name}</span>
+                <Panel.Title
+                  toggle
+                  className={"inline"}
+                  onClick={() => this.handleExpand()}
+                >
+                  <span class="h5">{strategy.name} </span>
                 </Panel.Title>
                 <Panel.Title className={"inline"}>
                   <span
@@ -105,13 +130,16 @@ class StrategyItem extends Component {
             );
             cssClassesofStrategyPanel = "passiveStrategyPanel";
           }
-        }
-        // if no tactic of actual strategy is set as filter
-        else {
+        } else {
+          // if no tactic of actual strategy is set as filter
           strategyHeading = (
             <span>
-              <Panel.Title toggle className={"inline"}>
-                <span class="h5">{strategy.name}</span>
+              <Panel.Title
+                toggle
+                className={"inline"}
+                onClick={() => this.handleExpand()}
+              >
+                <span class="h5">{strategy.name} </span>
               </Panel.Title>
               <Panel.Title className={"inline"}>
                 <span
@@ -127,7 +155,7 @@ class StrategyItem extends Component {
     } else {
       // if strategy is not in sidebar
       strategyHeading = (
-        <Panel.Title toggle>
+        <Panel.Title toggle onClick={() => this.handleExpand()}>
           <span class="h5">{strategy.name}</span>
         </Panel.Title>
       );
@@ -136,22 +164,13 @@ class StrategyItem extends Component {
     return (
       <span>
         <Col xs={isFilter ? 12 : 12}>
-          <Panel id={strategy.name} className={cssClassesofStrategyPanel}>
-            <Panel.Heading>
-              {strategyHeading}
-
-              {/*<Panel.Title toggle>
-                <span class="h5">{strategy.name}</span>
-                <span
-                  onClick={() =>
-                    this.setStrategyAsFilter(strategy.assignedTactics)
-                  }
-                >
-                  filter
-                </span>
-                </Panel.Title>*/}
-            </Panel.Heading>
-            <Panel.Collapse>
+          <Panel
+            id={strategy.name}
+            className={cssClassesofStrategyPanel}
+            expanded={this.state.expanded}
+          >
+            <Panel.Heading>{strategyHeading}</Panel.Heading>
+            <Panel.Collapse className={strategy.name}>
               <Panel.Body>
                 {isFilter ? (
                   <span>
@@ -186,7 +205,6 @@ StrategyItem.propTypes = {
 const mapStateToProps = state => ({
   auth: state.auth,
   pattern: state.pattern
-  // strategy: state.strategy
 });
 
 export default connect(

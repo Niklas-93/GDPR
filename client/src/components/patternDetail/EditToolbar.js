@@ -10,7 +10,8 @@ import {
 } from "react-bootstrap";
 import BtnWithMouseOverPop from "../common/BtnWithMouseOverPop";
 import { withRouter } from "react-router-dom";
-import { deletePattern } from "../../actions/patternActions";
+import { deletePattern, getPatterns } from "../../actions/patternActions";
+import { getStrategies } from "../../actions/strategyActions";
 
 class EditToolbar extends Component {
   constructor(props, context) {
@@ -18,77 +19,25 @@ class EditToolbar extends Component {
     this.handleShowRemoveModal = this.handleShowRemoveModal.bind(this);
     this.handleCloseRemoveModal = this.handleCloseRemoveModal.bind(this);
 
-    this.handleShowEditModal = this.handleShowEditModal.bind(this);
-    this.handleCloseEditModal = this.handleCloseEditModal.bind(this);
-
+    //initially, do not display modal
     this.state = {
       showRemoveModal: false
     };
-
-    this.onChange = this.onChange.bind(this);
-    //this.onSubmit = this.onSubmit.bind(this);
   }
-  /*onSubmit(e) {
-    e.preventDefault();
 
-    const patternData = {
-      patternName: this.state.patternName,
-      patternDescription: this.state.patternDescription
-    };
-
-    this.props.editPattern(patternData);
-  }*/
-
-  onChange(e) {
-    // alert(e.target.name);
-    // alert(e.target.value);
-    this.setState({ [e.target.name]: e.target.value });
-  }
-  /*onDelete(id) {
-    this.props.onDelete(id);
-  }*/
-  onChangeAssignedTactics = id => {
-    //onChangeAssignedTactics(id) {
-    //this.setState({ assignedTactics[this.state.assignedTactics.indexOf(id)]: true });
-    this.state.assignedTactics.splice(
-      this.state.assignedTactics.indexOf(id),
-      1
-    );
-  };
+  // Close Modal
   handleCloseRemoveModal() {
     this.setState({ showRemoveModal: false });
   }
-
+  //show Modal
   handleShowRemoveModal() {
     this.setState({ showRemoveModal: true });
   }
-  handleCloseEditModal() {
-    this.setState({ showEditModal: false });
-  }
-
-  handleShowEditModal() {
-    this.setState({ showEditModal: true });
-  }
-
-  editPattern = () => {
-    const patternData = {
-      name: this.state.name,
-      summary: this.state.summary,
-      id: this.props.pattern._id
-    };
-    console.log(
-      "function editpattern called in EditToolbar:" +
-        patternData.name +
-        patternData.summary
-    );
-    this.props.editPattern(patternData);
-    this.handleCloseEditModal();
-  };
-
+  //delete Pattern on confirmation of modal
   deletePattern = id => {
-    console.log("function deletepattern called in EditToolbar" + id);
-    console.log(this.props.history);
     this.props.deletePattern(id, this.props.history);
+    this.props.getStrategies();
+    this.props.getPatterns();
   };
 
   render() {
@@ -108,9 +57,6 @@ class EditToolbar extends Component {
             link="#"
             onClick={() => this.handleShowRemoveModal()}
           />
-          {/*<Button onClick={this.handleShowRemoveModal}>
-            <Glyphicon glyph="remove" />
-      </Button>*/}
         </ButtonGroup>
         <div className="static-modal">
           <Modal
@@ -160,5 +106,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { deletePattern }
+  { deletePattern, getStrategies, getPatterns }
 )(withRouter(EditToolbar));

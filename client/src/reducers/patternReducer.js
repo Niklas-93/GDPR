@@ -15,7 +15,6 @@ import {
   LINK_TO_PATTERN_AFTER_SEARCH,
   SET_EDITING_TO_FALSE
 } from "../actions/types";
-import { stat } from "fs";
 
 const initialState = {
   patterns: [],
@@ -56,8 +55,6 @@ export default function(state = initialState, action) {
         )
       };
     case UPDATE_PATTERN:
-      console.log("redcer");
-      console.log(action.payload);
       for (var i in state.patterns) {
         if (state.patterns[i]._id == action.payload._id) {
           state.patterns[i] = action.payload;
@@ -71,6 +68,7 @@ export default function(state = initialState, action) {
       };
     case SET_CHOSEN_TACTICS:
       if (state.chosenTactics.includes(action.payload)) {
+        // if tactic is already chosen --> deselect tactic
         return {
           ...state,
           chosenTactics: state.chosenTactics.filter(
@@ -78,6 +76,7 @@ export default function(state = initialState, action) {
           )
         };
       } else {
+        // if tactic is not already chosen --> select tactic
         return {
           ...state,
           chosenTactics: [action.payload, ...state.chosenTactics]
@@ -88,48 +87,37 @@ export default function(state = initialState, action) {
         ...state,
         chosenTactics: []
       };
-
-    /*return {
-        ...state,
-        pattern: action.payload,
-        patterns: state.patterns.filter(
-          pattern => pattern._id !== action.payload
-        )
-      };*/
     case SET_FILTER_FOR_PATTERNS:
-      console.log("filter");
-      console.log(action.payload);
-      console.log("state");
-      console.log(state);
+      // if tactic is set as filter
       var visFilters = state.visibilityFilters;
       var visFilters = state.visibilityFilters.filter(
         strategyFilter =>
           strategyFilter._id == action.payload.strategyFilter._id
       );
+
       // check if corresponding strategy is already set as filter
       if (visFilters.length == 0) {
         var strategyToInsert = action.payload.strategyFilter;
         strategyToInsert.assignedTactics = [action.payload.tacticFilter];
-        // if corresponding strategy is not set as filter and no other filters are already set
         if (state.visibilityFilters.length == 0) {
-          console.log("empty filters");
+          // if corresponding strategy is not set as filter and no other filters are already set
           return {
             ...state,
             visibilityFilters: [strategyToInsert]
           };
         } else {
           //if corresponding strategy is not set as filter, but already others
-          console.log("not empty filters");
           state.visibilityFilters.push(strategyToInsert);
           return {
             ...state,
             visibilityFilters: state.visibilityFilters
           };
         }
-        //if corresponding strategy is already set
       } else {
+        //if corresponding strategy is already set
         // add tactic to strategy
         visFilters[0].assignedTactics.push(action.payload.tacticFilter);
+
         // convert strategy back to object
         visFilters = visFilters[0];
 
@@ -138,9 +126,8 @@ export default function(state = initialState, action) {
           strategyFilter =>
             strategyFilter._id != action.payload.strategyFilter._id
         );
-        console.log("strategy already set");
-        // add new strategy to filters
 
+        // add new strategy to filters
         return {
           ...state,
           visibilityFilters: [...state.visibilityFilters, visFilters]
@@ -148,25 +135,26 @@ export default function(state = initialState, action) {
       }
 
     case DESELECT_TACTIC_AS_FILTER:
+      // if tactic is deselected as filter
       // Select corresponding strategy from filters
       var strategyInFilters = state.visibilityFilters.filter(
         filter => filter._id == action.payload.strategyFilter._id
       );
+
       //filter out selected tactic
       var assignedTacticsInCorrespondingStrategy = strategyInFilters[0].assignedTactics.filter(
         tacticFilter => tacticFilter._id != action.payload.tacticFilter._id
       );
+
       // check if deselected tactic was last selected tactic from strategy
       if (assignedTacticsInCorrespondingStrategy.length == 0) {
+        // if tactic was last selected tactic from strategy
         // Delete old strategy from filters
         state.visibilityFilters = state.visibilityFilters.filter(
           strategyFilter =>
             strategyFilter._id != action.payload.strategyFilter._id
         );
-        console.log(
-          "visfilters nach deselecten als letzte tactic, aber nicnt letzte startegy"
-        );
-        console.log(state.visibilityFilters);
+
         //check if fiters are completely empty now
         if (state.visibilityFilters.length == 0) {
           return {
@@ -174,16 +162,16 @@ export default function(state = initialState, action) {
             visibilityFilters: []
           };
         }
-        // if filters are not empty, but strategy, return rest of filters
+        // if not all filters are empty, but strategy, return rest of filters
         else {
           return {
             ...state,
             visibilityFilters: state.visibilityFilters
           };
         }
-      }
-      // if at least one tactic is left in corresponding strategy
-      else {
+      } else {
+        // if at least one tactic is left in corresponding strategy
+
         //replace assignedTactics
         strategyInFilters[0].assignedTactics = assignedTacticsInCorrespondingStrategy;
 

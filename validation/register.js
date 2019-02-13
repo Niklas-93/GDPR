@@ -38,8 +38,6 @@ module.exports = function validateRegisterInput(data) {
     errors.role = "Role field is required";
   }
 
-  // TO DO Role = Developer or Project Manager or Data Protection Officer
-
   if (Validator.isEmpty(data.password2)) {
     errors.password2 = "Confirm Password field is required";
   }
