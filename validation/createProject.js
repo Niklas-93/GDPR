@@ -5,7 +5,7 @@ module.exports = function validateProjectInput(data) {
   let errors = {};
 
   if (!Validator.isLength(data.name, { min: 2, max: 30 })) {
-    errors.name = "Name of the pattern must be between 2 and 30 characters";
+    errors.name = "Name of the project must be between 2 and 30 characters";
   }
 
   if (Validator.isEmpty(data.name)) {

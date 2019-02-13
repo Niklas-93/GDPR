@@ -49,6 +49,7 @@ class CommentBox extends Component {
     this.props.setComment(commentData);
   }
 
+  // this support function shows the correct author, date and role from the comment-creator
   correctX(comment, x) {
     var index;
     var tempArrAtt = [];
@@ -94,12 +95,7 @@ class CommentBox extends Component {
     }, 1000);
   }
 
-  /*componentDidUpdate() {
-    setTimeout(() => {
-      this.setState({ state: this.state });
-    }, 1000);
-  }*/
-
+  // convert date to a readable version
   convertDate(isoDate) {
     const date = new Date(isoDate);
     const hour = date.getUTCHours();
@@ -133,10 +129,6 @@ class CommentBox extends Component {
       delete: false
     };
 
-    //console.log(commentData);
-
-    //console.log(editedProject);
-
     this.props.setComment(commentData);
 
     this.setState({
@@ -145,12 +137,14 @@ class CommentBox extends Component {
         content: ""
       }
     });
+    // timeout because of the asynchronity it takes a little bit time until
+    // the comment array will be updated
     setTimeout(() => {
       this.updateScroll();
     }, 250);
-    //this.props.editProject(commentData);
   }
 
+  // through ES6 function the commentBox will be scrolled to bottom
   updateScroll() {
     var element = document.getElementsByClassName("chatBox")[0];
     if (element) {
@@ -159,9 +153,6 @@ class CommentBox extends Component {
   }
 
   render() {
-    //console.log(this.props.match.params.id);
-    //console.log(this.state.comment);
-
     {
       setTimeout(() => {
         this.updateScroll();

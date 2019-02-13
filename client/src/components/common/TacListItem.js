@@ -27,7 +27,6 @@ class TacListItem extends Component {
       assignedTactics: {},
       assignedTacticsForProject: store.getState().project.project
         .assignedTactics
-      //nameDeveloper: ""
     };
 
     this.onClick = this.onClick.bind(this);
@@ -36,6 +35,7 @@ class TacListItem extends Component {
   componentDidMount() {
     var arr = this.props.assignedTactics;
 
+    // regarding on the pathname the elements are already selected or not
     if (
       arr !== undefined &&
       this.props.location.pathname !== "/create-project"
@@ -57,7 +57,7 @@ class TacListItem extends Component {
       this.setState(() => {
         this.props.setAssignedTactics(this.props.tactic);
         return {
-          assignedTactics: this.props.tactic,
+          //assignedTactics: this.props.tactic,
           bsStyle: !this.state.bsStyle ? "info" : undefined
         };
       });

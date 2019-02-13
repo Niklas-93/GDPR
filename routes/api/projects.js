@@ -23,6 +23,7 @@ router.get("/test", (req, res) => res.json({ msg: "Project Works" }));
 router.get("/", (req, res) =>
   Project.aggregate([
     {
+      //the ids will be matched to the related objects
       $lookup: {
         from: "users",
         localField: "assignedDevelopers",
@@ -31,6 +32,7 @@ router.get("/", (req, res) =>
       }
     },
     {
+      //the ids will be matched to the related objects
       $lookup: {
         from: "strategies",
         localField: "assignedTactics",
@@ -39,6 +41,7 @@ router.get("/", (req, res) =>
       }
     },
     {
+      //the ids will be matched to the related objects
       $lookup: {
         from: "strategies",
         localField: "assignedStrategies",
@@ -50,6 +53,7 @@ router.get("/", (req, res) =>
 
     .exec()
     .then(projects => {
+      // creating a new attribute with assigned strategy object where only the assigned tactics are included
       projects.forEach(function(project) {
         project.assignedTactics.forEach(function(
           assignedTactic,
@@ -107,6 +111,8 @@ router.post(
       return res.status(400).json(errors);
     }
 
+    // project will be searched if already exists return an error
+    // else create the project
     Project.findOne({ name: req.body.name }).then(project => {
       if (project) {
         errors.name = "Project already exists";
@@ -134,6 +140,8 @@ router.post(
 // @route   DELETE api/projects/:id
 // @desc    Delete project
 // @access  Private
+
+// this function deletes the project from the database
 router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
@@ -153,6 +161,7 @@ router.delete(
 // @desc    Get project by ID
 // @access  Public
 
+// this is more or less the same like the getAllProjects get function
 router.get("/project/:id", (req, res) => {
   const errors = {};
 
@@ -233,6 +242,7 @@ router.get("/project/:id", (req, res) => {
 // @desc    Edit project by ID
 // @access  Public
 
+// here the projects will be edited
 router.post("/project/edit", (req, res) => {
   const { errors, isValid } = validateProjectInput(req.body);
 
@@ -260,39 +270,22 @@ router.post("/project/edit", (req, res) => {
   if (req.body.assignedDevelopers) userFields.assignedProjects = req.body.id;
 
   console.log(projectFields);
-  //console.log(req.body.comment);
-
-  //console.log("123123" + req.body.id);
-  /*for (var i = 0; i < req.body.assignedDevelopers.length; i++) {
-    for (
-      var j = 0;
-      j < req.body.assignedDevelopers[i].assignedProjects.length;
-      j++
-    ) {
-      console.log(
-        "assignedProjects: " +
-          req.body.assignedDevelopers[i].assignedProjects[j]
-      );
-    }
-    console.log("assignedDevelopers: " + req.body.assignedDevelopers[i]);
-  }*/
 
   let promiseArr = [];
   var idArrAssDev = [];
+  // create a temporary array only with the ids
   if (req.body.assignedDevelopers) {
     for (var i = 0; i < req.body.assignedDevelopers.length; i++) {
       idArrAssDev.push(req.body.assignedDevelopers[i]._id);
     }
 
-    //console.log(idArrAssDev);
-
+    // for all assignedDevelopers it will be checked which developer has changed or not
     for (var i = 0; i < req.body.assignedDevelopers.length; i++) {
+      // if developer is not assigned push it into the array in the database
       if (
         req.body.assignedDevelopers[i].assignedProjects.indexOf(req.body.id) ===
         -1
       ) {
-        console.log("Project wird hinzugefügt");
-
         var prom = new Promise(function(resolve, reject) {
           User.findOneAndUpdate(
             { _id: req.body.assignedDevelopers[i]._id },
@@ -309,16 +302,13 @@ router.post("/project/edit", (req, res) => {
 
         promiseArr.push(prom);
       } else {
-        //console.log("entfernen prüfen");
-
+        // if developer is not assigned pull it out the array in the database
         for (var j = 0; j < req.body.allDevelopers.length; j++) {
           if (
             req.body.allDevelopers[j].assignedProjects.indexOf(req.body.id) !==
               -1 &&
             idArrAssDev.indexOf(req.body.allDevelopers[j]._id) === -1
           ) {
-            //console.log("Entfernen");
-
             var prom = new Promise(function(resolve, reject) {
               User.findOneAndUpdate(
                 { _id: req.body.allDevelopers[j]._id },
@@ -335,13 +325,13 @@ router.post("/project/edit", (req, res) => {
 
             promiseArr.push(prom);
           } else {
-            //console.log("Bleibt");
           }
         }
       }
     }
   }
   var prom = new Promise(function(resolve, reject) {
+    // the project will be updated
     Project.findOneAndUpdate(
       { _id: req.body.id },
       {
@@ -357,24 +347,15 @@ router.post("/project/edit", (req, res) => {
 
   promiseArr.push(prom);
 
-  //console.log(promiseArr);
-
+  // all promises which are pushed into the promiseArr array will be executed at the same time
   Promise.all(promiseArr)
     .then(project => res.json(project))
     .catch(err => res.status(404).json({ project: "There is no project" }));
 });
 
+// here the comments will be saved in the database as array
 router.post("/project/setComment", (req, res) => {
-  const errors = {};
-
   const projectFields = {};
-
-  //projectFields.comment = req.body.comment;
-
-  console.log(req.body);
-
-  //console.log(projectFields);
-  //console.log(req.body.id);
 
   if (req.body.delete === false) {
     projectFields.comment = req.body.comment;
@@ -391,20 +372,23 @@ router.post("/project/setComment", (req, res) => {
       .then(comment => res.json(comment.comment))
       .catch(err => console.log(err));
   } else {
+    //here is the part where an comment will be deleted
+
     tempArr = [];
+    // again a temporary array where the ids are saved
     commentsArray = req.body.comments;
     for (var i = 0; i < req.body.comments.length; i++) {
       tempArr.push(req.body.comments[i]._id);
     }
 
-    console.log(tempArr);
     index = tempArr.indexOf(req.body.commentId);
-    console.log(index);
 
+    // to be deleted comment will be removed from array
     commentsArray.splice(index, 1);
 
     projectFields.comment = commentsArray;
 
+    // the project will be searched and the comments array will be updated
     Project.findOneAndUpdate(
       { _id: req.body.id },
       {
@@ -419,18 +403,14 @@ router.post("/project/setComment", (req, res) => {
   }
 });
 
+// here the finished tactics will be set in the database
 router.post("/project/setFinishedTactic", (req, res) => {
-  const errors = {};
-
   const projectFields = {};
 
   projectFields.finishedTactics = req.body.finishedTactic;
 
-  //console.log(req.body);
-  //console.log(req.body.id);
-
   if (req.body.finishedTactics.indexOf(req.body.finishedTactic) === -1) {
-    //console.log(req.body.finishedTactic + "hinzugefügt");
+    // when the finished tactic are not in the finished tactics array push it into it
     Project.findOneAndUpdate(
       { _id: req.body.id },
       {
@@ -443,7 +423,7 @@ router.post("/project/setFinishedTactic", (req, res) => {
       .then(finishedTactics => res.json(finishedTactics))
       .catch(err => console.log(err));
   } else {
-    //console.log(req.body.finishedTactic + "entfernt");
+    // when the finished tactic are in the finished tactics array pull it out of it
     Project.findOneAndUpdate(
       { _id: req.body.id },
       {
@@ -459,12 +439,10 @@ router.post("/project/setFinishedTactic", (req, res) => {
 });
 
 // @route   POST api/projects/project/deleteAssignedProject
-// @desc    Edit project by ID
+// @desc    Removes assigned project from developer when projects are deleted
 // @access  Public
 
 router.post("/project/deleteAssignedProject", (req, res) => {
-  const errors = {};
-
   const userFields = {};
 
   if (req.body.assignedDevelopers) userFields.assignedProjects = req.body._id;
@@ -474,6 +452,7 @@ router.post("/project/deleteAssignedProject", (req, res) => {
   let promiseArr = [];
   if (req.body.assignedDevelopers) {
     for (var i = 0; i < req.body.assignedDevelopers.length; i++) {
+      // all assigned developers will be found and the assigned project which are deleted will be removed
       var prom = new Promise(function(resolve, reject) {
         User.findOneAndUpdate(
           { _id: req.body.assignedDevelopers[i]._id },
@@ -492,8 +471,7 @@ router.post("/project/deleteAssignedProject", (req, res) => {
     }
   }
 
-  //console.log(promiseArr);
-
+  // all promises will be executed at the same time
   Promise.all(promiseArr)
     .then(project => res.json(project))
     .catch(err => res.status(404).json({ project: "There is no project" }));
@@ -503,9 +481,8 @@ router.post("/project/deleteAssignedProject", (req, res) => {
 // @desc    Edit project by ID
 // @access  Public
 
+// this will be add the created project into the assigned projects from all assined developers
 router.post("/project/addAssignedProject", (req, res) => {
-  const errors = {};
-
   const userFields = {};
 
   if (req.body.assignedDevelopers) userFields.assignedProjects = req.body._id;
@@ -532,8 +509,6 @@ router.post("/project/addAssignedProject", (req, res) => {
       promiseArr.push(prom);
     }
   }
-
-  //console.log(promiseArr);
 
   Promise.all(promiseArr)
     .then(project => res.json(project))

@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { Component } from "react";
 import { Panel, Row, Col, Button, ProgressBar } from "react-bootstrap";
 import { withRouter, Link } from "react-router-dom";
@@ -6,7 +5,6 @@ import { connect } from "react-redux";
 import {
   getProject,
   setFinishedTactic,
-  switchAttrForEditProject,
   deleteProject,
   removeAssignedProjects
 } from "../../actions/projectActions";
@@ -44,27 +42,32 @@ class DetailProject extends Component {
   }
 
   componentDidMount() {
-    this.props.getDevelopers();
+    //this.props.getDevelopers();
     this.props.getProject(this.props.match.params.id);
 
+    /* this is a supporting function and returns a boolean array */
     this.createDoneArray();
+    /* this is a supporting value for set proper checkbox values*/
     this.setState({ default: false });
   }
 
-  //for realtime chat activate
+  //for (realtime) chat activate
   componentWillUpdate() {
     /*setTimeout(() => {
       this.props.getProject(this.props.match.params.id);
-      this.props.switchAttrForEditProject();
     }, 5000);*/
   }
 
+  // a function to update with database
   updateProject() {
     this.props.getProject(this.props.match.params.id);
   }
 
+  // to delete the project
   onClickDelete(id) {
     this.props.deleteProject(id);
+
+    // removes this project from all developers which are assigned to this
     this.props.removeAssignedProjects(this.props.project);
   }
 
@@ -76,6 +79,7 @@ class DetailProject extends Component {
     }
     var tacticsArr = [];
 
+    // a array with all tactics will be generated
     if (tactics != undefined) {
       tactics.map(strategies =>
         strategies.assignedTactics.map(
@@ -86,6 +90,8 @@ class DetailProject extends Component {
 
     var finishedTacticsArray = this.props.finishedTactics;
 
+    // here it will be checked wheather the items of all tactics are included in the finishedTactics array
+    // if yes push the tactic with true, if not with false
     if (tactics != undefined && finishedTacticsArray != undefined) {
       for (var i = 0; i < tacticsArr.length; i++) {
         if (finishedTacticsArray.indexOf(tacticsArr[i].name) === -1) {
@@ -99,9 +105,8 @@ class DetailProject extends Component {
     return doneArr;
   }
 
+  // this sends the finished tasks to the database
   handleInputChange(e) {
-    //e.preventDefault();
-
     const finishedTacticData = {
       id: this.props.match.params.id,
       finishedTactic: e.target.name,
@@ -111,10 +116,11 @@ class DetailProject extends Component {
     this.props.setFinishedTactic(finishedTacticData);
   }
 
+  // this function handles the "checked"-value from the finished tactics
   handleChecked(tac, i) {
-    //console.log(tac);
     var finTac = this.props.project.finishedTactics;
 
+    // here it will be checked wheather the default value is true or false, true during loading page and setting defaultchecks
     if (this.state.default) {
       if (finTac.indexOf(tac.name) === -1) {
         return false;
@@ -129,6 +135,7 @@ class DetailProject extends Component {
   render() {
     let projectContent;
 
+    // here the strategies will be sorted alphabetically
     if (this.props.project.assignedStrategiesWithAllTactics) {
       var tactics = this.props.project.assignedStrategiesWithAllTactics;
       tactics.sort(function(a, b) {
@@ -141,11 +148,11 @@ class DetailProject extends Component {
           return 1;
         }
 
-        // namen müssen gleich sein
         return 0;
       });
     }
 
+    // this function creates a array with all assigned tactics for the open/done component
     function aggrTac() {
       var arr = [];
 
@@ -160,6 +167,7 @@ class DetailProject extends Component {
 
     var finishedTacticsArray = this.props.finishedTactics;
 
+    // here will be created an array where all open tactics are included
     function doneTacticArray() {
       var tempArr = [];
 
@@ -184,12 +192,16 @@ class DetailProject extends Component {
     var finTac = this.props.finishedTactics;
     var allTac = this.props.project.assignedTactics;
 
+    // progress will be calculated for the progress bar
     if (this.props.finishedTactics && this.props.project.assignedTactics) {
       progress = (finTac.length * 100) / allTac.length;
     }
 
+    // counter will be defined to iterate the checkboxes from finished tasks
+    // startet by -1 works proper
     var counter = -1;
 
+    // this is a support-function to set the correct height of the assigned strategy/tactic panels
     function getMaxAssignedTacticsForHeight() {
       var max = 0;
       if (tactics) {
@@ -265,6 +277,7 @@ class DetailProject extends Component {
                                   className="strategyPanel panelBodyTactics"
                                   style={{
                                     height:
+                                      //the height will be set dynamically
                                       getMaxAssignedTacticsForHeight() * 40 +
                                       "px"
                                   }}
@@ -287,6 +300,8 @@ class DetailProject extends Component {
                                               {tac.name}
                                             </Col>
                                             <Col md={3}>
+                                              {/* the checkboxes will be created with all default-checked values
+                                                with the support-functions from above */}
                                               <input
                                                 name={tac.name}
                                                 type="checkbox"
@@ -319,6 +334,7 @@ class DetailProject extends Component {
                 </Button>
               </Link>
 
+              {/* Only the Project Manager have the credential to edit/delete the project */}
               {this.props.auth.user.role === "Project Manager" ? (
                 <span>
                   <Link to={`/project/edit-project/${this.props.project._id}`}>
@@ -340,6 +356,7 @@ class DetailProject extends Component {
           <Panel>
             <Panel.Heading>
               <Panel.Title componentClass="h4">
+                {/* heading from the progress bar changes regarding to progress */}
                 {progress === 0
                   ? "Project haven't started yet"
                   : progress < 100
@@ -348,6 +365,7 @@ class DetailProject extends Component {
               </Panel.Title>
             </Panel.Heading>
             <Panel.Body>
+              {/* regarding to progress the color of the bar changes */}
               <ProgressBar
                 striped
                 bsStyle={
@@ -367,6 +385,7 @@ class DetailProject extends Component {
                       <Panel.Title componentClass="h4">Done</Panel.Title>
                     </Panel.Heading>
                     <Panel.Body>
+                      {/* Finished tasks will be shown here */}
                       <ul className="ulTac">
                         {this.props.finishedTactics
                           ? this.props.finishedTactics.map(tac => (
@@ -388,6 +407,7 @@ class DetailProject extends Component {
                       <Panel.Title componentClass="h4">Open</Panel.Title>
                     </Panel.Heading>
                     <Panel.Body>
+                      {/* Open tasks will be shown here */}
                       <ul className="ulTac">
                         {doneTacticArray().map(tac => (
                           <Col md={6} key={tac}>
@@ -403,6 +423,7 @@ class DetailProject extends Component {
               </Row>
             </Panel.Body>
           </Panel>
+          {/* a comment box is here inserted */}
           <CommentBox
             project={this.props.project}
             getProject={() => {
@@ -454,7 +475,6 @@ export default connect(
     getProject,
     getDevelopers,
     setFinishedTactic,
-    switchAttrForEditProject,
     deleteProject,
     removeAssignedProjects
   }
