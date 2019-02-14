@@ -39,9 +39,9 @@ class Landing extends Component {
                   <Link to="/login" className="btn btn-lg btn-primary">
                     Login
                   </Link>
-                  <Link to="/register" className="btn btn-lg">
+                  {/*<Link to="/register" className="btn btn-lg">
                     Sign Up
-                  </Link>
+    </Link>*/}
                 </ButtonToolbar>
               </Col>
             </Panel.Body>

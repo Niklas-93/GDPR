@@ -95,7 +95,8 @@ class Navigationbar extends Component {
               </MenuItem>
 
               <MenuItem divider />
-              {isAuthenticated ? authLinks : guestLinkRegister}
+              {isAuthenticated ? authLinks : ""}
+              {/** guestLinkRegister*/}
               {isAuthenticated ? "" : guestLinkLogin}
             </NavDropdown>
           </Nav>
