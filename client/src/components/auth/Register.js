@@ -74,6 +74,8 @@ class Register extends Component {
 
     return (
       <div className={"landing"}>
+        <h1>Registering is disabled.</h1>
+        {/*
         <Col xs={6} xsOffset={3}>
           <Panel style={{ marginBottom: "150px", marginTop: "150px" }}>
             <Panel.Heading>
@@ -252,7 +254,7 @@ class Register extends Component {
               </div>
             </Panel.Body>
           </Panel>
-        </Col>
+        </Col>*/}
       </div>
     );
   }

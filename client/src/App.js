@@ -54,7 +54,7 @@ class App extends Component {
             <NavigationBar />
             <Route exact path="/" component={Landing} />
             <Route exact path="/login" component={Login} />
-            {/*<Route exact path="/register" component={Register} />*/}
+            <Route exact path="/register" component={Register} />
             <div
               className="container"
               style={{ marginBottom: "75px", marginTop: "75px" }}
