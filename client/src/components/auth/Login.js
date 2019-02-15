@@ -95,9 +95,9 @@ class Login extends Component {
             <Panel style={{ marginBottom: "150px", marginTop: "150px" }}>
               <Panel.Heading>
                 <span className={"h4"}>Sign in to your Account</span>
-                <Link to="register" style={{ float: "right" }}>
+                {/*<Link to="register" style={{ float: "right" }}>
                   Register...
-                </Link>
+    </Link>*/}
               </Panel.Heading>
               <Panel.Body>
                 <div className="login">

@@ -74,7 +74,11 @@ class Register extends Component {
 
     return (
       <div className={"landing"}>
-        <h1>Registering is disabled.</h1>
+        <h1
+          style={{ paddingLeft: "60px", paddingTop: "60px", fontSize: "60px" }}
+        >
+          Registering is disabled.
+        </h1>
         {/*
         <Col xs={6} xsOffset={3}>
           <Panel style={{ marginBottom: "150px", marginTop: "150px" }}>

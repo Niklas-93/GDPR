@@ -12,7 +12,7 @@ import PrivateRoute from "./components/common/PrivateRoute";
 
 import NavigationBar from "./components/layout/NavigationBar";
 import Landing from "./components/layout/Landing";
-//import Register from "./components/auth/Register";
+import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import PatternOverview from "./components/patternOverview/PatternOverview";
 import CreatePattern from "./components/patternDetail/CreatePattern";
